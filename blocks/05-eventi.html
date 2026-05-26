@@ -18,12 +18,16 @@
 
     <div class="vw-eventi__grid" x-show="eventiVisibili.length">
       <template x-for="ev in eventiVisibili" :key="ev.id">
-        <article class="vw-eventi__card" :class="`theme-${ev.theme||'western'}`">
+        <article class="vw-eventi__card vw-card vw-card--wood" :class="`theme-${ev.theme||'western'}`">
           <div class="vw-eventi__media">
             <img :src="ev.immagine" :alt="ev.titolo" loading="lazy" />
           </div>
           <div class="vw-eventi__body">
-            <time class="vw-eventi__data">
+            <!-- Urgency chip (B8) -->
+            <template x-if="labelRelativa(ev.data_inizio)">
+              <span class="vw-evento__urgency" x-text="labelRelativa(ev.data_inizio)"></span>
+            </template>
+            <time class="vw-eventi__data" :datetime="ev.data_inizio">
               <strong x-text="formatGiorno(ev.data_inizio)"></strong>
               <span x-text="formatMese(ev.data_inizio)"></span>
               <em x-text="formatOra(ev.data_inizio)"></em>
@@ -36,9 +40,7 @@
       </template>
     </div>
 
-    <p class="vw-eventi__empty" x-show="!eventiVisibili.length">
-      Nessun evento programmato nei prossimi giorni. Torna a trovarci presto.
-    </p>
+    <p class="vw-eventi__empty" x-show="!eventiVisibili.length" x-text="data.empty_message || 'Nessun evento programmato nei prossimi giorni. Torna a trovarci presto.'"></p>
   </div>
 </section>
 
@@ -69,6 +71,8 @@
   }
   .vw-eventi__card.theme-latin { border-top: 3px solid var(--vw-latin-magenta); }
   .vw-eventi__card.theme-western { border-top: 3px solid var(--vw-gold); }
+  /* Override .vw-card padding (B1) per card eventi: il padding sta in __body */
+  .vw-eventi__card.vw-card { padding: 0; }
 
   .vw-eventi__media {
     aspect-ratio: 16/10;
@@ -112,5 +116,20 @@
     color: var(--vw-paper-2);
     padding: var(--space-xl) 0;
     font-style: italic;
+  }
+
+  /* Urgency chip (B8) */
+  .vw-evento__urgency {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    background: var(--vw-gold);
+    color: var(--vw-bg);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
   }
 </style>

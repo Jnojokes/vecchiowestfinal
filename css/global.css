@@ -716,3 +716,376 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
   .vw-roulette-trigger { animation: none; }
   .vw-roulette-wheel  { transition: none; }
 }
+
+/* =========================================================
+   FOCUS RING GLOBALE (A9)
+   ========================================================= */
+*:focus-visible {
+  outline: none;
+  box-shadow: var(--vw-focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+/* =========================================================
+   BADGE — alias --veg (A9)
+   ========================================================= */
+.vw-badge--veg {
+  background: rgba(107, 138, 74, 0.15);
+  color: var(--vw-olive-soft);
+  border-color: var(--vw-olive);
+}
+
+/* =========================================================
+   CHIP (A2 allergeni · B4 filtro multi-toggle)
+   ========================================================= */
+.vw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: transform .15s var(--vw-ease-out-back), background .15s ease, color .15s ease, border-color .15s ease;
+}
+.vw-chip--allergen {
+  background: rgba(200, 155, 60, 0.10);
+  color: var(--vw-gold);
+  border: 1px solid rgba(200, 155, 60, 0.30);
+  text-transform: lowercase;
+}
+.vw-chip--allergen:hover { transform: translateY(-1px); }
+
+.vw-chip--toggle {
+  background: transparent;
+  border: 1px solid rgba(200, 155, 60, 0.35);
+  color: var(--vw-paper);
+  padding: 0.35rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-transform: lowercase;
+}
+.vw-chip--toggle:hover {
+  border-color: var(--vw-gold);
+  background: rgba(200, 155, 60, 0.08);
+}
+.vw-chip--toggle.is-active {
+  background: var(--vw-gold);
+  color: var(--vw-bg);
+  border-color: var(--vw-gold);
+  text-decoration: line-through;
+}
+.vw-chip--clear {
+  background: transparent;
+  border: 1px dashed rgba(240, 227, 200, 0.4);
+  color: rgba(240, 227, 200, 0.7);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.vw-chip--clear:hover {
+  color: var(--vw-paper);
+  border-color: var(--vw-paper-2);
+}
+
+/* Allergen filter container */
+.vw-allergen-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+}
+.vw-allergen-filter__label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--vw-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-right: 0.25rem;
+}
+
+/* Inline meta wrapper (lista chip nei menu items) */
+.vw-menu__item-aller,
+.vw-menu-vert__item-aller {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+.vw-menu__item-aller-label,
+.vw-menu-vert__item-aller-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--vw-dust);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-right: 0.2rem;
+}
+
+/* =========================================================
+   TABS SCROLLABLE — mask fade laterale (A4)
+   ========================================================= */
+.vw-menu__tabs-wrap { position: relative; }
+.vw-menu__tabs--scrollable {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 32px,
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 32px,
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
+}
+.vw-menu__tabs--scrollable::-webkit-scrollbar { display: none; }
+
+/* =========================================================
+   CARD SYSTEM · 3 tier (B1)
+   --paper  → eroe (USP BBQ, evento principale)
+   --wood   → portante (menu item, eventi minori)
+   --minimal → secondaria (recensioni singole)
+   ========================================================= */
+.vw-card {
+  background: var(--vw-paper);
+  color: var(--vw-ink);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.vw-card--paper {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 60%),
+    var(--vw-paper);
+  border: 1px solid rgba(200, 155, 60, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 10px 24px -12px rgba(0, 0, 0, 0.55);
+}
+.vw-card--paper:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 18px 32px -14px rgba(0, 0, 0, 0.7);
+}
+
+.vw-card--wood {
+  background:
+    linear-gradient(180deg, rgba(60, 38, 22, 0.95), rgba(40, 24, 14, 0.95)),
+    var(--vw-bg-2);
+  color: var(--vw-paper);
+  border: 1px solid rgba(200, 155, 60, 0.22);
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.5);
+}
+.vw-card--wood:hover {
+  transform: translateY(-2px);
+  border-color: rgba(200, 155, 60, 0.45);
+}
+
+.vw-card--minimal {
+  background: transparent;
+  border: 1px solid rgba(200, 155, 60, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  box-shadow: none;
+  color: inherit;
+}
+.vw-card--minimal:hover {
+  border-color: rgba(200, 155, 60, 0.45);
+  background: rgba(200, 155, 60, 0.04);
+}
+
+/* =========================================================
+   SVG STARS · stamp animation (B2)
+   ========================================================= */
+@keyframes vw-star-stamp {
+  0%   { transform: scale(0.4) rotate(-15deg); opacity: 0; }
+  60%  { transform: scale(1.2) rotate(2deg);   opacity: 1; }
+  100% { transform: scale(1)   rotate(0);      opacity: 1; }
+}
+.vw-stars {
+  display: inline-flex;
+  gap: 2px;
+  color: rgba(200, 155, 60, 0.22);
+  vertical-align: middle;
+}
+.vw-star { width: 18px; height: 18px; transition: transform .2s ease; }
+.vw-star--full,
+.vw-star--half { color: var(--vw-gold); }
+
+.vw-stars.is-visible .vw-star--full,
+.vw-stars.is-visible .vw-star--half {
+  animation: vw-star-stamp .45s cubic-bezier(.34, 1.56, .64, 1) backwards;
+  animation-delay: var(--vw-star-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-stars.is-visible .vw-star { animation: none; }
+}
+
+/* =========================================================
+   CAROUSEL TRACK (B3 — supporto swipe touch)
+   ========================================================= */
+.vw-rec__track {
+  touch-action: pan-y;
+  will-change: transform;
+}
+.vw-rec__track.is-dragging { transition: none !important; }
+
+/* =========================================================
+   TACTILE FEEDBACK :active (B6)
+   ========================================================= */
+.vw-btn,
+.vw-chip,
+.vw-sidebar__link,
+button:not([disabled]) {
+  transition:
+    transform .12s cubic-bezier(.4, 0, .6, 1),
+    box-shadow .12s cubic-bezier(.4, 0, .6, 1),
+    background-color .2s ease,
+    color .2s ease,
+    border-color .2s ease;
+  -webkit-tap-highlight-color: transparent;
+  transform-origin: center;
+}
+.vw-btn:active,
+.vw-chip:active,
+.vw-sidebar__link:active,
+button:not([disabled]):active {
+  transform: scale(0.96);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+@media (hover: hover) and (pointer: fine) {
+  .vw-btn:active,
+  button:not([disabled]):active { transform: scale(0.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-btn:active,
+  .vw-chip:active,
+  button:not([disabled]):active { transform: none; }
+}
+
+/* =========================================================
+   REVEAL META MENU ITEM su hover/focus (B7)
+   Selettore allineato a BEM esistente: .vw-menu__item
+   ========================================================= */
+.vw-menu__item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity .25s ease, max-height .25s ease;
+}
+.vw-menu__item:hover .vw-menu__item-meta,
+.vw-menu__item:focus-within .vw-menu__item-meta {
+  opacity: 1;
+  max-height: 200px;
+}
+@media (hover: none) {
+  .vw-menu__item-meta { opacity: 1; max-height: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-menu__item-meta { transition: none; }
+}
+
+/* =========================================================
+   SKIP LINK (C1 · WCAG 2.4.1)
+   ========================================================= */
+.vw-skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: var(--vw-gold);
+  color: var(--vw-bg);
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-headline);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  z-index: 1000;
+  text-decoration: none;
+  transition: top .2s ease;
+}
+.vw-skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--vw-paper);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   CURSOR MIRINO (C2 · galleria)
+   ========================================================= */
+.vw-galleria,
+.vw-galleria * {
+  cursor: url('../assets/img/cursor-mirino.svg') 14 14, crosshair;
+}
+@supports not (cursor: url('foo.svg'), auto) {
+  .vw-galleria { cursor: crosshair; }
+}
+@media (hover: none) {
+  .vw-galleria,
+  .vw-galleria * { cursor: auto; }
+}
+
+/* =========================================================
+   BURGER ANIMATO (B5 · adattato a .vw-sidebar esistente)
+   Il toggle attuale è un <button> con <svg>. Aggiungiamo
+   supporto opzionale alle 3 <span> per la croce-su-open.
+   ========================================================= */
+.vw-sidebar__toggle .vw-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+}
+.vw-sidebar__toggle .vw-burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--vw-gold);
+  transition: transform .3s ease, opacity .3s ease;
+  border-radius: 1px;
+}
+.vw-sidebar.is-open ~ .vw-sidebar__toggle .vw-burger span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.vw-sidebar.is-open ~ .vw-sidebar__toggle .vw-burger span:nth-child(2) {
+  opacity: 0;
+}
+.vw-sidebar.is-open ~ .vw-sidebar__toggle .vw-burger span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Backdrop fade più solido */
+.vw-sidebar__backdrop {
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.vw-sidebar__backdrop.is-visible {
+  display: block;
+  opacity: 1;
+}

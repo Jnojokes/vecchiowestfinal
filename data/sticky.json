@@ -3,15 +3,19 @@
   "attivo": true,
   "mostra_dopo_scroll_px": 600,
   "nascondi_se_in_cima": true,
+  "whatsapp_url": "https://wa.me/393520029607?text=Salve%20forestiero%2C%20vorrei%20riservare%20un%20tavolo.%0A%0AGiorno%3A%20%0AOrario%3A%20%0ACoperti%3A%20%0ANome%3A%20",
+  "phone_url": "tel:+393520029607",
+  "whatsapp_label": "Riserva il posto",
+  "phone_label": "Chiama subito",
   "azioni": [
     {
-      "testo": "Prenota tavolo",
+      "testo": "Riserva il posto",
       "icona": "whatsapp",
-      "link": "https://wa.me/393520029607?text=Ciao%20vorrei%20prenotare%20al%20Vecchio%20West",
+      "link": "https://wa.me/393520029607?text=Salve%20forestiero%2C%20vorrei%20riservare%20un%20tavolo.%0A%0AGiorno%3A%20%0AOrario%3A%20%0ACoperti%3A%20%0ANome%3A%20",
       "stile": "oro"
     },
     {
-      "testo": "Chiama",
+      "testo": "Chiama subito",
       "icona": "phone",
       "link": "tel:+393520029607",
       "stile": "outline"

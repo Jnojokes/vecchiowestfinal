@@ -232,12 +232,108 @@
   }
 }
 
-/* ----- Print: locandina stampabile ----- */
+/* ----- Print: locandina stampabile (C3) ----- */
 @media print {
+  *, *::before, *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0;
+  }
   body.has-sidebar { padding-left: 0 !important; }
-  .vw-sidebar, .vw-roulette-trigger, .vw-grain, .vw-menu-vert__cta, .vw-menu-vert__filter { display: none !important; }
-  .vw-menu-vert { background: white; color: black; padding: 1cm; }
-  .vw-menu-vert__title, .vw-menu-vert__sezione-titolo, .vw-menu-vert__item-price { color: #8a6a1c; }
-  .vw-menu-vert__item-name, .vw-menu-vert__intro, .vw-menu-vert__item-desc { color: black; }
-  .vw-menu-vert__item-dots { border-bottom-color: #8a6a1c; }
+
+  .vw-sidebar,
+  .vw-sidebar__toggle,
+  .vw-sidebar__backdrop,
+  .vw-roulette-trigger,
+  .vw-roulette-overlay,
+  .vw-grain,
+  .vw-menu-vert__cta,
+  .vw-menu-vert__filter,
+  .vw-allergen-filter,
+  .vw-skip-link,
+  .vw-gunshot-layer,
+  noscript {
+    display: none !important;
+  }
+
+  .vw-menu-vert { background: white; padding: 0; min-height: 0; }
+  .vw-menu-vert__container { max-width: none; padding: 0; }
+
+  /* Header pagina stampa */
+  body::before {
+    content: "Vecchio West · Sant'Elpidio a Mare · +39 352 002 9607";
+    display: block;
+    text-align: center;
+    font-size: 9pt;
+    color: #555 !important;
+    border-bottom: 2px solid #8a6a1c !important;
+    padding-bottom: 0.3cm;
+    margin-bottom: 0.5cm;
+  }
+  body::after {
+    content: "vecchiowestpub.it";
+    display: block;
+    position: fixed;
+    bottom: 0.5cm;
+    right: 0.5cm;
+    font-size: 8pt;
+    color: #999 !important;
+  }
+
+  .vw-menu-vert__head {
+    text-align: center;
+    margin-bottom: 0.6cm;
+    padding-bottom: 0.3cm;
+    border-bottom: 1px solid #999 !important;
+  }
+  .vw-menu-vert__title { font-size: 22pt; color: #8a6a1c !important; }
+  .vw-menu-vert__intro { font-size: 10pt; color: #333 !important; }
+
+  /* 2 colonne sui contenuti del menu */
+  .vw-menu-vert__sezioni-wrap,
+  .vw-menu-vert__sezioni {
+    column-count: 2;
+    column-gap: 0.8cm;
+    column-rule: 1px solid #ccc;
+  }
+  .vw-menu-vert__sezione {
+    break-inside: avoid;
+    margin-bottom: 0.4cm;
+  }
+  .vw-menu-vert__sezione-titolo { color: #8a6a1c !important; font-size: 13pt; }
+  .vw-menu-vert__sezione-rule { background: none; border-bottom: 1px solid #8a6a1c; }
+
+  .vw-menu-vert__item {
+    break-inside: avoid;
+    margin-bottom: 0.25cm;
+    padding: 0.1cm 0;
+  }
+  .vw-menu-vert__item-name { font-weight: 700; font-size: 10.5pt; color: #000 !important; }
+  .vw-menu-vert__item-price { font-weight: 700; color: #8a6a1c !important; }
+  .vw-menu-vert__item-desc { font-size: 9.5pt; color: #444 !important; }
+  .vw-menu-vert__item-dots { border-bottom-color: #8a6a1c !important; }
+  .vw-menu-vert__item-aller { font-size: 8pt; color: #777 !important; }
+
+  /* Link assoluti: mostra URL accanto */
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 8pt;
+    color: #666 !important;
+  }
+  a[href^="#"]:after,
+  a[href^="tel:"]:after,
+  a[href^="mailto:"]:after { content: ""; }
+
+  @page {
+    margin: 1.3cm;
+    size: A4;
+  }
 }

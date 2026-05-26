@@ -23,9 +23,9 @@
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
           <span x-text="data.telefono"></span>
         </a>
-        <a :href="`https://wa.me/${data.whatsapp?.replace(/\D/g,'')}?text=${encodeURIComponent(data.whatsapp_msg_default || '')}`" target="_blank" rel="noopener" class="vw-btn">
+        <a :href="`https://wa.me/${data.whatsapp?.replace(/\D/g,'')}?text=${encodeURIComponent(data.whatsapp_msg_default || '')}`" target="_blank" rel="noopener" class="vw-btn" data-cta="contatti-whatsapp" data-gunshot>
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.95 11.95 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.18-3.48-8.52zM12 22a9.93 9.93 0 0 1-5.07-1.39l-.36-.21-3.66.96.98-3.57-.24-.37A9.93 9.93 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/></svg>
-          WhatsApp
+          Riserva il posto
         </a>
         <a :href="`mailto:${data.email}`" class="vw-btn vw-btn--ghost">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
