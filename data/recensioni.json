@@ -7,6 +7,8 @@
     "link_short": "https://g.page/r/INSERIRE_SHORT_URL/review"
   },
   "rating_medio_visibile": true,
+  "empty_message": "Le diligenze stanno ancora arrivando. Torna fra qualche giorno per leggere le testimonianze.",
+  "loading_message": "Sto raccogliendo le voci del saloon…",
   "recensioni": [
     {
       "autore": "Marco R.",

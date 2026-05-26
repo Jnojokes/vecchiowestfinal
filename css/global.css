@@ -716,3 +716,54 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
   .vw-roulette-trigger { animation: none; }
   .vw-roulette-wheel  { transition: none; }
 }
+
+/* =========================================================
+   CHIP ALLERGENI (A2)
+   ========================================================= */
+.vw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: transform .15s var(--vw-ease-out-back, ease), background .15s ease;
+}
+.vw-chip--allergen {
+  background: rgba(200, 155, 60, 0.10);
+  color: var(--vw-gold);
+  border: 1px solid rgba(200, 155, 60, 0.30);
+  text-transform: lowercase;
+}
+.vw-chip--allergen:hover { transform: translateY(-1px); }
+
+.vw-menu__item-aller,
+.vw-menu-vert__item-aller {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+.vw-menu__item-aller-label,
+.vw-menu-vert__item-aller-label {
+  font-size: 0.68rem;
+  color: var(--vw-dust);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-right: 0.2rem;
+}
+
+/* =========================================================
+   A9 · Badge veg / marchigiano oliva
+   ========================================================= */
+.vw-badge--veg {
+  background: rgba(107, 138, 74, 0.15);
+  color: var(--vw-olive-soft);
+  border: 1px solid var(--vw-olive);
+}

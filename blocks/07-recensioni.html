@@ -22,18 +22,29 @@
     <div class="vw-rec__carousel">
       <button class="vw-rec__nav vw-rec__nav--prev" @click="prev()" aria-label="Precedente">‹</button>
 
-      <div class="vw-rec__track">
+      <div class="vw-rec__track" aria-live="polite" aria-atomic="true">
         <template x-for="(r, i) in data.recensioni" :key="i">
           <article
             class="vw-rec__card"
             :class="{ 'is-active': i === current }"
             :aria-hidden="i !== current"
           >
+            <header class="vw-rec__head">
+              <div
+                class="vw-rec__avatar"
+                :style="`--avatar-hue: ${avatarHue(r.autore)}`"
+                :aria-label="`Avatar di ${r.autore}`"
+              >
+                <span x-text="initials(r.autore)"></span>
+              </div>
+              <div class="vw-rec__meta">
+                <span class="vw-rec__author" x-text="r.autore"></span>
+                <span class="vw-rec__stars-sm" :aria-label="`Valutazione ${r.rating} su 5`" x-text="renderStars(r.rating)"></span>
+              </div>
+            </header>
             <div class="vw-rec__quote">"</div>
             <p class="vw-rec__text" x-text="r.testo"></p>
             <footer class="vw-rec__footer">
-              <span class="vw-rec__author" x-text="r.autore"></span>
-              <span class="vw-rec__stars-sm" x-text="renderStars(r.rating)"></span>
               <time class="vw-rec__date" x-text="formatData(r.data)"></time>
             </footer>
           </article>
@@ -63,7 +74,42 @@
 </section>
 
 <style>
-  .vw-rec { background: var(--vw-bg-2); }
+  .vw-rec {
+    background:
+      radial-gradient(circle at 20% 0%, rgba(200,155,60,0.08), transparent 60%),
+      radial-gradient(circle at 80% 100%, rgba(200,155,60,0.06), transparent 50%),
+      var(--vw-paper);
+    color: var(--vw-bg);
+    position: relative;
+  }
+  .vw-rec::before,
+  .vw-rec::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 24' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,12 L90,18 L80,10 L70,20 L60,8 L50,16 L40,6 L30,18 L20,10 L10,20 L0,12 Z' fill='%231a120b'/%3E%3C/svg%3E");
+    background-size: 100px 24px;
+    background-repeat: repeat-x;
+    pointer-events: none;
+  }
+  .vw-rec::before { top: -1px; }
+  .vw-rec::after  { bottom: -1px; transform: scaleY(-1); }
+
+  /* Card su sfondo paper: usa colori "scuri" */
+  .vw-rec .vw-rec__card {
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--vw-bg);
+    border: 1px solid rgba(26, 18, 11, 0.12);
+    border-top: 3px solid var(--vw-gold);
+    box-shadow: 0 4px 12px rgba(26, 18, 11, 0.08);
+  }
+  .vw-rec .vw-rec__author { color: var(--vw-bg); }
+  .vw-rec .vw-rec__text { color: rgba(26, 18, 11, 0.85); }
+  .vw-rec .vw-rec__stars { color: var(--vw-gold-dark, #a67e1f); }
+  .vw-rec .vw-rec__dot { background: rgba(26, 18, 11, 0.25); }
+  .vw-rec .vw-rec__dot.is-active { background: var(--vw-bg); }
+  .vw-rec .vw-rec__avg { color: rgba(26, 18, 11, 0.7); }
   .vw-rec__rating {
     display: flex;
     flex-direction: column;
@@ -159,6 +205,34 @@
   .vw-rec__dot.is-active { background: var(--vw-gold); transform: scale(1.3); }
 
   .vw-rec__cta { text-align: center; margin-top: var(--space-md); }
+
+  /* A3 · Avatar iniziali */
+  .vw-rec__head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .vw-rec__avatar {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: hsl(var(--avatar-hue, 38), 35%, 18%);
+    color: var(--vw-gold);
+    border: 1.5px solid rgba(200, 155, 60, 0.35);
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+    user-select: none;
+  }
+  .vw-rec__meta { display: flex; flex-direction: column; gap: 0.15rem; }
+  .vw-rec__meta .vw-rec__author { margin: 0; }
+  .vw-rec__footer .vw-rec__date { margin-left: 0; }
 
   @media (max-width: 640px) {
     .vw-rec__nav { width: 36px; height: 36px; font-size: 1.2rem; }

@@ -84,4 +84,54 @@
   /* --- Grain / texture overlay (nuovo) --- */
   --grain-opacity: 0.045;
   --grain-z: 1;
+
+  /* =========================================================
+     A9 · PALETTE — Estensione marchigiana
+     ========================================================= */
+  --vw-olive: #6b8a4a;          /* verde oliva, scottona marchigiana */
+  --vw-olive-soft: #a4b889;
+  --vw-olive-dark: #4d6633;
+
+  --vw-rust: #c45a3a;            /* errori / alert dolce */
+  --vw-rust-soft: #e8a292;
+
+  /* =========================================================
+     A9 · TOKEN SEMANTICI — riferirsi a questi nei componenti
+     invece dei colori raw quando possibile
+     ========================================================= */
+
+  /* Action / interazione */
+  --vw-action-primary:        var(--vw-gold);
+  --vw-action-primary-hover:  #d9ad53;
+  --vw-action-primary-press:  var(--vw-gold-dark);
+  --vw-action-secondary:      var(--vw-paper);
+  --vw-action-on-action:      var(--vw-bg);
+
+  /* Stato */
+  --vw-state-success:   var(--vw-olive);
+  --vw-state-warning:   #d6a73a;
+  --vw-state-error:     var(--vw-rust);
+  --vw-state-info:      var(--vw-latin-magenta);
+
+  /* Divider / surface */
+  --vw-divider:           rgba(200, 155, 60, 0.18);
+  --vw-divider-strong:    rgba(200, 155, 60, 0.35);
+  --vw-divider-on-paper:  rgba(26, 18, 11, 0.18);
+  --vw-surface-elevated:  rgba(255, 255, 255, 0.04);
+  --vw-surface-overlay:   rgba(15, 10, 6, 0.88);
+
+  /* Text on paper */
+  --vw-text-on-paper:        var(--vw-bg);
+  --vw-text-on-paper-muted:  rgba(26, 18, 11, 0.65);
+  --vw-text-on-paper-faint:  rgba(26, 18, 11, 0.40);
+
+  /* Focus ring (a11y) */
+  --vw-focus-ring: 0 0 0 3px rgba(200, 155, 60, 0.55);
+}
+
+/* A9 · focus-visible globale (a11y) */
+*:focus-visible {
+  outline: none;
+  box-shadow: var(--vw-focus-ring);
+  border-radius: var(--radius-sm, 6px);
 }

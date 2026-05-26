@@ -55,7 +55,7 @@
         console.error('[VW] Errore blocco', path, err);
         const errDiv = document.createElement('div');
         errDiv.style.cssText = 'padding:1rem;color:#b14a30;background:#1a120b;border:1px solid #b14a30;margin:1rem;font-family:monospace;font-size:0.85rem';
-        errDiv.textContent = `Errore caricamento ${path}: ${err.message}`;
+        errDiv.innerHTML = `🌵 Polvere sui binocoli.<br>Non riesco a caricare <code>${path}</code> — riprova fra un attimo o <a href="tel:+393520029607" style="color:inherit;text-decoration:underline">suona il campanaccio</a>. <small style="opacity:.6">(${err.message})</small>`;
         slot.parentNode.insertBefore(errDiv, slot);
         slot.remove();
       }
@@ -222,6 +222,19 @@
       formatData(iso) {
         return new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
       },
+      initials(nome) {
+        if (!nome) return '?';
+        const parti = String(nome).trim().split(/\s+/);
+        const ini = parti.length === 1
+          ? parti[0].slice(0, 2)
+          : (parti[0][0] + parti[parti.length - 1][0]);
+        return ini.toUpperCase();
+      },
+      avatarHue(nome) {
+        let h = 0;
+        for (let i = 0; i < (nome || '').length; i++) h = (h * 31 + nome.charCodeAt(i)) & 0xffff;
+        return h % 360;
+      },
     }));
 
     // BLOCK 09 · Sticky CTA
@@ -368,6 +381,30 @@
         document.body.style.overflow = 'hidden';
         // Refresh cooldown (potrebbe essere scaduto nel frattempo)
         this.checkCooldown();
+        // A7 · focus iniziale sul primo bottone interattivo
+        this.$nextTick(() => {
+          const modal = document.querySelector('.vw-roulette-modal');
+          if (!modal) return;
+          const first = modal.querySelector('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])');
+          if (first) first.focus();
+        });
+      },
+      trapFocus(e) {
+        const modal = document.querySelector('.vw-roulette-modal');
+        if (!modal) return;
+        const focusable = modal.querySelectorAll(
+          'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       },
       chiudi() {
         this.overlayOpen = false;
