@@ -1,0 +1,167 @@
+<!-- ============================================================
+     BLOCK 07 · RECENSIONI
+     Dati: /data/recensioni.json
+     Carousel pergamena
+     ============================================================ -->
+<section
+  id="recensioni"
+  class="vw-section vw-rec"
+  x-data="vwRecensioni('data/recensioni.json')"
+  x-cloak
+>
+  <div class="vw-container">
+    <div class="vw-section__head">
+      <p class="eyebrow">La taglia del Vecchio West</p>
+      <h2>Dicono di noi</h2>
+      <div class="vw-rec__rating" x-show="data.rating_medio_visibile">
+        <span class="vw-rec__stars" x-text="renderStars(mediaRating)"></span>
+        <span class="vw-rec__avg" x-text="`${mediaRating.toFixed(1)} su 5 · ${data.recensioni?.length || 0} recensioni`"></span>
+      </div>
+    </div>
+
+    <div class="vw-rec__carousel">
+      <button class="vw-rec__nav vw-rec__nav--prev" @click="prev()" aria-label="Precedente">‹</button>
+
+      <div class="vw-rec__track">
+        <template x-for="(r, i) in data.recensioni" :key="i">
+          <article
+            class="vw-rec__card"
+            :class="{ 'is-active': i === current }"
+            :aria-hidden="i !== current"
+          >
+            <div class="vw-rec__quote">"</div>
+            <p class="vw-rec__text" x-text="r.testo"></p>
+            <footer class="vw-rec__footer">
+              <span class="vw-rec__author" x-text="r.autore"></span>
+              <span class="vw-rec__stars-sm" x-text="renderStars(r.rating)"></span>
+              <time class="vw-rec__date" x-text="formatData(r.data)"></time>
+            </footer>
+          </article>
+        </template>
+      </div>
+
+      <button class="vw-rec__nav vw-rec__nav--next" @click="next()" aria-label="Successivo">›</button>
+    </div>
+
+    <div class="vw-rec__dots">
+      <template x-for="(r, i) in data.recensioni" :key="i">
+        <button
+          class="vw-rec__dot"
+          :class="{ 'is-active': i === current }"
+          @click="current = i"
+          :aria-label="`Recensione ${i + 1}`"
+        ></button>
+      </template>
+    </div>
+
+    <div class="vw-rec__cta">
+      <a :href="data.cta_lascia_recensione?.link_short" target="_blank" rel="noopener" class="vw-btn">
+        <span x-text="data.cta_lascia_recensione?.testo"></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vw-rec { background: var(--vw-bg-2); }
+  .vw-rec__rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+  }
+  .vw-rec__stars { color: var(--vw-gold); font-size: 1.2rem; letter-spacing: 0.15em; }
+  .vw-rec__avg { color: var(--vw-paper-2); font-size: 0.85rem; }
+
+  .vw-rec__carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+  .vw-rec__track {
+    flex: 1;
+    position: relative;
+    min-height: 280px;
+  }
+  .vw-rec__card {
+    position: absolute;
+    inset: 0;
+    background: var(--vw-paper);
+    color: var(--vw-ink);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border-top: 3px solid var(--vw-gold);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transition: opacity .4s ease, transform .4s ease;
+    transform: scale(0.96);
+    pointer-events: none;
+  }
+  .vw-rec__card.is-active {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+  .vw-rec__quote {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: var(--vw-gold);
+    line-height: 0.8;
+    margin-bottom: 0.5rem;
+  }
+  .vw-rec__text {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+  }
+  .vw-rec__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+    border-top: 1px dashed rgba(42, 29, 18, 0.3);
+    padding-top: var(--space-sm);
+  }
+  .vw-rec__author { font-family: var(--font-headline); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem; }
+  .vw-rec__stars-sm { color: var(--vw-gold-dark); }
+  .vw-rec__date { margin-left: auto; font-size: 0.78rem; color: rgba(42, 29, 18, 0.7); }
+
+  .vw-rec__nav {
+    width: 44px; height: 44px;
+    background: var(--vw-bg);
+    border: 1px solid var(--vw-gold);
+    color: var(--vw-gold);
+    font-size: 1.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .vw-rec__nav:hover { background: var(--vw-gold); color: var(--vw-bg); }
+
+  .vw-rec__dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+    margin: var(--space-md) 0;
+  }
+  .vw-rec__dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 0;
+    background: var(--vw-dust);
+    cursor: pointer;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .vw-rec__dot.is-active { background: var(--vw-gold); transform: scale(1.3); }
+
+  .vw-rec__cta { text-align: center; margin-top: var(--space-md); }
+
+  @media (max-width: 640px) {
+    .vw-rec__nav { width: 36px; height: 36px; font-size: 1.2rem; }
+    .vw-rec__card { padding: var(--space-md); }
+  }
+</style>

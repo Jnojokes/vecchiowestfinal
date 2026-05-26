@@ -1,0 +1,718 @@
+/* =========================================================
+   VECCHIO WEST · GLOBAL STYLES
+   ========================================================= */
+
+@import url('tokens.css');
+
+/* --- Font loading (subset locale consigliato in produzione) --- */
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@400;600;700&family=Inter:wght@400;500;700&family=Special+Elite&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--vw-paper);
+  background: var(--vw-bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Texture seppia globale opzionale */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at top, rgba(200, 155, 60, 0.04), transparent 70%),
+    radial-gradient(ellipse at bottom, rgba(26, 18, 11, 0.5), transparent 60%);
+}
+
+img, video { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--vw-gold); text-decoration: none; transition: color .2s ease; }
+a:hover { color: var(--vw-gold-2); }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--vw-paper);
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.2rem, 6vw, 4.5rem); line-height: 1.05; }
+h2 { font-size: clamp(1.7rem, 4vw, 3rem); line-height: 1.1; margin-bottom: var(--space-sm); }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.78rem;
+  color: var(--vw-gold);
+}
+
+/* --- Container --- */
+.vw-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+/* --- Section spacing --- */
+.vw-section {
+  padding: var(--space-xl) 0;
+  position: relative;
+  z-index: 2;
+}
+@media (min-width: 768px) { .vw-section { padding: var(--space-2xl) 0; } }
+
+/* --- Buttons --- */
+.vw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.6rem;
+  font-family: var(--font-headline);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.92rem;
+  border: 2px solid var(--vw-gold);
+  background: var(--vw-gold);
+  color: var(--vw-bg);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  text-decoration: none;
+}
+.vw-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-gold); background: var(--vw-gold-2); }
+
+.vw-btn--ghost {
+  background: transparent;
+  color: var(--vw-paper);
+  border-color: var(--vw-paper-2);
+}
+.vw-btn--ghost:hover { background: var(--vw-paper); color: var(--vw-bg); }
+
+.vw-btn--latin {
+  background: var(--vw-latin-magenta);
+  border-color: var(--vw-latin-magenta);
+  color: var(--vw-paper);
+}
+.vw-btn--latin:hover { background: var(--vw-latin-accent); border-color: var(--vw-latin-accent); }
+
+/* --- Decorazioni western (divisori) --- */
+.vw-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: var(--space-md) auto;
+  color: var(--vw-gold);
+}
+.vw-divider::before, .vw-divider::after {
+  content: "";
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--vw-gold), transparent);
+}
+.vw-divider svg { width: 24px; height: 24px; fill: currentColor; }
+
+/* --- Badge --- */
+.vw-badge {
+  display: inline-block;
+  padding: 0.18rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--vw-gold);
+  color: var(--vw-gold);
+  background: rgba(200, 155, 60, 0.08);
+  border-radius: var(--radius-sm);
+}
+.vw-badge--piccante { color: var(--vw-red-2); border-color: var(--vw-red-2); background: rgba(177, 74, 48, 0.1); }
+.vw-badge--nuovo { color: var(--vw-paper); border-color: var(--vw-paper); }
+.vw-badge--marchigiano { color: var(--vw-sand); border-color: var(--vw-sand); }
+.vw-badge--vegan { color: #8ab06a; border-color: #8ab06a; }
+.vw-badge--top { background: var(--vw-gold); color: var(--vw-bg); }
+
+/* --- Card pergamena (recensioni, eventi) --- */
+.vw-card-paper {
+  background: var(--vw-paper);
+  color: var(--vw-ink);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  border-top: 3px solid var(--vw-gold);
+}
+
+/* --- Theme latin override (DJ Flow blocks) --- */
+.theme-latin {
+  --vw-gold: var(--vw-latin-magenta);
+  --vw-gold-2: var(--vw-latin-accent);
+}
+
+/* --- Utility --- */
+.vw-text-gold { color: var(--vw-gold); }
+.vw-text-mono { font-family: var(--font-mono); }
+.vw-text-display { font-family: var(--font-display); }
+.vw-text-headline { font-family: var(--font-headline); text-transform: uppercase; letter-spacing: 0.05em; }
+.vw-hide-mobile { display: none; }
+@media (min-width: 768px) { .vw-hide-mobile { display: inherit; } .vw-hide-desktop { display: none; } }
+
+/* --- Animations --- */
+@keyframes vw-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.vw-anim-fade-up { animation: vw-fade-up .8s ease both; }
+
+@keyframes vw-scroll-hint {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+/* --- Reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* --- x-cloak: solo PRIMA che Alpine sia caricato (rimosso quando arriva) ---
+   Versione difensiva: NON nasconde tutto, nasconde solo span/text con bindings vuoti.
+   Se Alpine non parte, almeno la struttura dei blocchi è visibile. */
+[x-cloak] {
+  visibility: visible;
+}
+.vw-loading [x-cloak] {
+  visibility: hidden;
+}
+
+/* =========================================================
+   GRAIN TEXTURE OVERLAY (nuovo)
+   Strato sottile di rumore per dare sensazione "pellicola"
+   ========================================================= */
+.vw-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--grain-z);
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.95  0 0 0 0 0.85  0 0 0 0 0.65  0 0 0 1 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 220px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-grain { display: none; }
+}
+
+/* =========================================================
+   REVEAL ON SCROLL (nuovo)
+   Animazione "appare" quando l'elemento entra in viewport.
+   Usare con: data-reveal su qualsiasi elemento.
+   Varianti: data-reveal="up|left|right|zoom"
+   ========================================================= */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 700ms var(--vw-ease-bullet),
+    transform 700ms var(--vw-ease-bullet);
+  will-change: opacity, transform;
+}
+[data-reveal="left"]  { transform: translateX(-32px); }
+[data-reveal="right"] { transform: translateX(32px); }
+[data-reveal="zoom"]  { transform: scale(0.92); }
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+}
+
+/* =========================================================
+   SIDEBAR VERTICALE (nuovo · BLOCK 00)
+   Desktop: 72px collapsed → 240px expanded on hover
+   Mobile : drawer pattern, toggle con burger
+   ========================================================= */
+.vw-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-w);
+  z-index: var(--sidebar-z);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  transition: width 320ms var(--vw-ease-out-back);
+  overflow: hidden;
+}
+.vw-sidebar:hover,
+.vw-sidebar:focus-within,
+.vw-sidebar.is-open {
+  width: var(--sidebar-w-expanded);
+}
+
+.vw-sidebar__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--header-h);
+  padding: 0 var(--space-sm);
+  border-bottom: 1px solid var(--sidebar-border);
+  color: var(--vw-gold);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.vw-sidebar__brand-mark {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+}
+.vw-sidebar__brand-text {
+  margin-left: 0.6rem;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 220ms, transform 220ms;
+}
+.vw-sidebar:hover .vw-sidebar__brand-text,
+.vw-sidebar:focus-within .vw-sidebar__brand-text,
+.vw-sidebar.is-open .vw-sidebar__brand-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.vw-sidebar__nav {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-sm) 0;
+  flex: 1;
+  overflow-y: auto;
+}
+.vw-sidebar__item {
+  display: block;
+}
+.vw-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  height: 52px;
+  padding: 0 22px;
+  color: var(--vw-paper-2);
+  font-family: var(--font-headline);
+  font-size: 0.86rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  white-space: nowrap;
+  transition: color 220ms, background 220ms;
+}
+.vw-sidebar__link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 3px;
+  background: transparent;
+  transition: background 220ms;
+}
+.vw-sidebar__link:hover {
+  color: var(--vw-paper);
+  background: rgba(200, 155, 60, 0.06);
+}
+.vw-sidebar__link:hover::before {
+  background: var(--vw-gold-dark);
+}
+.vw-sidebar__link.is-active {
+  color: var(--vw-gold);
+  background: rgba(200, 155, 60, 0.10);
+}
+.vw-sidebar__link.is-active::before {
+  background: var(--vw-gold);
+}
+.vw-sidebar__icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 1.05rem;
+}
+.vw-sidebar__label {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 220ms, transform 220ms;
+}
+.vw-sidebar:hover .vw-sidebar__label,
+.vw-sidebar:focus-within .vw-sidebar__label,
+.vw-sidebar.is-open .vw-sidebar__label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.vw-sidebar__cta {
+  padding: var(--space-sm);
+  border-top: 1px solid var(--sidebar-border);
+}
+.vw-sidebar__cta .vw-btn {
+  width: 100%;
+  padding: 0.65rem 0.6rem;
+  font-size: 0.78rem;
+}
+.vw-sidebar:not(:hover):not(:focus-within):not(.is-open) .vw-sidebar__cta .vw-btn span {
+  display: none;
+}
+
+/* Mobile toggle (burger) */
+.vw-sidebar__toggle {
+  display: none;
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: calc(var(--sidebar-z) + 5);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: rgba(26, 18, 11, 0.85);
+  border: 1px solid var(--sidebar-border);
+  color: var(--vw-gold);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.vw-sidebar__toggle svg { width: 22px; height: 22px; }
+
+/* Backdrop mobile quando drawer è aperto */
+.vw-sidebar__backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--sidebar-z) - 1);
+  background: rgba(10, 7, 4, 0.6);
+  backdrop-filter: blur(4px);
+}
+.vw-sidebar__backdrop.is-visible {
+  display: block;
+}
+
+/* Layout: desktop spinge contenuto a destra */
+@media (min-width: 1024px) {
+  body.has-sidebar {
+    padding-left: var(--sidebar-w);
+  }
+}
+
+/* Mobile: sidebar nascosta di default, toggle visibile */
+@media (max-width: 1023px) {
+  .vw-sidebar {
+    transform: translateX(-100%);
+    width: var(--sidebar-w-expanded);
+    transition: transform 320ms var(--vw-ease-out-back);
+  }
+  .vw-sidebar.is-open {
+    transform: translateX(0);
+  }
+  .vw-sidebar__brand-text,
+  .vw-sidebar__label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .vw-sidebar__cta .vw-btn span {
+    display: inline;
+  }
+  .vw-sidebar__toggle {
+    display: flex;
+  }
+  body.has-sidebar { padding-left: 0; }
+}
+
+/* =========================================================
+   GUNSHOT EFFECT (nuovo)
+   Foro di proiettile + flash al click su CTA
+   ========================================================= */
+.vw-gunshot-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--gunshot-z);
+  overflow: hidden;
+}
+.vw-gunshot-hole {
+  position: absolute;
+  width: var(--gunshot-size);
+  height: var(--gunshot-size);
+  margin-left: calc(var(--gunshot-size) / -2);
+  margin-top: calc(var(--gunshot-size) / -2);
+  background:
+    radial-gradient(circle at 50% 50%,
+      #050302 0%,
+      #14100b 20%,
+      rgba(20, 16, 11, 0.85) 38%,
+      rgba(60, 38, 18, 0.45) 55%,
+      rgba(120, 80, 40, 0.18) 72%,
+      transparent 85%);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.8));
+  opacity: 0;
+  transform: scale(0.2);
+  animation: vw-gunshot-fade var(--gunshot-fade-ms) var(--vw-ease-bullet) forwards;
+}
+.vw-gunshot-hole::after {
+  /* crepe sottili */
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    linear-gradient(35deg, transparent 49.5%, rgba(20, 14, 8, 0.55) 50%, transparent 50.5%),
+    linear-gradient(120deg, transparent 49.5%, rgba(20, 14, 8, 0.45) 50%, transparent 50.5%),
+    linear-gradient(-65deg, transparent 49.6%, rgba(20, 14, 8, 0.35) 50%, transparent 50.4%);
+  background-size: 100% 100%;
+  border-radius: 50%;
+  -webkit-mask: radial-gradient(circle, black 30%, transparent 70%);
+          mask: radial-gradient(circle, black 30%, transparent 70%);
+  opacity: 0.85;
+}
+.vw-gunshot-flash {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: radial-gradient(circle, rgba(255, 230, 170, 0.95), rgba(255, 180, 80, 0.5) 40%, transparent 70%);
+  border-radius: 50%;
+  animation: vw-gunshot-flash 220ms ease-out forwards;
+}
+@keyframes vw-gunshot-fade {
+  0%   { opacity: 0;   transform: scale(0.2); }
+  10%  { opacity: 0.95; transform: scale(1.05); }
+  20%  { opacity: 0.92; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.08); }
+}
+@keyframes vw-gunshot-flash {
+  0%   { opacity: 1; transform: scale(0.4); }
+  60%  { opacity: 0.6; transform: scale(8); }
+  100% { opacity: 0; transform: scale(14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-gunshot-hole,
+  .vw-gunshot-flash { display: none !important; }
+}
+
+/* =========================================================
+   ROULETTE OVERLAY (nuovo · BLOCK 11)
+   ========================================================= */
+.vw-roulette-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--roulette-overlay-z);
+  background: var(--roulette-backdrop);
+  display: grid;
+  place-items: center;
+  padding: var(--space-md);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.vw-roulette-modal {
+  width: 100%;
+  max-width: 540px;
+  background:
+    radial-gradient(ellipse at top, rgba(200, 155, 60, 0.08), transparent 60%),
+    var(--vw-bg-2);
+  border: 1px solid var(--sidebar-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-lg) var(--space-md);
+  position: relative;
+  text-align: center;
+  animation: vw-fade-up 500ms var(--vw-ease-out-back) both;
+}
+.vw-roulette-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--sidebar-border);
+  color: var(--vw-paper-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: color 200ms, border-color 200ms;
+}
+.vw-roulette-close:hover { color: var(--vw-gold); border-color: var(--vw-gold); }
+
+.vw-roulette-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  color: var(--vw-gold);
+  margin-bottom: 0.4rem;
+}
+.vw-roulette-sub {
+  color: var(--vw-paper-2);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-md);
+}
+
+.vw-roulette-wheel-wrap {
+  position: relative;
+  width: var(--roulette-wheel-size);
+  height: var(--roulette-wheel-size);
+  margin: 0 auto var(--space-md);
+}
+.vw-roulette-wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid var(--vw-gold-dark);
+  box-shadow:
+    0 0 0 4px var(--vw-bg-2),
+    0 0 0 6px var(--vw-gold-dark),
+    var(--shadow-lg);
+  background: conic-gradient(
+    from -90deg,
+    #8c2f1b 0deg 30deg,
+    #1a120b 30deg 60deg,
+    #c89b3c 60deg 90deg,
+    #1a120b 90deg 120deg,
+    #8c2f1b 120deg 150deg,
+    #1a120b 150deg 180deg,
+    #c89b3c 180deg 210deg,
+    #1a120b 210deg 240deg,
+    #8c2f1b 240deg 270deg,
+    #1a120b 270deg 300deg,
+    #c89b3c 300deg 330deg,
+    #1a120b 330deg 360deg
+  );
+  transition: transform var(--roulette-spin-duration) var(--vw-ease-spin);
+  transform: rotate(0deg);
+}
+.vw-roulette-wheel.is-spinning {
+  /* la rotazione è applicata via JS con style.transform */
+}
+.vw-roulette-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22%;
+  height: 22%;
+  margin: -11% 0 0 -11%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--vw-gold) 30%, var(--vw-gold-dark) 70%);
+  box-shadow: var(--shadow-md), inset 0 0 8px rgba(26, 18, 11, 0.6);
+  display: grid;
+  place-items: center;
+  color: var(--vw-bg);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+}
+.vw-roulette-pointer {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 24px solid var(--vw-gold);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  z-index: 2;
+}
+
+.vw-roulette-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--space-sm);
+}
+.vw-roulette-result {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  border-top: 1px dashed var(--sidebar-border);
+  animation: vw-fade-up 500ms var(--vw-ease-out-back) both;
+}
+.vw-roulette-result__title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--vw-gold);
+  margin-bottom: 0.4rem;
+}
+.vw-roulette-result__code {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.55rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  border: 1px dashed var(--vw-gold);
+  color: var(--vw-paper);
+  background: rgba(200, 155, 60, 0.06);
+}
+.vw-roulette-meta {
+  margin-top: var(--space-sm);
+  font-size: 0.78rem;
+  color: var(--vw-dust);
+}
+.vw-roulette-cooldown {
+  font-family: var(--font-mono);
+  color: var(--vw-sand);
+  font-size: 0.85rem;
+  margin-top: var(--space-sm);
+}
+
+/* Trigger floating (mobile/desktop) opzionale */
+.vw-roulette-trigger {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  z-index: calc(var(--sidebar-z) + 2);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--vw-gold);
+  color: var(--vw-bg);
+  border: 2px solid var(--vw-gold-dark);
+  cursor: pointer;
+  box-shadow: var(--shadow-gold), var(--shadow-md);
+  display: grid;
+  place-items: center;
+  font-size: 1.4rem;
+  transition: transform 200ms ease;
+  animation: vw-pulse-soft 2.4s ease-in-out infinite;
+}
+.vw-roulette-trigger:hover { transform: scale(1.08); }
+@keyframes vw-pulse-soft {
+  0%, 100% { box-shadow: var(--shadow-gold), var(--shadow-md); }
+  50%      { box-shadow: 0 0 36px rgba(200, 155, 60, 0.55), var(--shadow-md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-roulette-trigger { animation: none; }
+  .vw-roulette-wheel  { transition: none; }
+}

@@ -1,0 +1,42 @@
+{
+  "_note": "BLOCK 07 · Recensioni Google. Compila a mano selezionando le 5-10 migliori da Google Business Profile. In v2 si può sostituire con auto-fetch da Google Place API ('auto_fetch': true + 'place_id'). 'rating': 1-5 stelle.",
+  "auto_fetch": false,
+  "place_id": "INSERIRE_PLACE_ID_GOOGLE",
+  "cta_lascia_recensione": {
+    "testo": "Lascia anche tu la tua recensione",
+    "link_short": "https://g.page/r/INSERIRE_SHORT_URL/review"
+  },
+  "rating_medio_visibile": true,
+  "recensioni": [
+    {
+      "autore": "Marco R.",
+      "rating": 5,
+      "data": "2026-06-02",
+      "testo": "Cena fantastica al BBQ del tavolo. Carne marchigiana di qualità assurda, atmosfera tipo film di Sergio Leone. Lo staff scherzava come un saloon vero. Torneremo!"
+    },
+    {
+      "autore": "Giulia P.",
+      "rating": 5,
+      "data": "2026-06-04",
+      "testo": "L'idea della griglia personale è geniale. Mio figlio ha cotto la salsiccia da solo, si è divertito un mondo. Olive ascolana strepitose."
+    },
+    {
+      "autore": "Andrea T.",
+      "rating": 5,
+      "data": "2026-06-06",
+      "testo": "Venerdì serata DJ Flow, atmosfera latina davvero coinvolgente. Birra alla spina della casa ottima. Prezzo onesto."
+    },
+    {
+      "autore": "Sara M.",
+      "rating": 4,
+      "data": "2026-06-08",
+      "testo": "Posto particolare, scenografia western curata nei dettagli. Il Doppio Tex era enorme. Unico appunto: prenotate, perché il venerdì è pieno."
+    },
+    {
+      "autore": "Luca B.",
+      "rating": 5,
+      "data": "2026-06-10",
+      "testo": "Finalmente un locale che non è la solita americanata. Spaghetti western italiano vero, con olive ascolana e salame ventricina. Top."
+    }
+  ]
+}

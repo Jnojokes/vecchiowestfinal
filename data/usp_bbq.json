@@ -1,0 +1,29 @@
+{
+  "_note": "BLOCK 04 · USP Hero BBQ al tavolo. Split-screen: 'foto' a sinistra, claim+step a destra. Modifica i 3 step per cambiare il funzionamento.",
+  "titolo": "Il BBQ è al tuo tavolo",
+  "claim": "Acquisti la carne, accendi il barbecue, cuoci come piace a te. La griglia è la tua, lo spettacolo è di tutti.",
+  "foto": "assets/img/bbq-tavolo.jpg",
+  "foto_alt": "Barbecue acceso al centro di una tavolata Vecchio West",
+  "step": [
+    {
+      "numero": "01",
+      "titolo": "Scegli la carne",
+      "testo": "Scottona marchigiana, costine, salsicce, pollo. Tutto fresco, sourcing locale."
+    },
+    {
+      "numero": "02",
+      "titolo": "Ti portiamo il BBQ",
+      "testo": "Ogni tavolo ha la sua griglia personale, brace già pronta e pinze."
+    },
+    {
+      "numero": "03",
+      "titolo": "Cuoci e mangia",
+      "testo": "Tempi tuoi, cotture tue. Noi ti portiamo contorni, salse e birra fredda."
+    }
+  ],
+  "cta": {
+    "testo": "Prenota il tavolo BBQ",
+    "link": "https://wa.me/393520029607?text=Ciao%20vorrei%20prenotare%20un%20tavolo%20BBQ"
+  },
+  "parallax": true
+}

@@ -1,0 +1,76 @@
+<!-- ============================================================
+     BLOCK 09 · STICKY CTA BOTTOM (MOBILE)
+     Dati: /data/sticky.json
+     Solo su mobile (<768px)
+     ============================================================ -->
+<div
+  class="vw-sticky"
+  x-data="vwSticky('data/sticky.json')"
+  x-show="data.attivo && visibile"
+  x-transition.duration.300ms
+  x-cloak
+  role="region"
+  aria-label="Azioni rapide"
+>
+  <template x-for="(a, i) in data.azioni" :key="i">
+    <a
+      :href="a.link"
+      class="vw-sticky__btn"
+      :class="`vw-sticky__btn--${a.stile}`"
+      :target="a.link.startsWith('http') ? '_blank' : '_self'"
+      :rel="a.link.startsWith('http') ? 'noopener' : ''"
+    >
+      <template x-if="a.icona === 'whatsapp'">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.95 11.95 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.18-3.48-8.52z"/></svg>
+      </template>
+      <template x-if="a.icona === 'phone'">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+      </template>
+      <span x-text="a.testo"></span>
+    </a>
+  </template>
+</div>
+
+<style>
+  .vw-sticky {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem max(0.6rem, env(safe-area-inset-bottom));
+    background: linear-gradient(180deg, rgba(26, 18, 11, 0.85), var(--vw-bg));
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(200, 155, 60, 0.25);
+  }
+  @media (min-width: 768px) {
+    .vw-sticky { display: none !important; }
+  }
+  .vw-sticky__btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.85rem 0.5rem;
+    font-family: var(--font-headline);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    border: 2px solid var(--vw-gold);
+  }
+  .vw-sticky__btn--oro {
+    background: var(--vw-gold);
+    color: var(--vw-bg);
+  }
+  .vw-sticky__btn--outline {
+    background: transparent;
+    color: var(--vw-paper);
+    border-color: var(--vw-paper-2);
+  }
+</style>

@@ -1,0 +1,26 @@
+{
+  "attivo": true,
+  "mode": "lottery",
+  "_commento_mode": "Valori ammessi: 'lottery' (1 su N vince, default) | 'always_win' (vince sempre, conforme art.6 DPR 430/2001 — manifestazione di sorte non soggetta).",
+
+  "probabilita_vittoria": 0.04,
+  "_commento_probabilita": "0.04 = 1 colpo su 25 vince. Usato solo se mode = 'lottery'.",
+
+  "cooldown_ore": 24,
+  "_commento_cooldown": "Ore di attesa fra due tentativi dallo stesso browser (localStorage).",
+
+  "auto_open_dopo_secondi": 0,
+  "_commento_auto_open": "0 = nessuna apertura automatica. Inserire un valore > 0 per aprire la roulette dopo X secondi dal caricamento.",
+
+  "titolo": "Roulette del West",
+  "sottotitolo": "Gira la ruota: 1 colpo su 25 vince una birra alla spina",
+  "premio_descrizione": "Una birra alla spina (media) offerta dalla casa.",
+  "consolazione": "Il vecchio Tex ha sbagliato mira. La fortuna gira veloce — riprova domani.",
+  "codice_prefix": "VW",
+
+  "disclaimer": "Manifestazione di sorte interna al locale. Codice valido una sola volta, da mostrare al banco entro la chiusura della serata in cui è stato generato. Non cumulabile con altre offerte. Sotto i 18 anni: bevanda analcolica equivalente.",
+
+  "hub_label_default": "WEST",
+  "hub_label_win": "WIN!",
+  "hub_label_lose": "MISS"
+}

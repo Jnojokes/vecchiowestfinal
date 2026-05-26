@@ -1,0 +1,70 @@
+{
+  "_note": "BLOCK 06 · Galleria masonry. 'tipo': foto | video. 'tag': filtro categoria (locale | piatti | eventi | bbq). Tutti gli asset devono essere serviti in WebP per le foto e MP4 H.264 per i video. Aggiungi sempre 'alt' descrittivo per accessibilità.",
+  "tag_disponibili": ["tutti", "locale", "piatti", "bbq", "eventi"],
+  "asset": [
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/locale-01.webp",
+      "alt": "Sala principale Vecchio West con tavoloni in legno e luci calde",
+      "tag": "locale",
+      "ratio": "4:5"
+    },
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/bbq-01.webp",
+      "alt": "Bistecca di scottona sul barbecue da tavolo",
+      "tag": "bbq",
+      "ratio": "1:1"
+    },
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/piatto-tex-mex.webp",
+      "alt": "Hamburger Tex Mex con patatine e salsa",
+      "tag": "piatti",
+      "ratio": "4:5"
+    },
+    {
+      "tipo": "video",
+      "src": "assets/video/galleria/inaugurazione-teaser.mp4",
+      "poster": "assets/img/galleria/inaugurazione-teaser-poster.webp",
+      "alt": "Teaser inaugurazione 29 maggio",
+      "tag": "eventi",
+      "ratio": "9:16"
+    },
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/olive-ascolana.webp",
+      "alt": "Piatto di olive ascolana fritte appena servite",
+      "tag": "piatti",
+      "ratio": "1:1"
+    },
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/locale-02.webp",
+      "alt": "Bancone bar Vecchio West con birre alla spina",
+      "tag": "locale",
+      "ratio": "3:4"
+    },
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/bbq-02.webp",
+      "alt": "Costine ribs glassate sulla griglia",
+      "tag": "bbq",
+      "ratio": "4:5"
+    },
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/evento-latin.webp",
+      "alt": "DJ Flow al mixer durante una serata latina",
+      "tag": "eventi",
+      "ratio": "1:1"
+    },
+    {
+      "tipo": "foto",
+      "src": "assets/img/galleria/piadina-ultima-pistola.webp",
+      "alt": "Piadina L'Ultima Pistola con salame ventricina e stracciatella",
+      "tag": "piatti",
+      "ratio": "4:5"
+    }
+  ]
+}

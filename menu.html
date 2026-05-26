@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a120b" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- SEO ============================================== -->
+  <title>Menù · Vecchio West · Hamburger, BBQ, scottona marchigiana</title>
+  <meta name="description" content="Il menù completo del Vecchio West: hamburger artigianali, BBQ al tavolo, scottona marchigiana, olive ascolana, antipasti, primi, dolci e drink list. Sant'Elpidio a Mare." />
+  <meta name="keywords" content="menù vecchio west, menu pub western, hamburger sant'elpidio, bbq al tavolo, scottona marchigiana, olive ascolana, ristorante marche menu" />
+  <link rel="canonical" href="https://www.vecchiowestpub.it/menu.html" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+
+  <!-- Open Graph / FB -->
+  <meta property="og:type" content="restaurant.menu" />
+  <meta property="og:title" content="Menù · Vecchio West" />
+  <meta property="og:description" content="Il menù completo: hamburger, BBQ al tavolo, scottona marchigiana, olive ascolana. Sant'Elpidio a Mare." />
+  <meta property="og:image" content="https://www.vecchiowestpub.it/assets/img/og-cover.jpg" />
+  <meta property="og:url" content="https://www.vecchiowestpub.it/menu.html" />
+  <meta property="og:locale" content="it_IT" />
+  <meta property="og:site_name" content="Vecchio West" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Menù · Vecchio West" />
+  <meta name="twitter:description" content="Hamburger, BBQ al tavolo, scottona marchigiana e drink list western." />
+  <meta name="twitter:image" content="https://www.vecchiowestpub.it/assets/img/og-cover.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png" />
+
+  <!-- Preload critical -->
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Rye-Regular.woff2" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- CSS: globale + page-specific menu -->
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/menu-page.css" />
+
+  <!-- Tailwind CDN — solo per utility extra. In produzione: build statica con tailwindcss CLI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { vw: { gold: '#c89b3c', paper: '#f0e3c8', bg: '#1a120b' } } } }
+    }
+  </script>
+
+  <!-- app.js gestisce tutto: carica blocchi → inietta Alpine.js dinamicamente -->
+  <script src="js/app.js"></script>
+
+  <!-- =========================================================
+       Schema.org JSON-LD · Menu del ristorante
+       ========================================================= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Menu",
+    "@id": "https://www.vecchiowestpub.it/menu.html#menu",
+    "name": "Menù Vecchio West",
+    "inLanguage": "it-IT",
+    "description": "Menù completo del Vecchio West: hamburger, BBQ al tavolo, scottona marchigiana, olive ascolana, antipasti, primi, dolci e drink list.",
+    "url": "https://www.vecchiowestpub.it/menu.html",
+    "isPartOf": {
+      "@type": "Restaurant",
+      "@id": "https://www.vecchiowestpub.it/#restaurant",
+      "name": "Vecchio West",
+      "url": "https://www.vecchiowestpub.it/"
+    }
+  }
+  </script>
+
+  <style>
+    /* x-cloak gestito dal CSS globale tramite .vw-loading class */
+  </style>
+</head>
+
+<body x-data class="has-sidebar">
+
+  <!-- Texture grain globale (overlay decorativo, pointer-events:none) -->
+  <div class="vw-grain" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       Pagina menù standalone: nav + menu verticale + footer
+       I link della sidebar che puntano alle sezioni della home
+       sono gestiti dal nav block (può rilevare la pagina e
+       prefissare gli anchor con "index.html").
+       ============================================================ -->
+
+  <!-- Sidebar verticale (fissa, scroll-spy) -->
+  <div data-block="blocks/00-nav.html"></div>
+
+  <!-- Menu verticale "locandina" — unico contenuto principale -->
+  <div data-block="blocks/03-menu-verticale.html"></div>
+
+  <!-- Footer -->
+  <div data-block="blocks/10-footer.html"></div>
+
+  <noscript>
+    <div style="padding:2rem;background:#1a120b;color:#f0e3c8;text-align:center;font-family:Georgia,serif">
+      <h2 style="color:#c89b3c">Vecchio West · Menù</h2>
+      <p>Per vedere il menù completo attiva JavaScript nel tuo browser.</p>
+      <p>Oppure chiamaci: <a href="tel:+393520029607" style="color:#c89b3c">+39 352 002 9607</a></p>
+      <p>Strada Cura Mostrapiedi 2294, Sant'Elpidio a Mare (FM)</p>
+      <p><a href="index.html" style="color:#c89b3c">← Torna alla home</a></p>
+    </div>
+  </noscript>
+
+</body>
+</html>

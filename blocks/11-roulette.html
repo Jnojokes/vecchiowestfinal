@@ -1,0 +1,98 @@
+<!-- =========================================================
+     BLOCK 11 · ROULETTE OVERLAY
+     Spin con probabilità configurabile (default 1/25)
+     Modalità: lottery (default) | always_win
+     ========================================================= -->
+<div x-data="vwRoulette('data/roulette.json')" x-init="init()">
+
+  <!-- Trigger floating (visibile solo se attivo e non in cooldown) -->
+  <button
+    type="button"
+    class="vw-roulette-trigger"
+    x-show="data.attivo && triggerVisibile"
+    x-cloak
+    @click="apri()"
+    aria-label="Tenta la fortuna alla roulette"
+    title="Tenta la fortuna"
+    data-gunshot
+  >
+    <span aria-hidden="true">🎯</span>
+  </button>
+
+  <!-- Overlay -->
+  <div
+    class="vw-roulette-overlay"
+    x-show="overlayOpen"
+    x-cloak
+    x-transition.opacity.duration.300ms
+    @keydown.escape.window="chiudi()"
+    role="dialog"
+    aria-modal="true"
+    :aria-label="data.titolo || 'Roulette del West'"
+  >
+    <div class="vw-roulette-modal" @click.stop>
+      <button class="vw-roulette-close" type="button" @click="chiudi()" aria-label="Chiudi">×</button>
+
+      <p class="eyebrow">Round of the House</p>
+      <h2 class="vw-roulette-title" x-text="data.titolo || 'Roulette del West'"></h2>
+      <p class="vw-roulette-sub" x-text="data.sottotitolo || 'Gira la ruota: 1 colpo su 25 vince una birra alla spina'"></p>
+
+      <!-- Ruota -->
+      <div class="vw-roulette-wheel-wrap">
+        <div class="vw-roulette-pointer" aria-hidden="true"></div>
+        <div
+          class="vw-roulette-wheel"
+          :class="{ 'is-spinning': spinning }"
+          :style="`transform: rotate(${rotazioneTotale}deg);`"
+        ></div>
+        <div class="vw-roulette-hub" aria-hidden="true">
+          <span x-text="hubLabel"></span>
+        </div>
+      </div>
+
+      <!-- Azioni -->
+      <div class="vw-roulette-actions" x-show="!risultato && !cooldownAttivo">
+        <button
+          type="button"
+          class="vw-btn"
+          @click="spin()"
+          :disabled="spinning"
+          data-gunshot
+        >
+          <span x-show="!spinning">Spara il colpo</span>
+          <span x-show="spinning">…</span>
+        </button>
+        <button type="button" class="vw-btn vw-btn--ghost" @click="chiudi()">Lascia stare</button>
+      </div>
+
+      <!-- Cooldown -->
+      <div class="vw-roulette-cooldown" x-show="cooldownAttivo && !risultato" x-cloak>
+        Hai già tentato la sorte. Torna fra <span x-text="cooldownFormatted"></span>.
+      </div>
+
+      <!-- Risultato -->
+      <div class="vw-roulette-result" x-show="risultato" x-cloak>
+        <template x-if="risultato === 'win'">
+          <div>
+            <h3 class="vw-roulette-result__title">🍻 Hai vinto!</h3>
+            <p x-text="data.premio_descrizione || 'Una birra alla spina offerta dalla casa.'"></p>
+            <span class="vw-roulette-result__code" x-text="codice"></span>
+            <p class="vw-roulette-meta">Mostra questo codice al banco entro le 02:00 di stasera. Valido una sola volta.</p>
+          </div>
+        </template>
+        <template x-if="risultato === 'lose'">
+          <div>
+            <h3 class="vw-roulette-result__title">Niente birra, stavolta</h3>
+            <p x-text="data.consolazione || 'Il vecchio Tex ha sbagliato mira. Riprova fra 24 ore.'"></p>
+            <div class="vw-roulette-actions" style="margin-top: 1rem;">
+              <button type="button" class="vw-btn vw-btn--ghost" @click="chiudi()">Chiudi</button>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <p class="vw-roulette-meta" x-show="data.disclaimer" x-text="data.disclaimer"></p>
+    </div>
+  </div>
+
+</div>

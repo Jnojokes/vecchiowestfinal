@@ -1,0 +1,32 @@
+{
+  "_note": "BLOCK 08 · Mappa + Contatti. La mappa viene embeddata via Google Maps Embed API; 'maps_query' è la stringa di ricerca. 'apple_maps_url' è il deep link per iOS. Telefono e WhatsApp generano automaticamente i link tel: e wa.me.",
+  "nome": "Vecchio West",
+  "indirizzo": "Strada Cura Mostrapiedi 2294",
+  "cap": "63811",
+  "citta": "Sant'Elpidio a Mare",
+  "provincia": "FM",
+  "regione": "Marche",
+  "nazione": "Italia",
+  "coordinate": {
+    "lat": 43.2225,
+    "lng": 13.6850
+  },
+  "telefono": "+39 352 002 9607",
+  "whatsapp": "+39 352 002 9607",
+  "whatsapp_msg_default": "Ciao, vorrei prenotare un tavolo al Vecchio West",
+  "email": "info@vecchiowestpub.it",
+  "maps_query": "Vecchio West, Strada Cura Mostrapiedi 2294, Sant'Elpidio a Mare",
+  "google_maps_url": "https://maps.google.com/?q=Vecchio+West+Sant'Elpidio+a+Mare",
+  "apple_maps_url": "https://maps.apple.com/?q=Vecchio+West+Sant'Elpidio+a+Mare",
+  "indicazioni_url": "https://www.google.com/maps/dir/?api=1&destination=Vecchio+West+Sant'Elpidio+a+Mare",
+  "orari": [
+    { "giorno": "Lunedì", "apertura": "Chiuso", "chiusura": "" },
+    { "giorno": "Martedì", "apertura": "19:00", "chiusura": "00:30" },
+    { "giorno": "Mercoledì", "apertura": "19:00", "chiusura": "00:30" },
+    { "giorno": "Giovedì", "apertura": "19:00", "chiusura": "00:30" },
+    { "giorno": "Venerdì", "apertura": "19:00", "chiusura": "02:00" },
+    { "giorno": "Sabato", "apertura": "19:00", "chiusura": "02:00" },
+    { "giorno": "Domenica", "apertura": "12:00", "chiusura": "23:30" }
+  ],
+  "mappa_stile_sepia": true
+}

@@ -1,0 +1,210 @@
+{
+  "_note": "BLOCK 03 · Menu Tabs. Aggiungi/rimuovi piatti dentro 'sezioni[].items[]'. 'badge': NUOVO | PICCANTE | MARCHIGIANO | VEGAN | TOP. 'allergeni' opzionale: array di stringhe (glutine, lattosio, uova, sesamo, ecc.). 'foto' opzionale (path relativo da /src/).",
+  "ricerca_allergeni_attiva": true,
+  "sezioni": [
+    {
+      "id": "piatti",
+      "titolo": "Piatti",
+      "icona": "steak",
+      "items": [
+        {
+          "nome": "VECCHIO WEST",
+          "descrizione": "Tagliata di scottona marchigiana, patate al rosmarino, salsa BBQ della casa",
+          "prezzo": "18,00",
+          "badge": ["MARCHIGIANO", "TOP"],
+          "allergeni": [],
+          "foto": "assets/img/menu/vecchio-west.jpg"
+        },
+        {
+          "nome": "TRINITÀ",
+          "descrizione": "Costine glassate al bourbon, fagioli stufati, pane abbrustolito",
+          "prezzo": "16,00",
+          "badge": [],
+          "allergeni": ["glutine"],
+          "foto": "assets/img/menu/trinita.jpg"
+        },
+        {
+          "nome": "GERONIMO",
+          "descrizione": "Mix grigliata: salsiccia, costine, pancetta croccante, verdure al carbone",
+          "prezzo": "22,00",
+          "badge": ["TOP"],
+          "allergeni": [],
+          "foto": "assets/img/menu/geronimo.jpg"
+        },
+        {
+          "nome": "BBQ RIBS",
+          "descrizione": "Ribs di maiale cotte 8 ore, salsa BBQ affumicata, coleslaw western",
+          "prezzo": "19,00",
+          "badge": [],
+          "allergeni": ["sedano"],
+          "foto": "assets/img/menu/bbq-ribs.jpg"
+        },
+        {
+          "nome": "POLLO DEL VECCHIO RESCIFFO",
+          "descrizione": "Mezzo pollo marinato 24h, patate fritte, salsa piccante",
+          "prezzo": "14,00",
+          "badge": ["PICCANTE"],
+          "allergeni": []
+        },
+        {
+          "nome": "TEX MEX",
+          "descrizione": "Hamburger 300gr di scottona marchigiana, cheddar, bacon, salsa tex mex",
+          "prezzo": "15,00",
+          "badge": ["MARCHIGIANO", "TOP"],
+          "allergeni": ["glutine", "lattosio"],
+          "foto": "assets/img/menu/tex-mex.jpg"
+        },
+        {
+          "nome": "DOPPIO TEX",
+          "descrizione": "Doppio hamburger di scottona, doppio cheddar, cipolle caramellate",
+          "prezzo": "18,00",
+          "badge": ["MARCHIGIANO"],
+          "allergeni": ["glutine", "lattosio"],
+          "foto": "assets/img/menu/doppio-tex.jpg"
+        }
+      ]
+    },
+    {
+      "id": "panini",
+      "titolo": "Panini",
+      "icona": "burger",
+      "items": [
+        {
+          "nome": "CAMPAGNOLO",
+          "descrizione": "Hamburger di scottona, pancetta, scamorza affumicata, cipolla rossa",
+          "prezzo": "12,00",
+          "badge": ["MARCHIGIANO"],
+          "allergeni": ["glutine", "lattosio"]
+        },
+        {
+          "nome": "IL CATTIVO",
+          "descrizione": "Doppio hamburger, cheddar fuso, jalapeños, salsa Tabasco western",
+          "prezzo": "13,50",
+          "badge": ["PICCANTE"],
+          "allergeni": ["glutine", "lattosio"]
+        }
+      ]
+    },
+    {
+      "id": "piadine",
+      "titolo": "Piadine",
+      "icona": "flatbread",
+      "items": [
+        {
+          "nome": "L'ULTIMA PISTOLA",
+          "descrizione": "Salame ventricina, stracciatella, rucola, scaglie di pecorino",
+          "prezzo": "9,50",
+          "badge": ["MARCHIGIANO", "PICCANTE"],
+          "allergeni": ["glutine", "lattosio"],
+          "foto": "assets/img/menu/piadina-ultima-pistola.jpg"
+        },
+        {
+          "nome": "LA BALLATA DEL MATTO",
+          "descrizione": "Porchetta, cipolla agrodolce, senape, insalata",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": ["glutine"]
+        },
+        {
+          "nome": "WESTERN ALL'ITALIANA",
+          "descrizione": "Prosciutto crudo, squacquerone, fichi caramellati",
+          "prezzo": "9,50",
+          "badge": ["MARCHIGIANO"],
+          "allergeni": ["glutine", "lattosio"]
+        },
+        {
+          "nome": "LO SCIACALLO",
+          "descrizione": "Verdure grigliate, hummus, formaggio fresco vegetale",
+          "prezzo": "8,50",
+          "badge": ["VEGAN"],
+          "allergeni": ["glutine", "sesamo"]
+        }
+      ]
+    },
+    {
+      "id": "fritti",
+      "titolo": "Fritti",
+      "icona": "fries",
+      "items": [
+        {
+          "nome": "OLIVE ASCOLANA",
+          "descrizione": "La specialità marchigiana: 8 olive ripiene fritte al momento",
+          "prezzo": "7,00",
+          "badge": ["MARCHIGIANO", "TOP"],
+          "allergeni": ["glutine", "uova"],
+          "foto": "assets/img/menu/olive-ascolana.jpg"
+        },
+        {
+          "nome": "CREMINI",
+          "descrizione": "Crocchette cremose di formaggio, panate e fritte",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": ["glutine", "lattosio", "uova"]
+        },
+        {
+          "nome": "MOZZARELLINE STICK",
+          "descrizione": "Bastoncini di mozzarella croccanti con salsa BBQ",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": ["glutine", "lattosio"]
+        },
+        {
+          "nome": "ANELLI DI CIPOLLA",
+          "descrizione": "Onion rings croccanti con salsa ranch",
+          "prezzo": "5,50",
+          "badge": [],
+          "allergeni": ["glutine", "lattosio"]
+        },
+        {
+          "nome": "PEPITE DI POLLO",
+          "descrizione": "Bocconcini di pollo croccanti con salsa BBQ o miele e senape",
+          "prezzo": "7,00",
+          "badge": [],
+          "allergeni": ["glutine"]
+        },
+        {
+          "nome": "BANDIDOS DI POLLO",
+          "descrizione": "Strisce di pollo piccanti speziate alla messicana",
+          "prezzo": "8,00",
+          "badge": ["PICCANTE", "NUOVO"],
+          "allergeni": ["glutine"]
+        }
+      ]
+    },
+    {
+      "id": "birre",
+      "titolo": "Birre",
+      "icona": "beer",
+      "items": [
+        {
+          "nome": "Birra alla Spina Vecchio West",
+          "descrizione": "La nostra bionda artigianale — media 0,4L",
+          "prezzo": "5,00",
+          "badge": ["TOP"],
+          "allergeni": ["glutine"]
+        },
+        {
+          "nome": "IPA Outlaw",
+          "descrizione": "IPA agrumata e luppolata — bottiglia 33cl",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": ["glutine"]
+        },
+        {
+          "nome": "Rossa del Sceriffo",
+          "descrizione": "Doppio malto rossa, note caramellate — bottiglia 33cl",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": ["glutine"]
+        },
+        {
+          "nome": "Birra senza glutine",
+          "descrizione": "Bottiglia 33cl — disponibile su richiesta",
+          "prezzo": "5,50",
+          "badge": [],
+          "allergeni": []
+        }
+      ]
+    }
+  ]
+}

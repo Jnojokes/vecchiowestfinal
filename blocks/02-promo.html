@@ -1,0 +1,105 @@
+<!-- ============================================================
+     BLOCK 02 · PROMO BANNER DINAMICO
+     Dati: /data/promo.json
+     Posizione: SOPRA HEADER, sticky top
+     ============================================================ -->
+<aside
+  id="promo-banner"
+  class="vw-promo"
+  x-data="vwPromoBanner('data/promo.json')"
+  x-show="visible && current && !isExpired(current)"
+  :class="`theme-${current?.theme || 'western'}`"
+  x-transition.duration.400ms
+  x-cloak
+  role="region"
+  aria-label="Banner promozionale"
+>
+  <div class="vw-promo__inner">
+    <span class="vw-promo__star" aria-hidden="true">★</span>
+    <div class="vw-promo__text">
+      <strong x-text="current?.title"></strong>
+      <span class="vw-promo__sub" x-text="current?.subtitle"></span>
+    </div>
+    <a
+      :href="current?.cta_link"
+      class="vw-promo__cta"
+      x-text="current?.cta_text"
+      x-show="current?.cta_text"
+    ></a>
+    <button
+      class="vw-promo__close"
+      @click="dismiss()"
+      x-show="current?.dismissable !== false"
+      aria-label="Chiudi banner promozionale"
+    >×</button>
+  </div>
+</aside>
+
+<style>
+  .vw-promo {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: linear-gradient(90deg, var(--vw-gold-dark), var(--vw-gold), var(--vw-gold-dark));
+    color: var(--vw-bg);
+    font-family: var(--font-headline);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    box-shadow: var(--shadow-sm);
+  }
+  .vw-promo.theme-latin {
+    background: linear-gradient(90deg, #6c2456, var(--vw-latin-magenta), #6c2456);
+    color: var(--vw-paper);
+  }
+  .vw-promo.theme-festive {
+    background: linear-gradient(90deg, var(--vw-red), var(--vw-red-2), var(--vw-red));
+    color: var(--vw-paper);
+  }
+  .vw-promo__inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0.55rem var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+  }
+  .vw-promo__star { font-size: 1rem; opacity: 0.9; }
+  .vw-promo__text {
+    flex: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+  }
+  .vw-promo__sub {
+    font-family: var(--font-body);
+    font-weight: 400;
+    opacity: 0.85;
+    font-size: 0.82rem;
+  }
+  .vw-promo__cta {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+  .vw-promo__close {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0.3rem;
+    opacity: 0.7;
+  }
+  .vw-promo__close:hover { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .vw-promo__sub { display: none; }
+    .vw-promo__inner { gap: 0.4rem; padding: 0.5rem 0.8rem; }
+  }
+</style>

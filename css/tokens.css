@@ -1,0 +1,87 @@
+/* =========================================================
+   VECCHIO WEST · DESIGN TOKENS
+   Spaghetti western italiano (Sergio Leone) — palette desaturata
+   Accenti latin/cobalt SOLO nei blocchi DJ Flow
+   ========================================================= */
+
+:root {
+  /* --- Palette base — terra, seppia, polvere --- */
+  --vw-bg: #1a120b;            /* terra bruciata profonda — fondo notte */
+  --vw-bg-2: #2a1d12;          /* terra bruciata 2 — sezioni */
+  --vw-paper: #f0e3c8;         /* pergamena cream */
+  --vw-paper-2: #d9c39a;       /* pergamena bruciata */
+  --vw-sand: #b89b6a;          /* sabbia / cuoio */
+  --vw-dust: #7a5a3a;           /* polvere strada */
+  --vw-ink: #2a1d12;           /* inchiostro su carta */
+
+  /* --- Accenti oro pallido — CTA, dettagli scrollwork --- */
+  --vw-gold: #c89b3c;          /* oro pallido principale */
+  --vw-gold-2: #e3b75a;        /* oro chiaro highlight */
+  --vw-gold-dark: #8a6a26;     /* oro brunito ombra */
+
+  /* --- Rosso bruciato — uso parsimonioso (badge piccante, sangue ocra) --- */
+  --vw-red: #8c2f1b;
+  --vw-red-2: #b14a30;
+
+  /* --- Accenti DJ Flow / Latin Night — SOLO blocchi marcati .theme-latin --- */
+  --vw-latin-magenta: #b53a7a;  /* fucsia desaturato, non neon */
+  --vw-latin-cobalt: #2e4f8a;   /* cobalto profondo, non saturo */
+  --vw-latin-accent: #c45a8a;
+
+  /* --- Tipografia --- */
+  --font-display: 'Rye', 'Georgia', serif;
+  --font-headline: 'Oswald', 'Impact', sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Special Elite', 'Courier New', monospace;
+
+  /* --- Spacing scale --- */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+
+  /* --- Border radius — angoli rustici, mai super arrotondati --- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+
+  /* --- Shadows — caldi, luce di lanterna --- */
+  --shadow-sm: 0 1px 2px rgba(26, 18, 11, 0.4);
+  --shadow-md: 0 4px 12px rgba(26, 18, 11, 0.45);
+  --shadow-lg: 0 16px 40px rgba(26, 18, 11, 0.55);
+  --shadow-gold: 0 0 24px rgba(200, 155, 60, 0.25);
+
+  /* --- Layout --- */
+  --container-max: 1280px;
+  --header-h: 64px;
+  --promo-h: 44px;
+
+  /* --- Sidebar verticale (nuovo) --- */
+  --sidebar-w: 72px;
+  --sidebar-w-expanded: 240px;
+  --sidebar-z: 80;
+  --sidebar-bg: rgba(26, 18, 11, 0.92);
+  --sidebar-border: rgba(200, 155, 60, 0.18);
+
+  /* --- Roulette overlay (nuovo) --- */
+  --roulette-overlay-z: 100;
+  --roulette-wheel-size: clamp(280px, 70vw, 480px);
+  --roulette-spin-duration: 4s;
+  --roulette-backdrop: rgba(10, 7, 4, 0.92);
+
+  /* --- Gunshot effect (nuovo) --- */
+  --gunshot-z: 90;
+  --gunshot-fade-ms: 1200ms;
+  --gunshot-size: clamp(56px, 14vw, 96px);
+
+  /* --- Easings custom (nuovo) --- */
+  --vw-ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --vw-ease-bullet: cubic-bezier(0.1, 0.8, 0.2, 1);
+  --vw-ease-spin: cubic-bezier(0.16, 0.84, 0.27, 1);
+
+  /* --- Grain / texture overlay (nuovo) --- */
+  --grain-opacity: 0.045;
+  --grain-z: 1;
+}

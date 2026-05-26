@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a120b" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- SEO ============================================== -->
+  <title>Vecchio West · Pub western a Sant'Elpidio a Mare · BBQ al tavolo</title>
+  <meta name="description" content="Vecchio West: spaghetti western italiano, hamburgheria, griglia e barbecue personale al tavolo a Sant'Elpidio a Mare. Scottona marchigiana, olive ascolana, eventi DJ Latin Night. Prenota su WhatsApp." />
+  <meta name="keywords" content="pub western marche, bbq al tavolo, hamburger sant'elpidio, scottona marchigiana, ristorante western fermo, olive ascolana, dj flow, latin night, civitanova marche" />
+  <link rel="canonical" href="https://www.vecchiowestpub.it/" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+
+  <!-- Open Graph / FB -->
+  <meta property="og:type" content="restaurant" />
+  <meta property="og:title" content="Vecchio West · Pub western italiano · BBQ al tavolo" />
+  <meta property="og:description" content="Spaghetti western italiano, hamburgheria, griglia e barbecue personale al tavolo. Sant'Elpidio a Mare." />
+  <meta property="og:image" content="https://www.vecchiowestpub.it/assets/img/og-cover.jpg" />
+  <meta property="og:url" content="https://www.vecchiowestpub.it/" />
+  <meta property="og:locale" content="it_IT" />
+  <meta property="og:site_name" content="Vecchio West" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Vecchio West · BBQ al tavolo" />
+  <meta name="twitter:description" content="Spaghetti western italiano a Sant'Elpidio a Mare. BBQ personale al tavolo, scottona marchigiana, olive ascolana." />
+  <meta name="twitter:image" content="https://www.vecchiowestpub.it/assets/img/og-cover.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png" />
+
+  <!-- Preload critical -->
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Rye-Regular.woff2" crossorigin />
+  <link rel="preload" as="image" href="assets/img/hero-poster.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css" />
+
+  <!-- Tailwind CDN — solo per utility extra. In produzione: build statica con tailwindcss CLI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { vw: { gold: '#c89b3c', paper: '#f0e3c8', bg: '#1a120b' } } } }
+    }
+  </script>
+
+  <!-- app.js gestisce tutto: carica blocchi → inietta Alpine.js dinamicamente -->
+  <script src="js/app.js"></script>
+
+  <!-- =========================================================
+       Schema.org JSON-LD
+       Restaurant + LocalBusiness + Event (inaugurazione)
+       ========================================================= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["Restaurant", "LocalBusiness"],
+        "@id": "https://www.vecchiowestpub.it/#restaurant",
+        "name": "Vecchio West",
+        "description": "Pub spaghetti western italiano con hamburgheria, griglia e barbecue personale al tavolo. Sant'Elpidio a Mare.",
+        "url": "https://www.vecchiowestpub.it/",
+        "telephone": "+393520029607",
+        "email": "info@vecchiowestpub.it",
+        "image": [
+          "https://www.vecchiowestpub.it/assets/img/og-cover.jpg",
+          "https://www.vecchiowestpub.it/assets/img/bbq-tavolo.jpg"
+        ],
+        "logo": "https://www.vecchiowestpub.it/assets/img/logo.png",
+        "priceRange": "€€",
+        "servesCuisine": ["Hamburger", "Barbecue", "Cucina marchigiana", "Tex Mex", "Pub food"],
+        "acceptsReservations": "True",
+        "currenciesAccepted": "EUR",
+        "paymentAccepted": "Cash, Credit Card, Debit Card",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Strada Cura Mostrapiedi 2294",
+          "addressLocality": "Sant'Elpidio a Mare",
+          "addressRegion": "FM",
+          "postalCode": "63811",
+          "addressCountry": "IT"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 43.2225,
+          "longitude": 13.6850
+        },
+        "openingHoursSpecification": [
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday"], "opens": "19:00", "closes": "00:30" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Friday","Saturday"], "opens": "19:00", "closes": "02:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "12:00", "closes": "23:30" }
+        ],
+        "sameAs": [
+          "https://instagram.com/vecchiowest.pub",
+          "https://facebook.com/vecchiowest"
+        ],
+        "hasMenu": "https://www.vecchiowestpub.it/#menu",
+        "areaServed": {
+          "@type": "City",
+          "name": ["Sant'Elpidio a Mare", "Civitanova Marche", "Fermo", "Porto Sant'Elpidio"]
+        }
+      },
+      {
+        "@type": "Event",
+        "@id": "https://www.vecchiowestpub.it/#inaugurazione",
+        "name": "Inaugurazione Vecchio West · DJ Flow Latin Night",
+        "startDate": "2026-05-29T19:00:00+02:00",
+        "endDate": "2026-05-30T02:00:00+02:00",
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "eventStatus": "https://schema.org/EventScheduled",
+        "location": {
+          "@type": "Place",
+          "name": "Vecchio West",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Strada Cura Mostrapiedi 2294",
+            "addressLocality": "Sant'Elpidio a Mare",
+            "addressRegion": "FM",
+            "postalCode": "63811",
+            "addressCountry": "IT"
+          }
+        },
+        "image": "https://www.vecchiowestpub.it/assets/img/eventi/inaugurazione.jpg",
+        "description": "Apertura ufficiale del Vecchio West con DJ Flow set Reggaeton & Latin Urban dalle 21:00.",
+        "organizer": {
+          "@type": "Organization",
+          "name": "Vecchio West",
+          "url": "https://www.vecchiowestpub.it"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "EUR",
+          "availability": "https://schema.org/InStock",
+          "url": "https://www.vecchiowestpub.it/#eventi"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Analytics: GA4 + Meta Pixel + Microsoft Clarity (placeholder, da configurare in deploy) -->
+  <!--
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', 'G-XXXXXXX');
+  </script>
+  -->
+
+  <style>
+    /* x-cloak gestito dal CSS globale tramite .vw-loading class */
+  </style>
+</head>
+
+<body x-data class="has-sidebar">
+
+  <!-- Texture grain globale (overlay decorativo, pointer-events:none) -->
+  <div class="vw-grain" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       Slot blocchi modulari — caricati da js/app.js via fetch
+       L'ordine determina la disposizione in pagina.
+       Per disattivare un blocco: rimuovi o commenta lo slot.
+       ============================================================ -->
+
+  <!-- Sidebar verticale (fissa, scroll-spy) -->
+  <div data-block="blocks/00-nav.html"></div>
+
+  <div data-block="blocks/02-promo.html"></div>
+  <div data-block="blocks/01-hero.html"></div>
+  <div data-block="blocks/03-menu.html"></div>
+  <div data-block="blocks/04-usp-bbq.html"></div>
+  <div data-block="blocks/05-eventi.html"></div>
+  <div data-block="blocks/06-galleria.html"></div>
+  <div data-block="blocks/07-recensioni.html"></div>
+  <div data-block="blocks/08-contatti.html"></div>
+  <div data-block="blocks/10-footer.html"></div>
+  <div data-block="blocks/09-sticky-cta.html"></div>
+
+  <!-- Roulette overlay (in fondo: trigger floating + modal) -->
+  <div data-block="blocks/11-roulette.html"></div>
+
+  <noscript>
+    <div style="padding:2rem;background:#1a120b;color:#f0e3c8;text-align:center;font-family:Georgia,serif">
+      <h2 style="color:#c89b3c">Vecchio West</h2>
+      <p>Per vedere il sito attiva JavaScript nel tuo browser.</p>
+      <p>Oppure chiamaci: <a href="tel:+393520029607" style="color:#c89b3c">+39 352 002 9607</a></p>
+      <p>Strada Cura Mostrapiedi 2294, Sant'Elpidio a Mare (FM)</p>
+    </div>
+  </noscript>
+
+</body>
+</html>

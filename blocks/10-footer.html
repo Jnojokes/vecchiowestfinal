@@ -1,0 +1,181 @@
+<!-- ============================================================
+     BLOCK 10 · FOOTER
+     Dati: /data/footer.json
+     ============================================================ -->
+<footer
+  class="vw-footer"
+  x-data="vwBlock('footer', 'data/footer.json')"
+  x-cloak
+>
+  <div class="vw-container">
+    <div class="vw-footer__grid">
+
+      <div class="vw-footer__brand">
+        <div class="vw-footer__logo">VECCHIO WEST</div>
+        <p class="vw-footer__claim" x-text="data.claim_footer"></p>
+        <div class="vw-footer__social">
+          <template x-for="s in data.social" :key="s.nome">
+            <a :href="s.link" target="_blank" rel="noopener" :aria-label="s.nome" class="vw-footer__social-link">
+              <span x-text="s.nome.charAt(0)"></span>
+            </a>
+          </template>
+        </div>
+      </div>
+
+      <div class="vw-footer__newsletter" x-show="data.newsletter?.attiva">
+        <h3 x-text="data.newsletter?.titolo"></h3>
+        <p class="vw-footer__news-sub" x-text="data.newsletter?.sottotitolo"></p>
+        <form
+          :action="data.newsletter?.mailchimp_action"
+          method="post"
+          target="_blank"
+          class="vw-footer__form"
+          @submit="trackNewsletter($event)"
+        >
+          <input
+            type="email"
+            name="EMAIL"
+            :placeholder="data.newsletter?.placeholder"
+            required
+            class="vw-footer__input"
+          />
+          <button type="submit" class="vw-btn">
+            <span x-text="data.newsletter?.cta"></span>
+          </button>
+        </form>
+        <p class="vw-footer__gdpr" x-text="data.newsletter?.gdpr_text"></p>
+      </div>
+
+      <div class="vw-footer__legal">
+        <h3>Legale</h3>
+        <ul>
+          <template x-for="l in data.link_legali" :key="l.testo">
+            <li><a :href="l.link" x-text="l.testo"></a></li>
+          </template>
+        </ul>
+        <p class="vw-footer__piva" x-text="data.partita_iva"></p>
+      </div>
+
+    </div>
+
+    <div class="vw-footer__bottom">
+      <p class="vw-footer__credits">
+        © <span x-text="new Date().getFullYear()"></span> Vecchio West ·
+        <a :href="data.crediti_link" target="_blank" rel="noopener" x-text="data.crediti"></a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .vw-footer {
+    background: #0f0a06;
+    padding: var(--space-xl) 0 var(--space-md);
+    border-top: 1px solid rgba(200, 155, 60, 0.2);
+    position: relative;
+    z-index: 2;
+  }
+  .vw-footer__grid {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .vw-footer__grid { grid-template-columns: 1.2fr 1.4fr 1fr; }
+  }
+
+  .vw-footer__logo {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    color: var(--vw-gold);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+  }
+  .vw-footer__claim {
+    color: var(--vw-paper-2);
+    font-size: 0.88rem;
+    margin-bottom: var(--space-md);
+    max-width: 30ch;
+  }
+  .vw-footer__social {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .vw-footer__social-link {
+    width: 38px; height: 38px;
+    border: 1px solid var(--vw-gold);
+    color: var(--vw-gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-headline);
+    font-weight: 600;
+    transition: background .2s ease, color .2s ease;
+  }
+  .vw-footer__social-link:hover { background: var(--vw-gold); color: var(--vw-bg); }
+
+  .vw-footer__newsletter h3,
+  .vw-footer__legal h3 {
+    font-family: var(--font-display);
+    color: var(--vw-paper);
+    font-size: 1.05rem;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .vw-footer__news-sub {
+    color: var(--vw-paper-2);
+    font-size: 0.85rem;
+    margin-bottom: var(--space-sm);
+  }
+  .vw-footer__form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .vw-footer__input {
+    flex: 1;
+    min-width: 180px;
+    padding: 0.7rem 0.9rem;
+    background: var(--vw-bg-2);
+    border: 1px solid var(--vw-dust);
+    color: var(--vw-paper);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+  }
+  .vw-footer__gdpr {
+    font-size: 0.72rem;
+    color: var(--vw-dust);
+    margin-top: 0.3rem;
+  }
+
+  .vw-footer__legal ul {
+    list-style: none;
+    margin-bottom: var(--space-sm);
+  }
+  .vw-footer__legal li {
+    padding: 0.2rem 0;
+    font-size: 0.88rem;
+  }
+  .vw-footer__legal a { color: var(--vw-paper-2); }
+  .vw-footer__legal a:hover { color: var(--vw-gold); }
+  .vw-footer__piva {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--vw-dust);
+  }
+
+  .vw-footer__bottom {
+    text-align: center;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px dashed rgba(200, 155, 60, 0.15);
+  }
+  .vw-footer__credits {
+    color: var(--vw-paper-2);
+    font-size: 0.8rem;
+  }
+  .vw-footer__credits a { color: var(--vw-gold); }
+</style>

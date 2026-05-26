@@ -1,0 +1,129 @@
+<!-- ============================================================
+     BLOCK 01 · HERO
+     Dati: /data/hero.json
+     Dipende da: nessun blocco; deve apparire per primo
+     ============================================================ -->
+<section
+  id="hero"
+  class="vw-hero"
+  x-data="vwBlock('hero', 'data/hero.json')"
+  x-cloak
+>
+  <div class="vw-hero__media">
+    <video
+      x-show="data.video_url"
+      :poster="data.video_poster"
+      autoplay muted loop playsinline preload="metadata"
+      class="vw-hero__video"
+      aria-hidden="true"
+    >
+      <source :src="data.video_url" type="video/mp4" />
+    </video>
+    <img
+      x-show="!data.video_url"
+      :src="data.image_fallback"
+      alt=""
+      class="vw-hero__img"
+    />
+    <div
+      class="vw-hero__overlay"
+      :style="`background: linear-gradient(180deg, rgba(26,18,11,${(data.overlay_opacita||0.5)*0.6}) 0%, rgba(26,18,11,${data.overlay_opacita||0.5}) 60%, rgba(26,18,11,0.95) 100%)`"
+    ></div>
+  </div>
+
+  <div class="vw-container vw-hero__content">
+    <div class="vw-hero__logo" aria-hidden="true">
+      <span class="vw-hero__logo-frame">★</span>
+    </div>
+    <h1 class="vw-hero__claim vw-anim-fade-up" x-text="data.claim"></h1>
+    <p class="vw-hero__claim-2 vw-anim-fade-up" x-text="data.claim_secondario"></p>
+
+    <div class="vw-hero__cta vw-anim-fade-up">
+      <a
+        :href="data.cta_primario?.link"
+        class="vw-btn"
+        x-text="data.cta_primario?.testo"
+      ></a>
+      <a
+        :href="data.cta_secondario?.link"
+        class="vw-btn vw-btn--ghost"
+        x-text="data.cta_secondario?.testo"
+      ></a>
+    </div>
+  </div>
+
+  <a
+    href="#menu"
+    class="vw-hero__scroll"
+    x-show="data.scroll_indicator"
+    aria-label="Scorri per scoprire il menù"
+  >
+    <span></span>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l-6-6h12z"/></svg>
+  </a>
+</section>
+
+<style>
+  .vw-hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    isolation: isolate;
+    text-align: center;
+  }
+  .vw-hero__media { position: absolute; inset: 0; z-index: -1; }
+  .vw-hero__video,
+  .vw-hero__img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: sepia(0.35) saturate(0.85) contrast(1.05) brightness(0.9);
+  }
+  .vw-hero__overlay { position: absolute; inset: 0; }
+  .vw-hero__content { position: relative; padding: var(--space-xl) var(--space-md); }
+  .vw-hero__logo {
+    margin: 0 auto var(--space-md);
+    width: 80px; height: 80px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--vw-gold);
+    font-size: 2.5rem;
+    border: 2px solid var(--vw-gold);
+    border-radius: 50%;
+    background: rgba(26, 18, 11, 0.5);
+  }
+  .vw-hero__claim {
+    text-shadow: 0 4px 24px rgba(0,0,0,0.6);
+    margin-bottom: var(--space-sm);
+  }
+  .vw-hero__claim-2 {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.9rem;
+    color: var(--vw-paper-2);
+    margin-bottom: var(--space-lg);
+  }
+  .vw-hero__cta {
+    display: flex; flex-wrap: wrap; gap: var(--space-sm);
+    justify-content: center;
+  }
+  .vw-hero__scroll {
+    position: absolute;
+    bottom: var(--space-md);
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--vw-gold);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: vw-scroll-hint 2s ease-in-out infinite;
+  }
+  .vw-hero__scroll span {
+    width: 1px; height: 28px;
+    background: linear-gradient(180deg, transparent, var(--vw-gold));
+    margin-bottom: 4px;
+  }
+  .vw-hero__scroll svg { width: 18px; height: 18px; }
+</style>

@@ -1,0 +1,146 @@
+<!-- ============================================================
+     BLOCK 08 · MAPPA + CONTATTI
+     Dati: /data/contatti.json
+     ============================================================ -->
+<section
+  id="contatti"
+  class="vw-section vw-contatti"
+  x-data="vwBlock('contatti', 'data/contatti.json')"
+  x-cloak
+>
+  <div class="vw-container vw-contatti__grid">
+
+    <div class="vw-contatti__info">
+      <p class="eyebrow">Dove ci trovi</p>
+      <h2 x-text="data.nome"></h2>
+      <p class="vw-contatti__addr">
+        <span x-text="data.indirizzo"></span><br/>
+        <span x-text="`${data.cap} ${data.citta} (${data.provincia})`"></span>
+      </p>
+
+      <div class="vw-contatti__actions">
+        <a :href="`tel:${data.telefono?.replace(/\s/g,'')}`" class="vw-btn vw-btn--ghost">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          <span x-text="data.telefono"></span>
+        </a>
+        <a :href="`https://wa.me/${data.whatsapp?.replace(/\D/g,'')}?text=${encodeURIComponent(data.whatsapp_msg_default || '')}`" target="_blank" rel="noopener" class="vw-btn">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.95 11.95 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.18-3.48-8.52zM12 22a9.93 9.93 0 0 1-5.07-1.39l-.36-.21-3.66.96.98-3.57-.24-.37A9.93 9.93 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/></svg>
+          WhatsApp
+        </a>
+        <a :href="`mailto:${data.email}`" class="vw-btn vw-btn--ghost">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          <span x-text="data.email"></span>
+        </a>
+      </div>
+
+      <div class="vw-contatti__orari">
+        <h3>Orari</h3>
+        <ul>
+          <template x-for="o in data.orari" :key="o.giorno">
+            <li>
+              <span x-text="o.giorno"></span>
+              <em x-text="o.apertura === 'Chiuso' ? 'Chiuso' : `${o.apertura} – ${o.chiusura}`"></em>
+            </li>
+          </template>
+        </ul>
+      </div>
+
+      <div class="vw-contatti__map-actions">
+        <a :href="data.google_maps_url" target="_blank" rel="noopener" class="vw-btn vw-btn--ghost">Apri in Google Maps</a>
+        <a :href="data.apple_maps_url" target="_blank" rel="noopener" class="vw-btn vw-btn--ghost">Apri in Apple Maps</a>
+        <a :href="data.indicazioni_url" target="_blank" rel="noopener" class="vw-btn">Indicazioni stradali</a>
+      </div>
+    </div>
+
+    <div class="vw-contatti__map">
+      <iframe
+        :src="`https://www.google.com/maps?q=${encodeURIComponent(data.maps_query || '')}&output=embed`"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Mappa Vecchio West"
+        :class="{ 'vw-contatti__map-sepia': data.mappa_stile_sepia }"
+      ></iframe>
+      <div class="vw-contatti__map-overlay" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vw-contatti { background: var(--vw-bg); }
+  .vw-contatti__grid {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .vw-contatti__grid { grid-template-columns: 1fr 1.1fr; align-items: stretch; }
+  }
+
+  .vw-contatti__addr {
+    color: var(--vw-paper-2);
+    margin: var(--space-sm) 0 var(--space-md);
+    font-size: 1.05rem;
+  }
+  .vw-contatti__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: var(--space-md);
+  }
+  .vw-contatti__actions .vw-btn { font-size: 0.82rem; padding: 0.7rem 1rem; }
+
+  .vw-contatti__orari {
+    background: var(--vw-bg-2);
+    padding: var(--space-md);
+    border: 1px solid rgba(200, 155, 60, 0.18);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+  }
+  .vw-contatti__orari h3 {
+    font-family: var(--font-display);
+    color: var(--vw-gold);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .vw-contatti__orari ul { list-style: none; }
+  .vw-contatti__orari li {
+    display: flex; justify-content: space-between;
+    padding: 0.3rem 0;
+    border-bottom: 1px dashed rgba(200, 155, 60, 0.15);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .vw-contatti__orari li:last-child { border-bottom: 0; }
+  .vw-contatti__orari em { font-style: normal; color: var(--vw-paper-2); }
+
+  .vw-contatti__map-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .vw-contatti__map-actions .vw-btn { font-size: 0.8rem; padding: 0.6rem 0.9rem; }
+
+  .vw-contatti__map {
+    position: relative;
+    min-height: 360px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid rgba(200, 155, 60, 0.25);
+  }
+  .vw-contatti__map iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .vw-contatti__map-sepia { filter: sepia(0.5) saturate(0.85) contrast(1.1); }
+  .vw-contatti__map-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(26,18,11,0.05), rgba(26,18,11,0.15));
+    pointer-events: none;
+  }
+</style>

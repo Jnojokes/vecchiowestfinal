@@ -1,0 +1,57 @@
+{
+  "brand": "Vecchio West",
+  "voci": [
+    {
+      "id": "hero",
+      "label": "Home",
+      "href": "#hero",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><path d='M3 11l9-8 9 8'/><path d='M5 10v10h14V10'/></svg>"
+    },
+    {
+      "id": "menu",
+      "label": "Menu",
+      "href": "#menu",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><path d='M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3V4z'/><line x1='9' y1='9' x2='15' y2='9'/><line x1='9' y1='13' x2='15' y2='13'/></svg>"
+    },
+    {
+      "id": "bbq",
+      "label": "BBQ al tavolo",
+      "href": "#bbq",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><path d='M4 9h16l-2 6a4 4 0 01-4 3h-4a4 4 0 01-4-3L4 9z'/><line x1='12' y1='3' x2='12' y2='7'/><line x1='9' y1='5' x2='9' y2='7'/><line x1='15' y1='5' x2='15' y2='7'/></svg>"
+    },
+    {
+      "id": "eventi",
+      "label": "Eventi",
+      "href": "#eventi",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><rect x='4' y='5' width='16' height='15' rx='2'/><line x1='4' y1='10' x2='20' y2='10'/><line x1='8' y1='3' x2='8' y2='7'/><line x1='16' y1='3' x2='16' y2='7'/></svg>"
+    },
+    {
+      "id": "galleria",
+      "label": "Galleria",
+      "href": "#galleria",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><rect x='3' y='5' width='18' height='14' rx='2'/><circle cx='9' cy='10' r='1.5'/><path d='M21 17l-5-5-6 6'/></svg>"
+    },
+    {
+      "id": "recensioni",
+      "label": "Recensioni",
+      "href": "#recensioni",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><polygon points='12 2 15 8 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 8'/></svg>"
+    },
+    {
+      "id": "contatti",
+      "label": "Contatti",
+      "href": "#contatti",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><path d='M3 7l9 6 9-6'/><rect x='3' y='5' width='18' height='14' rx='2'/></svg>"
+    },
+    {
+      "id": "roulette",
+      "label": "Tenta la sorte",
+      "href": "#roulette",
+      "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><circle cx='12' cy='12' r='9'/><circle cx='12' cy='12' r='3.5'/><line x1='12' y1='3' x2='12' y2='8'/><line x1='12' y1='16' x2='12' y2='21'/><line x1='3' y1='12' x2='8' y2='12'/><line x1='16' y1='12' x2='21' y2='12'/></svg>"
+    }
+  ],
+  "cta": {
+    "label": "Prenota",
+    "href": "https://wa.me/393520029607?text=Ciao%20Vecchio%20West!%20Vorrei%20prenotare%20un%20tavolo."
+  }
+}

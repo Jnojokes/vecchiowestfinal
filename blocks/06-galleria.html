@@ -1,0 +1,194 @@
+<!-- ============================================================
+     BLOCK 06 · GALLERIA FOTO/VIDEO
+     Dati: /data/galleria.json
+     ============================================================ -->
+<section
+  id="galleria"
+  class="vw-section vw-galleria"
+  x-data="vwGalleria('data/galleria.json')"
+  x-cloak
+>
+  <div class="vw-container">
+    <div class="vw-section__head">
+      <p class="eyebrow">Dentro il saloon</p>
+      <h2>Galleria</h2>
+      <div class="vw-divider"><svg viewBox="0 0 24 24"><path d="M12 2l2.39 7.35H22l-6.19 4.5L18.2 21 12 16.5 5.8 21l2.39-7.15L2 9.35h7.61z"/></svg></div>
+    </div>
+
+    <!-- Filtri tag -->
+    <nav class="vw-galleria__tags" role="tablist">
+      <template x-for="tag in data.tag_disponibili" :key="tag">
+        <button
+          class="vw-galleria__tag"
+          :class="{ 'is-active': tagAttivo === tag }"
+          @click="tagAttivo = tag"
+          x-text="tag"
+          role="tab"
+          :aria-selected="tagAttivo === tag"
+        ></button>
+      </template>
+    </nav>
+
+    <!-- Masonry grid -->
+    <div class="vw-galleria__grid">
+      <template x-for="(asset, i) in assetVisibili" :key="i">
+        <button
+          class="vw-galleria__item"
+          :class="`vw-galleria__item--${asset.ratio?.replace(':','-') || '1-1'}`"
+          @click="apriLightbox(i)"
+          :aria-label="asset.alt"
+        >
+          <template x-if="asset.tipo === 'video'">
+            <div class="vw-galleria__video-thumb">
+              <img :src="asset.poster" :alt="asset.alt" loading="lazy"/>
+              <span class="vw-galleria__play" aria-hidden="true">▶</span>
+            </div>
+          </template>
+          <template x-if="asset.tipo === 'foto'">
+            <img :src="asset.src" :alt="asset.alt" loading="lazy"/>
+          </template>
+        </button>
+      </template>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div
+    class="vw-lightbox"
+    x-show="lightboxOpen"
+    @click.self="lightboxOpen = false"
+    @keydown.escape.window="lightboxOpen = false"
+    @keydown.left.window="lightboxOpen && prev()"
+    @keydown.right.window="lightboxOpen && next()"
+    x-transition.opacity
+    role="dialog"
+    aria-modal="true"
+  >
+    <button class="vw-lightbox__close" @click="lightboxOpen = false" aria-label="Chiudi">×</button>
+    <button class="vw-lightbox__nav vw-lightbox__nav--prev" @click="prev()" aria-label="Precedente">‹</button>
+    <div class="vw-lightbox__media" x-show="lightboxItem">
+      <template x-if="lightboxItem?.tipo === 'video'">
+        <video :src="lightboxItem.src" :poster="lightboxItem.poster" controls autoplay></video>
+      </template>
+      <template x-if="lightboxItem?.tipo === 'foto'">
+        <img :src="lightboxItem.src" :alt="lightboxItem.alt"/>
+      </template>
+    </div>
+    <button class="vw-lightbox__nav vw-lightbox__nav--next" @click="next()" aria-label="Successivo">›</button>
+  </div>
+</section>
+
+<style>
+  .vw-galleria__tags {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .vw-galleria__tag {
+    background: transparent;
+    border: 1px solid var(--vw-dust);
+    color: var(--vw-paper-2);
+    padding: 0.4rem 0.9rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+  }
+  .vw-galleria__tag.is-active {
+    background: var(--vw-gold); color: var(--vw-bg); border-color: var(--vw-gold);
+  }
+
+  .vw-galleria__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    grid-auto-rows: 180px;
+  }
+  @media (min-width: 700px) {
+    .vw-galleria__grid { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 220px; }
+  }
+  @media (min-width: 1024px) {
+    .vw-galleria__grid { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 240px; gap: 0.75rem; }
+  }
+
+  .vw-galleria__item {
+    background: var(--vw-bg-2);
+    border: 0;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    position: relative;
+  }
+  .vw-galleria__item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: sepia(0.2) saturate(0.95);
+    transition: transform .4s ease, filter .3s ease;
+  }
+  .vw-galleria__item:hover img {
+    transform: scale(1.04);
+    filter: sepia(0) saturate(1.05);
+  }
+  .vw-galleria__item--4-5 { grid-row: span 2; }
+  .vw-galleria__item--3-4 { grid-row: span 2; }
+  .vw-galleria__item--9-16 { grid-row: span 2; }
+
+  .vw-galleria__video-thumb { position: relative; width: 100%; height: 100%; }
+  .vw-galleria__play {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 56px; height: 56px;
+    background: rgba(26, 18, 11, 0.7);
+    border: 2px solid var(--vw-gold);
+    color: var(--vw-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.4rem;
+  }
+
+  /* Lightbox */
+  .vw-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(10, 6, 3, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+  }
+  .vw-lightbox__media { max-width: 90vw; max-height: 85vh; }
+  .vw-lightbox__media img,
+  .vw-lightbox__media video {
+    max-width: 90vw; max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+  }
+  .vw-lightbox__close,
+  .vw-lightbox__nav {
+    position: absolute;
+    background: rgba(26, 18, 11, 0.8);
+    color: var(--vw-gold);
+    border: 1px solid var(--vw-gold);
+    width: 48px; height: 48px;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vw-lightbox__close { top: var(--space-md); right: var(--space-md); }
+  .vw-lightbox__nav--prev { left: 2vw; top: 50%; transform: translateY(-50%); }
+  .vw-lightbox__nav--next { right: 2vw; top: 50%; transform: translateY(-50%); }
+</style>

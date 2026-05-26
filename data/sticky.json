@@ -1,0 +1,20 @@
+{
+  "_note": "BLOCK 09 · Sticky CTA bottom mobile. Appare solo su mobile (<768px). 'mostra_dopo_scroll_px' = quanti pixel di scroll prima di farla apparire. 'nascondi_se_in_cima' = sparisce se l'utente torna in cima.",
+  "attivo": true,
+  "mostra_dopo_scroll_px": 600,
+  "nascondi_se_in_cima": true,
+  "azioni": [
+    {
+      "testo": "Prenota tavolo",
+      "icona": "whatsapp",
+      "link": "https://wa.me/393520029607?text=Ciao%20vorrei%20prenotare%20al%20Vecchio%20West",
+      "stile": "oro"
+    },
+    {
+      "testo": "Chiama",
+      "icona": "phone",
+      "link": "tel:+393520029607",
+      "stile": "outline"
+    }
+  ]
+}

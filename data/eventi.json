@@ -1,0 +1,48 @@
+{
+  "_note": "BLOCK 05 · Eventi prossimi. Mostra max 3 card eventi con data > oggi entro 7 giorni. Per ogni evento: 'data_inizio' in formato ISO 8601 (es. 2026-05-29T19:00:00+02:00). 'theme': western | latin | festive cambia l'accento cromatico.",
+  "max_visibili": 3,
+  "finestra_giorni": 30,
+  "eventi": [
+    {
+      "id": "inaugurazione-29mag",
+      "titolo": "Inaugurazione · DJ Flow Latin Night",
+      "descrizione_breve": "Apertura ufficiale con DJ Flow set Reggaeton & Latin Urban dalle 21:00.",
+      "data_inizio": "2026-05-29T19:00:00+02:00",
+      "data_fine": "2026-05-30T02:00:00+02:00",
+      "immagine": "assets/img/eventi/inaugurazione.jpg",
+      "theme": "latin",
+      "cta_testo": "Salva la data",
+      "luogo": "Vecchio West, Sant'Elpidio a Mare"
+    },
+    {
+      "id": "venerdi-latin-5giu",
+      "titolo": "Venerdì Latin · DJ Flow",
+      "descrizione_breve": "Reggaeton & Latin Urban, drink list dedicata, BBQ acceso fino a tardi.",
+      "data_inizio": "2026-06-05T21:00:00+02:00",
+      "data_fine": "2026-06-06T02:00:00+02:00",
+      "immagine": "assets/img/eventi/latin-night.jpg",
+      "theme": "latin",
+      "cta_testo": "Salva la data"
+    },
+    {
+      "id": "tex-mex-night-12giu",
+      "titolo": "Tex Mex Night",
+      "descrizione_breve": "Menù speciale messicano: tacos, fajitas, margaritas western.",
+      "data_inizio": "2026-06-12T19:30:00+02:00",
+      "data_fine": "2026-06-13T01:00:00+02:00",
+      "immagine": "assets/img/eventi/tex-mex.jpg",
+      "theme": "western",
+      "cta_testo": "Salva la data"
+    },
+    {
+      "id": "live-country-19giu",
+      "titolo": "Live Country & Whiskey",
+      "descrizione_breve": "Acustico country live, degustazione whiskey, BBQ all'aperto.",
+      "data_inizio": "2026-06-19T20:00:00+02:00",
+      "data_fine": "2026-06-20T01:00:00+02:00",
+      "immagine": "assets/img/eventi/country-live.jpg",
+      "theme": "western",
+      "cta_testo": "Salva la data"
+    }
+  ]
+}

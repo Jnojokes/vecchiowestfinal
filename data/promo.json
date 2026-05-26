@@ -1,0 +1,32 @@
+{
+  "_note": "BLOCK 02 · Promo Banner DINAMICO. Per attivare/disattivare la striscia: 'active' true/false. La striscia si auto-nasconde dopo 'auto_dismiss_seconds' o quando l'utente la chiude. Se 'expires_at' < oggi, viene ignorata anche se active=true. 'theme': western | latin | festive.",
+  "active": true,
+  "title": "★ Proiettile d'Oro · Prima settimana dall'inaugurazione",
+  "subtitle": "Una porzione di patatine nasconde il proiettile. Cercalo nel Doppio Tex o nel Tex Mex.",
+  "cta_text": "Scopri di più",
+  "cta_link": "#proiettile",
+  "expires_at": "2026-06-05T23:59:00+02:00",
+  "theme": "western",
+  "auto_dismiss_seconds": 12,
+  "dismissable": true,
+  "rotazione": [
+    {
+      "active": true,
+      "title": "★ Venerdì DJ Flow · Latin Night",
+      "subtitle": "Reggaeton & Latin Urban dalle 21:00 — drink list dedicata",
+      "cta_text": "Salva la data",
+      "cta_link": "#eventi",
+      "expires_at": "2026-08-31T23:59:00+02:00",
+      "theme": "latin"
+    },
+    {
+      "active": true,
+      "title": "★ Gratta-e-Vinci · Cerca il volantino per Civitanova",
+      "subtitle": "Birra alla spina omaggio per chi vince — porta la cartolina al locale",
+      "cta_text": "Come funziona",
+      "cta_link": "#gratta",
+      "expires_at": "2026-07-31T23:59:00+02:00",
+      "theme": "festive"
+    }
+  ]
+}

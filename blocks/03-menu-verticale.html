@@ -1,0 +1,94 @@
+<!-- ============================================================
+     BLOCK 03 · MENU VERTICALE (pagina standalone /menu.html)
+     Dati: /data/menu.json
+     Riutilizza il componente Alpine `vwMenu` ma con layout monocolonna
+     stile "locandina del menù", senza tabs.
+     ============================================================ -->
+<section
+  id="menu"
+  class="vw-section vw-menu-vert"
+  x-data="vwMenu('data/menu.json')"
+  x-cloak
+>
+  <div class="vw-menu-vert__container">
+
+    <!-- Intestazione -->
+    <header class="vw-menu-vert__head" data-reveal>
+      <p class="eyebrow">Il menù completo</p>
+      <h1 class="vw-menu-vert__title">Vecchio West</h1>
+      <div class="vw-divider"><svg viewBox="0 0 24 24"><path d="M12 2l2.39 7.35H22l-6.19 4.5L18.2 21 12 16.5 5.8 21l2.39-7.15L2 9.35h7.61z"/></svg></div>
+      <p class="vw-menu-vert__intro">
+        Spaghetti western italiano. Scottona marchigiana, olive ascolana, salame ventricina.
+        Sourcing locale, cottura sul barbecue del tuo tavolo.
+      </p>
+    </header>
+
+    <!-- Filtro allergeni (opzionale, controllato dal JSON) -->
+    <div class="vw-menu-vert__filter" x-show="data.ricerca_allergeni_attiva" data-reveal>
+      <label class="vw-menu-vert__filter-label">
+        <span>Escludi allergene:</span>
+        <select x-model="filtroAllergene">
+          <option value="">Nessuno</option>
+          <template x-for="a in allergeniDisponibili" :key="a">
+            <option :value="a" x-text="a"></option>
+          </template>
+        </select>
+      </label>
+    </div>
+
+    <!-- Sezioni: una sotto l'altra, niente tabs -->
+    <template x-for="sezione in data.sezioni" :key="sezione.id">
+      <article class="vw-menu-vert__sezione" data-reveal>
+        <header class="vw-menu-vert__sezione-head">
+          <h2 class="vw-menu-vert__sezione-titolo" x-text="sezione.titolo"></h2>
+          <span class="vw-menu-vert__sezione-rule" aria-hidden="true"></span>
+        </header>
+
+        <ul class="vw-menu-vert__lista">
+          <template
+            x-for="item in (filtroAllergene
+              ? (sezione.items || []).filter(i => !(i.allergeni || []).includes(filtroAllergene))
+              : (sezione.items || []))"
+            :key="item.nome"
+          >
+            <li class="vw-menu-vert__item">
+              <div class="vw-menu-vert__item-row">
+                <h3 class="vw-menu-vert__item-name" x-text="item.nome"></h3>
+                <span class="vw-menu-vert__item-dots" aria-hidden="true"></span>
+                <span class="vw-menu-vert__item-price" x-text="`€ ${item.prezzo}`"></span>
+              </div>
+              <p class="vw-menu-vert__item-desc" x-text="item.descrizione" x-show="item.descrizione"></p>
+              <div class="vw-menu-vert__item-meta">
+                <div class="vw-menu-vert__item-badges" x-show="item.badge?.length">
+                  <template x-for="b in item.badge" :key="b">
+                    <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
+                  </template>
+                </div>
+                <p class="vw-menu-vert__item-aller" x-show="item.allergeni?.length">
+                  <span class="vw-text-mono">Allergeni:</span>
+                  <span x-text="item.allergeni.join(', ')"></span>
+                </p>
+              </div>
+            </li>
+          </template>
+
+          <li
+            class="vw-menu-vert__empty"
+            x-show="filtroAllergene && (sezione.items || []).every(i => (i.allergeni || []).includes(filtroAllergene))"
+          >
+            Nessun piatto in questa sezione corrisponde al filtro.
+          </li>
+        </ul>
+      </article>
+    </template>
+
+    <!-- CTA prenotazione + ritorno alla home -->
+    <footer class="vw-menu-vert__cta" data-reveal>
+      <a href="https://wa.me/393520029607" class="vw-btn vw-btn--gold" data-gunshot>
+        Prenota su WhatsApp
+      </a>
+      <a href="index.html" class="vw-menu-vert__back">← Torna alla home</a>
+    </footer>
+
+  </div>
+</section>

@@ -1,0 +1,43 @@
+{
+  "_note": "BLOCK 10 · Footer. Newsletter: se 'mailchimp_action' è impostato, il form invia direttamente alla lista. 'crediti' è il testo finale piccolo. Aggiungi/rimuovi social cambiando 'social[]'.",
+  "claim_footer": "Spaghetti western italiano · BBQ al tavolo · Sant'Elpidio a Mare",
+  "social": [
+    {
+      "nome": "Instagram",
+      "icona": "instagram",
+      "link": "https://instagram.com/vecchiowest.pub"
+    },
+    {
+      "nome": "Facebook",
+      "icona": "facebook",
+      "link": "https://facebook.com/vecchiowest"
+    },
+    {
+      "nome": "WhatsApp",
+      "icona": "whatsapp",
+      "link": "https://wa.me/393520029607"
+    },
+    {
+      "nome": "Google",
+      "icona": "google",
+      "link": "https://g.page/vecchiowest"
+    }
+  ],
+  "newsletter": {
+    "attiva": true,
+    "titolo": "Iscriviti alla newsletter del Saloon",
+    "sottotitolo": "Eventi, promo e il calendario del BBQ. Niente spam, parola di pistolero.",
+    "placeholder": "la-tua-mail@dominio.it",
+    "cta": "Iscrivimi",
+    "mailchimp_action": "https://xsolvestudio.us10.list-manage.com/subscribe/post?u=INSERIRE&id=INSERIRE",
+    "gdpr_text": "Iscrivendoti accetti la nostra Privacy Policy."
+  },
+  "link_legali": [
+    { "testo": "Privacy Policy", "link": "/privacy.html" },
+    { "testo": "Cookie Policy", "link": "/cookie.html" },
+    { "testo": "Note legali", "link": "/legal.html" }
+  ],
+  "partita_iva": "P.IVA da inserire",
+  "crediti": "Powered by XSolve Studio · Stagione 2026",
+  "crediti_link": "https://xsolvestudio.com"
+}
