@@ -127,7 +127,7 @@
     Alpine.data('vwMenu', (path) => ({
       data: { sezioni: [] },
       activeTab: '',
-      filtroAllergene: '',
+      filtriAllergeni: [],            // B4 · array multi-toggle (era filtroAllergene string)
       itemsVisibili: [],
       allergeniDisponibili: [],
       async init() {
@@ -142,11 +142,19 @@
       },
       setTab(id) { this.activeTab = id; this.aggiornaItems(); },
       filtraAllergeni() { this.aggiornaItems(); },
+      // B4 · multi-toggle
+      toggleAllergene(all) {
+        const idx = this.filtriAllergeni.indexOf(all);
+        if (idx === -1) this.filtriAllergeni.push(all);
+        else this.filtriAllergeni.splice(idx, 1);
+        this.aggiornaItems();
+      },
+      azzeraFiltri() { this.filtriAllergeni = []; this.aggiornaItems(); },
       aggiornaItems() {
         const sezione = this.data.sezioni?.find((s) => s.id === this.activeTab);
         const items = sezione?.items || [];
-        this.itemsVisibili = this.filtroAllergene
-          ? items.filter((i) => !(i.allergeni || []).includes(this.filtroAllergene))
+        this.itemsVisibili = this.filtriAllergeni.length
+          ? items.filter((i) => !(i.allergeni || []).some((a) => this.filtriAllergeni.includes(a)))
           : items;
       },
     }));
@@ -210,6 +218,24 @@
         if (this.data.recensioni?.length > 1) {
           this.autoplay = setInterval(() => this.next(), 6000);
         }
+        // B2 · Stamp animation on .vw-stars via IntersectionObserver
+        this.$nextTick(() => {
+          const stars = this.$root.querySelectorAll('.vw-stars');
+          if (!stars.length) return;
+          if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            stars.forEach((el) => el.classList.add('is-visible'));
+            return;
+          }
+          const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                io.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.4 });
+          stars.forEach((el) => io.observe(el));
+        });
       },
       get mediaRating() {
         const arr = this.data.recensioni || [];
@@ -218,6 +244,24 @@
       },
       next() { const len = this.data.recensioni?.length || 1; this.current = (this.current + 1) % len; },
       prev() { const len = this.data.recensioni?.length || 1; this.current = (this.current - 1 + len) % len; },
+      // B3 · Swipe touch threshold (no dragOffset perche layout usa opacity)
+      _touchStartX: 0,
+      _touchMoved: false,
+      onTouchStart(e) {
+        this._touchStartX = e.touches[0].clientX;
+        this._touchMoved = false;
+        if (this.autoplay) { clearInterval(this.autoplay); this.autoplay = null; }
+      },
+      onTouchMove(e) {
+        if (Math.abs(e.touches[0].clientX - this._touchStartX) > 8) this._touchMoved = true;
+      },
+      onTouchEnd(e) {
+        if (!this._touchMoved) return;
+        const delta = e.changedTouches[0].clientX - this._touchStartX;
+        const threshold = 50;
+        if (delta < -threshold) this.next();
+        else if (delta > threshold) this.prev();
+      },
       renderStars(n) { const full = Math.round(n); return '★'.repeat(full) + '☆'.repeat(5 - full); },
       formatData(iso) {
         return new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -593,6 +637,49 @@
     );
   }
 
+  // ---------- B5 · A11y sidebar/drawer mobile ----------
+  function attivaSidebarA11y() {
+    const sidebar = document.querySelector('.vw-sidebar');
+    const toggle = document.querySelector('.vw-sidebar__toggle');
+    if (!sidebar || !toggle) return;
+
+    const setExpanded = (isOpen) => {
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      toggle.setAttribute('aria-label', isOpen ? 'Chiudi menu' : 'Apri menu');
+    };
+    setExpanded(sidebar.classList.contains('is-open'));
+
+    // MutationObserver: sincronizza aria-expanded col cambio classe
+    const mo = new MutationObserver(() => {
+      setExpanded(sidebar.classList.contains('is-open'));
+    });
+    mo.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+
+    // ESC chiude (solo se aperto)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
+        sidebar.classList.remove('is-open');
+        toggle.focus();
+      }
+    });
+
+    // Focus trap dentro la sidebar quando aperta
+    sidebar.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab' || !sidebar.classList.contains('is-open')) return;
+      const focusables = sidebar.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    });
+  }
+
   // ---------- IntersectionObserver per [data-reveal] ----------
   function attivaReveal() {
     const elementi = Array.from(document.querySelectorAll('[data-reveal]'));
@@ -624,6 +711,7 @@
       // Effetti globali dopo che il DOM è completo
       attivaGunshotLayer();
       attivaReveal();
+      attivaSidebarA11y();
 
       // Inietta Alpine DINAMICAMENTE dopo che il DOM è completo
       const s = document.createElement('script');

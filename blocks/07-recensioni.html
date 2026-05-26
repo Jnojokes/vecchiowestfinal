@@ -14,7 +14,23 @@
       <p class="eyebrow">La taglia del Vecchio West</p>
       <h2>Dicono di noi</h2>
       <div class="vw-rec__rating" x-show="data.rating_medio_visibile">
-        <span class="vw-rec__stars" x-text="renderStars(mediaRating)"></span>
+        <div class="vw-stars vw-rec__stars" :aria-label="`Valutazione media ${mediaRating.toFixed(1)} su 5`" role="img">
+          <template x-for="j in 5" :key="j">
+            <svg class="vw-star"
+                 :class="{ 'vw-star--full': j <= Math.floor(mediaRating), 'vw-star--half': j === Math.ceil(mediaRating) && mediaRating % 1 !== 0 }"
+                 :style="`--vw-star-delay: ${j * 80}ms`"
+                 viewBox="0 0 24 24" aria-hidden="true">
+              <defs>
+                <linearGradient :id="`half-avg-${j}`" x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="50%" stop-color="var(--vw-gold)" />
+                  <stop offset="50%" stop-color="rgba(200,155,60,.22)" />
+                </linearGradient>
+              </defs>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                    :fill="j === Math.ceil(mediaRating) && mediaRating % 1 !== 0 ? `url(#half-avg-${j})` : 'currentColor'" />
+            </svg>
+          </template>
+        </div>
         <span class="vw-rec__avg" x-text="`${mediaRating.toFixed(1)} su 5 · ${data.recensioni?.length || 0} recensioni`"></span>
       </div>
     </div>
@@ -22,7 +38,12 @@
     <div class="vw-rec__carousel">
       <button class="vw-rec__nav vw-rec__nav--prev" @click="prev()" aria-label="Precedente">‹</button>
 
-      <div class="vw-rec__track" aria-live="polite" aria-atomic="true">
+      <div class="vw-rec__track"
+           aria-live="polite"
+           aria-atomic="true"
+           @touchstart="onTouchStart($event)"
+           @touchmove.passive="onTouchMove($event)"
+           @touchend="onTouchEnd($event)">
         <template x-for="(r, i) in data.recensioni" :key="i">
           <article
             class="vw-rec__card"
@@ -39,7 +60,23 @@
               </div>
               <div class="vw-rec__meta">
                 <span class="vw-rec__author" x-text="r.autore"></span>
-                <span class="vw-rec__stars-sm" :aria-label="`Valutazione ${r.rating} su 5`" x-text="renderStars(r.rating)"></span>
+                <div class="vw-stars vw-stars--sm" :aria-label="`Valutazione ${r.rating} su 5`" role="img">
+                  <template x-for="j in 5" :key="j">
+                    <svg class="vw-star"
+                         :class="{ 'vw-star--full': j <= Math.floor(r.rating), 'vw-star--half': j === Math.ceil(r.rating) && r.rating % 1 !== 0 }"
+                         :style="`--vw-star-delay: ${j * 80}ms`"
+                         viewBox="0 0 24 24" aria-hidden="true">
+                      <defs>
+                        <linearGradient :id="`half-${i}-${j}`" x1="0" x2="1" y1="0" y2="0">
+                          <stop offset="50%" stop-color="var(--vw-gold)" />
+                          <stop offset="50%" stop-color="rgba(200,155,60,.22)" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                            :fill="j === Math.ceil(r.rating) && r.rating % 1 !== 0 ? `url(#half-${i}-${j})` : 'currentColor'" />
+                    </svg>
+                  </template>
+                </div>
               </div>
             </header>
             <div class="vw-rec__quote">"</div>
@@ -117,8 +154,33 @@
     gap: 0.3rem;
     margin-top: 0.5rem;
   }
-  .vw-rec__stars { color: var(--vw-gold); font-size: 1.2rem; letter-spacing: 0.15em; }
   .vw-rec__avg { color: var(--vw-paper-2); font-size: 0.85rem; }
+
+  /* B2 · SVG stars con stamp animation */
+  .vw-stars {
+    display: inline-flex;
+    gap: 2px;
+    color: rgba(200, 155, 60, 0.22);
+    line-height: 0;
+  }
+  .vw-stars--sm .vw-star { width: 14px; height: 14px; }
+  .vw-star { width: 22px; height: 22px; transition: transform .2s ease; }
+  .vw-star--full,
+  .vw-star--half { color: var(--vw-gold); }
+
+  @keyframes vw-star-stamp {
+    0%   { transform: scale(0.4) rotate(-15deg); opacity: 0; }
+    60%  { transform: scale(1.2) rotate(2deg);   opacity: 1; }
+    100% { transform: scale(1)   rotate(0);      opacity: 1; }
+  }
+  .vw-stars.is-visible .vw-star--full,
+  .vw-stars.is-visible .vw-star--half {
+    animation: vw-star-stamp .45s cubic-bezier(.34, 1.56, .64, 1) backwards;
+    animation-delay: var(--vw-star-delay, 0ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vw-stars.is-visible .vw-star { animation: none; }
+  }
 
   .vw-rec__carousel {
     position: relative;

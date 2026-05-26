@@ -23,17 +23,24 @@
       </p>
     </header>
 
-    <!-- Filtro allergeni (opzionale, controllato dal JSON) -->
-    <div class="vw-menu-vert__filter" x-show="data.ricerca_allergeni_attiva" data-reveal>
-      <label class="vw-menu-vert__filter-label">
-        <span>Escludi allergene:</span>
-        <select x-model="filtroAllergene">
-          <option value="">Nessuno</option>
-          <template x-for="a in allergeniDisponibili" :key="a">
-            <option :value="a" x-text="a"></option>
-          </template>
-        </select>
-      </label>
+    <!-- Filtro allergeni (multi-toggle chip) -->
+    <div class="vw-menu-vert__filter vw-allergen-filter" x-show="data.ricerca_allergeni_attiva" data-reveal role="group" aria-label="Filtra per allergeni da escludere">
+      <span class="vw-allergen-filter__label">Escludi:</span>
+      <template x-for="all in allergeniDisponibili" :key="all">
+        <button type="button"
+                class="vw-chip vw-chip--toggle"
+                :class="{ 'is-active': filtriAllergeni.includes(all) }"
+                :aria-pressed="filtriAllergeni.includes(all).toString()"
+                @click="toggleAllergene(all)">
+          <span x-text="all"></span>
+        </button>
+      </template>
+      <button type="button"
+              class="vw-chip vw-chip--clear"
+              x-show="filtriAllergeni.length > 0"
+              @click="azzeraFiltri()">
+        Azzera filtri
+      </button>
     </div>
 
     <!-- Sezioni: una sotto l'altra, niente tabs -->
@@ -46,8 +53,8 @@
 
         <ul class="vw-menu-vert__lista">
           <template
-            x-for="item in (filtroAllergene
-              ? (sezione.items || []).filter(i => !(i.allergeni || []).includes(filtroAllergene))
+            x-for="item in (filtriAllergeni.length
+              ? (sezione.items || []).filter(i => !(i.allergeni || []).some(a => filtriAllergeni.includes(a)))
               : (sezione.items || []))"
             :key="item.nome"
           >
@@ -76,9 +83,9 @@
 
           <li
             class="vw-menu-vert__empty"
-            x-show="filtroAllergene && (sezione.items || []).every(i => (i.allergeni || []).includes(filtroAllergene))"
+            x-show="filtriAllergeni.length && (sezione.items || []).every(i => (i.allergeni || []).some(a => filtriAllergeni.includes(a)))"
           >
-            Nessun piatto in questa sezione corrisponde al filtro.
+            Nessun piatto in questa sezione corrisponde ai filtri.
           </li>
         </ul>
       </article>

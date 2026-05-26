@@ -767,3 +767,149 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
   color: var(--vw-olive-soft);
   border: 1px solid var(--vw-olive);
 }
+
+/* =========================================================
+   B1 · Sistema card a 3 tier (paper / wood / minimal)
+   Building block riutilizzabile: applicare i modifier come
+   opt-in su nuovi componenti. I blocchi esistenti (menu/eventi/
+   recensioni/usp) usano gia stili ad-hoc — convivenza tramite
+   selettori specifici (es. .vw-eventi__card non eredita).
+   ========================================================= */
+.vw-card {
+  background: var(--vw-paper);
+  color: var(--vw-ink);
+  border-radius: var(--radius-md, 4px);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.vw-card--paper {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 60%),
+    var(--vw-paper);
+  color: var(--vw-ink);
+  border: 1px solid rgba(200, 155, 60, 0.35);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 10px 24px -12px rgba(0, 0, 0, 0.55);
+}
+.vw-card--paper:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 18px 32px -14px rgba(0, 0, 0, 0.7);
+}
+
+.vw-card--wood {
+  background:
+    linear-gradient(180deg, rgba(60, 38, 22, 0.95), rgba(40, 24, 14, 0.95));
+  color: var(--vw-paper);
+  border: 1px solid rgba(200, 155, 60, 0.22);
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.5);
+}
+.vw-card--wood .vw-card__title { color: var(--vw-gold); }
+
+.vw-card--minimal {
+  background: transparent;
+  color: var(--vw-paper);
+  border: 1px solid rgba(200, 155, 60, 0.15);
+  border-radius: var(--radius-sm, 2px);
+  padding: 1rem 1.25rem;
+  box-shadow: none;
+}
+.vw-card--minimal:hover {
+  border-color: rgba(200, 155, 60, 0.45);
+  background: rgba(200, 155, 60, 0.04);
+}
+
+/* =========================================================
+   B4 · Filtro allergeni multi-toggle chip
+   ========================================================= */
+.vw-allergen-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+.vw-allergen-filter__label {
+  font-weight: 600;
+  color: var(--vw-gold);
+  margin-right: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.vw-chip--toggle {
+  background: transparent;
+  border: 1px solid rgba(200, 155, 60, 0.35);
+  color: var(--vw-paper);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.vw-chip--toggle:hover {
+  border-color: var(--vw-gold);
+  background: rgba(200, 155, 60, 0.08);
+}
+.vw-chip--toggle.is-active {
+  background: var(--vw-gold);
+  color: var(--vw-bg);
+  border-color: var(--vw-gold);
+  text-decoration: line-through;
+}
+.vw-chip--clear {
+  border: 1px dashed rgba(240, 227, 200, 0.4);
+  color: rgba(240, 227, 200, 0.7);
+  background: transparent;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+.vw-chip--clear:hover {
+  color: var(--vw-paper);
+  border-color: var(--vw-paper);
+}
+
+/* =========================================================
+   B6 · Tactile feedback :active mobile
+   ========================================================= */
+.vw-btn,
+.vw-chip,
+.vw-sidebar__link,
+button:not([disabled]) {
+  -webkit-tap-highlight-color: transparent;
+  transform-origin: center;
+}
+
+.vw-btn:active,
+.vw-chip:active,
+.vw-sidebar__link:active,
+button:not([disabled]):active {
+  transform: scale(0.96);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Pointer fine (mouse): scaling meno aggressivo */
+@media (hover: hover) and (pointer: fine) {
+  .vw-btn:active,
+  button:not([disabled]):active {
+    transform: scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vw-btn:active,
+  .vw-chip:active,
+  .vw-sidebar__link:active,
+  button:not([disabled]):active {
+    transform: none;
+  }
+}

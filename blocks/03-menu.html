@@ -33,17 +33,24 @@
       </nav>
     </div>
 
-    <!-- Allergen filter -->
-    <div class="vw-menu__filter" x-show="data.ricerca_allergeni_attiva">
-      <label class="vw-menu__filter-label">
-        <span>Escludi allergene:</span>
-        <select x-model="filtroAllergene" @change="filtraAllergeni()">
-          <option value="">Nessuno</option>
-          <template x-for="a in allergeniDisponibili" :key="a">
-            <option :value="a" x-text="a"></option>
-          </template>
-        </select>
-      </label>
+    <!-- Allergen filter (multi-toggle chip) -->
+    <div class="vw-menu__filter vw-allergen-filter" x-show="data.ricerca_allergeni_attiva" role="group" aria-label="Filtra per allergeni da escludere">
+      <span class="vw-allergen-filter__label">Escludi:</span>
+      <template x-for="all in allergeniDisponibili" :key="all">
+        <button type="button"
+                class="vw-chip vw-chip--toggle"
+                :class="{ 'is-active': filtriAllergeni.includes(all) }"
+                :aria-pressed="filtriAllergeni.includes(all).toString()"
+                @click="toggleAllergene(all)">
+          <span x-text="all"></span>
+        </button>
+      </template>
+      <button type="button"
+              class="vw-chip vw-chip--clear"
+              x-show="filtriAllergeni.length > 0"
+              @click="azzeraFiltri()">
+        Azzera filtri
+      </button>
     </div>
 
     <!-- Piatti -->
