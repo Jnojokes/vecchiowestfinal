@@ -2,8 +2,6 @@
   "_note": "BLOCK 05 · Eventi prossimi. Mostra max 3 card eventi con data > oggi entro 7 giorni. Per ogni evento: 'data_inizio' in formato ISO 8601 (es. 2026-05-29T19:00:00+02:00). 'theme': western | latin | festive cambia l'accento cromatico.",
   "max_visibili": 3,
   "finestra_giorni": 30,
-  "empty_message": "Il calendario è in pausa-sigaro. Niente eventi in programma — controlla fra qualche giorno.",
-  "cta_calendario_completo": "Guarda l'intera mandria",
   "eventi": [
     {
       "id": "inaugurazione-29mag",

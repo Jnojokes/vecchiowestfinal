@@ -80,9 +80,6 @@
 
 <body x-data class="has-sidebar">
 
-  <!-- C1 · Skip-to-main-content (WCAG 2.4.1) -->
-  <a href="#main" class="vw-skip-link">Salta al contenuto principale</a>
-
   <!-- Texture grain globale (overlay decorativo, pointer-events:none) -->
   <div class="vw-grain" aria-hidden="true"></div>
 
@@ -96,10 +93,8 @@
   <!-- Sidebar verticale (fissa, scroll-spy) -->
   <div data-block="blocks/00-nav.html"></div>
 
-  <main id="main" tabindex="-1">
-    <!-- Menu verticale "locandina" — unico contenuto principale -->
-    <div data-block="blocks/03-menu-verticale.html"></div>
-  </main>
+  <!-- Menu verticale "locandina" — unico contenuto principale -->
+  <div data-block="blocks/03-menu-verticale.html"></div>
 
   <!-- Footer -->
   <div data-block="blocks/10-footer.html"></div>

@@ -1,75 +1,69 @@
 <!-- =========================================================
-     BLOCK 00 · SIDEBAR VERTICALE + DRAWER MOBILE
+     BLOCK 00 · SIDEBAR VERTICALE
      Markup minimale, Alpine.js gestisce stato + scroll-spy
-     B5: drawerOpen reattivo, ESC, chiusura su click link,
-         focus trap mobile, burger animato 3-line cross.
      ========================================================= -->
-<div x-data="vwNav('data/nav.json')" x-init="init()">
-  <aside
-    class="vw-sidebar"
-    :class="{ 'is-open': open }"
-    @keydown.escape.window="open && (open = false)"
-    @keydown.tab="open && trapFocus($event)"
-    aria-label="Navigazione principale"
-  >
-    <!-- Brand -->
-    <a href="#hero" class="vw-sidebar__brand" data-gunshot @click="open = false">
-      <span class="vw-sidebar__brand-mark" aria-hidden="true">
-        <!-- mini stella sceriffo -->
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-          <path d="M12 2l2.5 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 2z"/>
-        </svg>
-      </span>
-      <span class="vw-sidebar__brand-text" x-text="data.brand || 'Vecchio West'"></span>
-    </a>
-
-    <!-- Voci di navigazione -->
-    <ul class="vw-sidebar__nav" role="list">
-      <template x-for="(voce, i) in (data.voci || [])" :key="i">
-        <li class="vw-sidebar__item">
-          <a
-            :href="voce.href"
-            class="vw-sidebar__link"
-            :class="{ 'is-active': voce.id === activeId }"
-            @click="onVoceClick(voce, $event)"
-            data-gunshot
-          >
-            <span class="vw-sidebar__icon" aria-hidden="true" x-html="voce.icon || '•'"></span>
-            <span class="vw-sidebar__label" x-text="voce.label"></span>
-          </a>
-        </li>
-      </template>
-    </ul>
-
-    <!-- CTA -->
-    <div class="vw-sidebar__cta" x-show="data.cta && data.cta.href">
-      <a :href="data.cta?.href" target="_blank" rel="noopener" class="vw-btn" data-gunshot data-magnetic>
-        <span x-text="data.cta?.label || 'Riserva il posto'"></span>
-      </a>
-    </div>
-  </aside>
-
-  <!-- Backdrop mobile -->
-  <div
-    class="vw-sidebar__backdrop"
-    :class="{ 'is-visible': open }"
-    x-show="open"
-    x-cloak
-    @click="open = false"
-    aria-hidden="true"
-  ></div>
-
-  <!-- Toggle mobile (burger animato 3-line) -->
-  <button
-    class="vw-sidebar__toggle"
-    type="button"
-    :aria-expanded="open.toString()"
-    aria-controls="vw-sidebar-nav"
-    :aria-label="open ? 'Chiudi menu' : 'Apri menu'"
-    @click="open = !open"
-  >
-    <span class="vw-burger" aria-hidden="true">
-      <span></span><span></span><span></span>
+<aside
+  class="vw-sidebar"
+  :class="{ 'is-open': open }"
+  x-data="vwNav('data/nav.json')"
+  x-init="init()"
+  aria-label="Navigazione principale"
+>
+  <!-- Brand -->
+  <a href="#hero" class="vw-sidebar__brand" data-gunshot>
+    <span class="vw-sidebar__brand-mark" aria-hidden="true">
+      <!-- mini stella sceriffo -->
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+        <path d="M12 2l2.5 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 2z"/>
+      </svg>
     </span>
-  </button>
-</div>
+    <span class="vw-sidebar__brand-text" x-text="data.brand || 'Vecchio West'"></span>
+  </a>
+
+  <!-- Voci di navigazione -->
+  <ul class="vw-sidebar__nav" role="list">
+    <template x-for="(voce, i) in (data.voci || [])" :key="i">
+      <li class="vw-sidebar__item">
+        <a
+          :href="voce.href"
+          class="vw-sidebar__link"
+          :class="{ 'is-active': voce.id === activeId }"
+          @click="onVoceClick(voce, $event)"
+          data-gunshot
+        >
+          <span class="vw-sidebar__icon" aria-hidden="true" x-html="voce.icon || '•'"></span>
+          <span class="vw-sidebar__label" x-text="voce.label"></span>
+        </a>
+      </li>
+    </template>
+  </ul>
+
+  <!-- CTA -->
+  <div class="vw-sidebar__cta" x-show="data.cta && data.cta.href">
+    <a :href="data.cta?.href" target="_blank" rel="noopener" class="vw-btn" data-gunshot>
+      <span x-text="data.cta?.label || 'Prenota'"></span>
+    </a>
+  </div>
+</aside>
+
+<!-- Backdrop mobile -->
+<div
+  class="vw-sidebar__backdrop"
+  :class="{ 'is-visible': open }"
+  x-data="{ get open(){ return document.querySelector('.vw-sidebar')?.classList.contains('is-open'); } }"
+  @click="document.querySelector('.vw-sidebar')?.classList.remove('is-open')"
+></div>
+
+<!-- Toggle mobile (burger) -->
+<button
+  class="vw-sidebar__toggle"
+  type="button"
+  aria-label="Apri menu"
+  onclick="document.querySelector('.vw-sidebar')?.classList.toggle('is-open')"
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+    <line x1="4" y1="7"  x2="20" y2="7"/>
+    <line x1="4" y1="12" x2="20" y2="12"/>
+    <line x1="4" y1="17" x2="20" y2="17"/>
+  </svg>
+</button>

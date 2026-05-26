@@ -123,11 +123,11 @@
       },
     }));
 
-    // BLOCK 03 · Menu (B4: filtro allergeni multi-toggle)
+    // BLOCK 03 · Menu
     Alpine.data('vwMenu', (path) => ({
       data: { sezioni: [] },
       activeTab: '',
-      filtriAllergeni: [],
+      filtroAllergene: '',
       itemsVisibili: [],
       allergeniDisponibili: [],
       async init() {
@@ -139,26 +139,19 @@
         );
         this.allergeniDisponibili = Array.from(set).sort();
         this.aggiornaItems();
-        // Reactive: rifiltra quando l'array filtriAllergeni muta
-        this.$watch('filtriAllergeni', () => this.aggiornaItems());
       },
       setTab(id) { this.activeTab = id; this.aggiornaItems(); },
-      toggleAllergene(all) {
-        const idx = this.filtriAllergeni.indexOf(all);
-        if (idx === -1) this.filtriAllergeni.push(all);
-        else this.filtriAllergeni.splice(idx, 1);
-        this.aggiornaItems();
-      },
+      filtraAllergeni() { this.aggiornaItems(); },
       aggiornaItems() {
         const sezione = this.data.sezioni?.find((s) => s.id === this.activeTab);
         const items = sezione?.items || [];
-        this.itemsVisibili = this.filtriAllergeni.length === 0
-          ? items
-          : items.filter((i) => !(i.allergeni || []).some((a) => this.filtriAllergeni.includes(a)));
+        this.itemsVisibili = this.filtroAllergene
+          ? items.filter((i) => !(i.allergeni || []).includes(this.filtroAllergene))
+          : items;
       },
     }));
 
-    // BLOCK 05 · Eventi (B8: labelRelativa "Stasera/Domani/Tra X giorni")
+    // BLOCK 05 · Eventi
     Alpine.data('vwEventi', (path) => ({
       data: { eventi: [] },
       eventiVisibili: [],
@@ -177,21 +170,6 @@
       formatGiorno(iso) { return new Date(iso).getDate(); },
       formatMese(iso) { return new Date(iso).toLocaleString('it-IT', { month: 'short' }).toUpperCase(); },
       formatOra(iso) { return new Date(iso).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }); },
-      labelRelativa(iso) {
-        if (!iso) return null;
-        const target = new Date(iso);
-        const now = new Date();
-        const d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const d1 = new Date(target.getFullYear(), target.getMonth(), target.getDate());
-        const diffDays = Math.round((d1 - d0) / (1000 * 60 * 60 * 24));
-        if (diffDays === 0) return 'Stasera';
-        if (diffDays === 1) return 'Domani';
-        if (diffDays === 2) return 'Dopodomani';
-        if (diffDays > 2 && diffDays <= 7) return `Tra ${diffDays} giorni`;
-        if (diffDays > 7 && diffDays <= 14) return 'Prossima settimana';
-        if (diffDays < 0) return 'Concluso';
-        return null;
-      },
       addToCalendarUrl(ev) {
         const fmt = (d) => new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
         const params = new URLSearchParams({
@@ -222,36 +200,16 @@
       next() { const len = this.assetVisibili.length; this.lightboxIndex = (this.lightboxIndex + 1) % len; },
     }));
 
-    // BLOCK 07 · Recensioni Carousel (A3 avatar, B2 SVG stars, B3 swipe touch)
+    // BLOCK 07 · Recensioni Carousel
     Alpine.data('vwRecensioni', (path) => ({
       data: { recensioni: [] },
       current: 0,
       autoplay: null,
-      // B3 · swipe touch state
-      touchStartX: 0,
-      touchEndX: 0,
-      _starsObserver: null,
       async init() {
         this.data = await fetchJSON(path);
         if (this.data.recensioni?.length > 1) {
           this.autoplay = setInterval(() => this.next(), 6000);
         }
-        // B2 · IntersectionObserver per stamp animation stelle
-        this.$nextTick(() => {
-          if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            this.$root.querySelectorAll('.vw-stars').forEach((el) => el.classList.add('is-visible'));
-            return;
-          }
-          this._starsObserver = new IntersectionObserver((entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add('is-visible');
-                this._starsObserver.unobserve(e.target);
-              }
-            });
-          }, { threshold: 0.4 });
-          this.$root.querySelectorAll('.vw-stars').forEach((el) => this._starsObserver.observe(el));
-        });
       },
       get mediaRating() {
         const arr = this.data.recensioni || [];
@@ -263,35 +221,6 @@
       renderStars(n) { const full = Math.round(n); return '★'.repeat(full) + '☆'.repeat(5 - full); },
       formatData(iso) {
         return new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
-      },
-      // A3 · iniziali avatar
-      initials(nome) {
-        if (!nome) return '?';
-        const parti = String(nome).trim().split(/\s+/);
-        const ini = parti.length === 1
-          ? parti[0].slice(0, 2)
-          : (parti[0][0] + parti[parti.length - 1][0]);
-        return ini.toUpperCase();
-      },
-      avatarHue(nome) {
-        let h = 0;
-        const s = nome || '';
-        for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0xffff;
-        return h % 360;
-      },
-      // B3 · swipe touch nativo (threshold 50px)
-      onTouchStart(e) {
-        this.touchStartX = e.touches[0].clientX;
-        // Pausa autoplay finché l'utente interagisce
-        if (this.autoplay) { clearInterval(this.autoplay); this.autoplay = null; }
-      },
-      onTouchMove() { /* passive: niente per ora, no transform drag (card sono absolute) */ },
-      onTouchEnd(e) {
-        this.touchEndX = e.changedTouches[0].clientX;
-        const delta = this.touchEndX - this.touchStartX;
-        const threshold = 50;
-        if (delta < -threshold) this.next();
-        else if (delta > threshold) this.prev();
       },
     }));
 
@@ -312,7 +241,7 @@
       },
     }));
 
-    // BLOCK 00 · Sidebar verticale + drawer mobile (B5)
+    // BLOCK 00 · Sidebar verticale + scroll-spy
     Alpine.data('vwNav', (path) => ({
       data: { brand: 'Vecchio West', voci: [], cta: {} },
       activeId: '',
@@ -320,17 +249,12 @@
       _observer: null,
       async init() {
         this.data = await fetchJSON(path);
+        // Marca il body così il layout desktop spinge il contenuto
         document.body.classList.add('has-sidebar');
 
+        // Scroll-spy via IntersectionObserver: la voce "attiva" è la sezione
+        // più visibile. Usiamo gli href #id come riferimento.
         this.$nextTick(() => this.setupScrollSpy());
-
-        // B5 · drawer mobile: body lock + classe sul backdrop
-        this.$watch('open', (val) => {
-          const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-          if (isMobile) {
-            document.body.style.overflow = val ? 'hidden' : '';
-          }
-        });
       },
       setupScrollSpy() {
         const ids = (this.data.voci || [])
@@ -368,30 +292,16 @@
         else this.activeId = ids[0];
       },
       onVoceClick(voce, ev) {
-        // B5 · chiusura drawer al click di una voce
-        this.open = false;
+        // Su mobile chiudi il drawer dopo il click
+        const sidebar = document.querySelector('.vw-sidebar');
+        if (sidebar && sidebar.classList.contains('is-open')) {
+          sidebar.classList.remove('is-open');
+        }
+        // Se è un anchor interno e l'id esiste, lascia che il browser gestisca
+        // lo smooth scroll (html { scroll-behavior: smooth }).
+        // Aggiorna activeId immediatamente per feedback visivo.
         const id = (voce.href || '').replace(/^#/, '');
         if (id) this.activeId = id;
-      },
-      // B5 · focus trap mobile dentro l'aside drawer
-      trapFocus(e) {
-        if (!this.open) return;
-        const isMobile = window.matchMedia('(max-width: 1023px)').matches;
-        if (!isMobile) return;
-        const root = e.currentTarget;
-        const focusable = root.querySelectorAll(
-          'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
-        );
-        if (!focusable.length) return;
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
       },
     }));
 
@@ -458,30 +368,6 @@
         document.body.style.overflow = 'hidden';
         // Refresh cooldown (potrebbe essere scaduto nel frattempo)
         this.checkCooldown();
-        // A7 · sposta focus sul primo bottone del modal
-        this.$nextTick(() => {
-          const firstBtn = document.querySelector('.vw-roulette-modal .vw-btn, .vw-roulette-modal .vw-roulette-close');
-          if (firstBtn) firstBtn.focus();
-        });
-      },
-      // A7 · focus trap nel modal roulette
-      trapFocus(e) {
-        if (!this.overlayOpen) return;
-        const modal = document.querySelector('.vw-roulette-modal');
-        if (!modal) return;
-        const focusable = modal.querySelectorAll(
-          'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])'
-        );
-        if (!focusable.length) return;
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
       },
       chiudi() {
         this.overlayOpen = false;
@@ -670,44 +556,6 @@
     );
   }
 
-  // ---------- Magnetic CTA (C4 · solo pointer fine, no reduced-motion) ----------
-  function initMagnetic() {
-    if (!window.matchMedia) return;
-    if (window.matchMedia('(hover: none)').matches) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const elements = document.querySelectorAll('[data-magnetic]');
-    if (!elements.length) return;
-    const STRENGTH = 0.25;
-    const RADIUS = 80;
-    elements.forEach((el) => {
-      let rafId = null;
-      const onMove = (e) => {
-        const rect = el.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = e.clientX - cx;
-        const dy = e.clientY - cy;
-        const distance = Math.hypot(dx, dy);
-        if (distance < RADIUS + Math.max(rect.width, rect.height) / 2) {
-          if (rafId) cancelAnimationFrame(rafId);
-          rafId = requestAnimationFrame(() => {
-            el.style.transform = `translate(${dx * STRENGTH}px, ${dy * STRENGTH}px)`;
-          });
-        } else {
-          el.style.transform = '';
-        }
-      };
-      const onLeave = () => {
-        if (rafId) cancelAnimationFrame(rafId);
-        el.style.transform = '';
-        el.style.transition = 'transform .35s cubic-bezier(.34, 1.56, .64, 1)';
-        setTimeout(() => { el.style.transition = ''; }, 400);
-      };
-      document.addEventListener('mousemove', onMove, { passive: true });
-      el.addEventListener('mouseleave', onLeave);
-    });
-  }
-
   // ---------- IntersectionObserver per [data-reveal] ----------
   function attivaReveal() {
     const elementi = Array.from(document.querySelectorAll('[data-reveal]'));
@@ -739,7 +587,6 @@
       // Effetti globali dopo che il DOM è completo
       attivaGunshotLayer();
       attivaReveal();
-      initMagnetic();
 
       // Inietta Alpine DINAMICAMENTE dopo che il DOM è completo
       const s = document.createElement('script');

@@ -16,69 +16,53 @@
       <p class="vw-menu__intro">Scottona marchigiana, olive ascolana, salame ventricina. Sourcing italiano, cottura sul barbecue del tuo tavolo.</p>
     </div>
 
-    <!-- Tab nav (scroll-affordance mask A4) -->
-    <div class="vw-menu__tabs-wrap">
-      <nav class="vw-menu__tabs vw-menu__tabs--scrollable" role="tablist">
-        <template x-for="sezione in data.sezioni" :key="sezione.id">
-          <button
-            class="vw-menu__tab"
-            :class="{ 'is-active': activeTab === sezione.id }"
-            @click="setTab(sezione.id)"
-            :aria-selected="activeTab === sezione.id"
-            role="tab"
-          >
-            <span x-text="sezione.titolo"></span>
-          </button>
-        </template>
-      </nav>
-    </div>
-
-    <!-- Allergen filter (B4 multi-toggle a chip) -->
-    <div class="vw-allergen-filter" x-show="data.ricerca_allergeni_attiva" role="group" aria-label="Filtra per allergeni da escludere">
-      <span class="vw-allergen-filter__label">Escludi:</span>
-      <template x-for="a in allergeniDisponibili" :key="a">
+    <!-- Tab nav -->
+    <nav class="vw-menu__tabs" role="tablist">
+      <template x-for="sezione in data.sezioni" :key="sezione.id">
         <button
-          type="button"
-          class="vw-chip vw-chip--toggle"
-          :class="{ 'is-active': filtriAllergeni.includes(a) }"
-          :aria-pressed="filtriAllergeni.includes(a).toString()"
-          @click="toggleAllergene(a)"
+          class="vw-menu__tab"
+          :class="{ 'is-active': activeTab === sezione.id }"
+          @click="setTab(sezione.id)"
+          :aria-selected="activeTab === sezione.id"
+          role="tab"
         >
-          <span x-text="a"></span>
+          <span x-text="sezione.titolo"></span>
         </button>
       </template>
-      <button
-        type="button"
-        class="vw-chip--clear"
-        x-show="filtriAllergeni.length > 0"
-        @click="filtriAllergeni = []; aggiornaItems()"
-      >Azzera filtri</button>
+    </nav>
+
+    <!-- Allergen filter -->
+    <div class="vw-menu__filter" x-show="data.ricerca_allergeni_attiva">
+      <label class="vw-menu__filter-label">
+        <span>Escludi allergene:</span>
+        <select x-model="filtroAllergene" @change="filtraAllergeni()">
+          <option value="">Nessuno</option>
+          <template x-for="a in allergeniDisponibili" :key="a">
+            <option :value="a" x-text="a"></option>
+          </template>
+        </select>
+      </label>
     </div>
 
     <!-- Piatti -->
     <div class="vw-menu__items" role="tabpanel">
       <template x-for="item in itemsVisibili" :key="item.nome">
-        <article class="vw-menu__item vw-card vw-card--wood" tabindex="0">
+        <article class="vw-menu__item">
           <div class="vw-menu__item-body">
             <header class="vw-menu__item-head">
               <h3 class="vw-menu__item-name" x-text="item.nome"></h3>
               <span class="vw-menu__item-price" x-text="`€ ${item.prezzo}`"></span>
             </header>
             <p class="vw-menu__item-desc" x-text="item.descrizione"></p>
-            <!-- Meta: badge + allergeni chip (B7 reveal on hover/focus) -->
-            <div class="vw-menu__item-meta" aria-label="Informazioni aggiuntive">
-              <div class="vw-menu__item-badges" x-show="item.badge?.length">
-                <template x-for="b in item.badge" :key="b">
-                  <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
-                </template>
-              </div>
-              <div class="vw-menu__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni">
-                <span class="vw-menu__item-aller-label">Allergeni</span>
-                <template x-for="a in (item.allergeni || [])" :key="a">
-                  <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
-                </template>
-              </div>
+            <div class="vw-menu__item-badges" x-show="item.badge?.length">
+              <template x-for="b in item.badge" :key="b">
+                <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
+              </template>
             </div>
+            <p class="vw-menu__item-aller" x-show="item.allergeni?.length">
+              <span class="vw-text-mono">Allergeni:</span>
+              <span x-text="item.allergeni.join(', ')"></span>
+            </p>
           </div>
         </article>
       </template>
@@ -159,8 +143,6 @@
     padding: var(--space-md);
     transition: border-color .2s ease, transform .2s ease;
   }
-  /* Override .vw-card padding (B1) per menu item: rimaniamo su var(--space-md) */
-  .vw-menu__item.vw-card { padding: var(--space-md); }
   .vw-menu__item:hover { border-color: var(--vw-gold); transform: translateY(-2px); }
 
   .vw-menu__item-head {

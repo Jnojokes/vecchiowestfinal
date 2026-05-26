@@ -23,26 +23,17 @@
       </p>
     </header>
 
-    <!-- Filtro allergeni (B4 multi-toggle a chip) -->
-    <div class="vw-allergen-filter vw-menu-vert__filter" x-show="data.ricerca_allergeni_attiva" data-reveal role="group" aria-label="Filtra per allergeni da escludere">
-      <span class="vw-allergen-filter__label">Escludi:</span>
-      <template x-for="a in allergeniDisponibili" :key="a">
-        <button
-          type="button"
-          class="vw-chip vw-chip--toggle"
-          :class="{ 'is-active': filtriAllergeni.includes(a) }"
-          :aria-pressed="filtriAllergeni.includes(a).toString()"
-          @click="toggleAllergene(a)"
-        >
-          <span x-text="a"></span>
-        </button>
-      </template>
-      <button
-        type="button"
-        class="vw-chip--clear"
-        x-show="filtriAllergeni.length > 0"
-        @click="filtriAllergeni = []"
-      >Azzera filtri</button>
+    <!-- Filtro allergeni (opzionale, controllato dal JSON) -->
+    <div class="vw-menu-vert__filter" x-show="data.ricerca_allergeni_attiva" data-reveal>
+      <label class="vw-menu-vert__filter-label">
+        <span>Escludi allergene:</span>
+        <select x-model="filtroAllergene">
+          <option value="">Nessuno</option>
+          <template x-for="a in allergeniDisponibili" :key="a">
+            <option :value="a" x-text="a"></option>
+          </template>
+        </select>
+      </label>
     </div>
 
     <!-- Sezioni: una sotto l'altra, niente tabs -->
@@ -55,7 +46,9 @@
 
         <ul class="vw-menu-vert__lista">
           <template
-            x-for="item in (sezione.items || []).filter(i => !(i.allergeni || []).some(a => filtriAllergeni.includes(a)))"
+            x-for="item in (filtroAllergene
+              ? (sezione.items || []).filter(i => !(i.allergeni || []).includes(filtroAllergene))
+              : (sezione.items || []))"
             :key="item.nome"
           >
             <li class="vw-menu-vert__item">
@@ -71,19 +64,17 @@
                     <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
                   </template>
                 </div>
-                <div class="vw-menu-vert__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni">
-                  <span class="vw-menu-vert__item-aller-label">Allergeni</span>
-                  <template x-for="a in (item.allergeni || [])" :key="a">
-                    <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
-                  </template>
-                </div>
+                <p class="vw-menu-vert__item-aller" x-show="item.allergeni?.length">
+                  <span class="vw-text-mono">Allergeni:</span>
+                  <span x-text="item.allergeni.join(', ')"></span>
+                </p>
               </div>
             </li>
           </template>
 
           <li
             class="vw-menu-vert__empty"
-            x-show="filtriAllergeni.length > 0 && (sezione.items || []).every(i => (i.allergeni || []).some(a => filtriAllergeni.includes(a)))"
+            x-show="filtroAllergene && (sezione.items || []).every(i => (i.allergeni || []).includes(filtroAllergene))"
           >
             Nessun piatto in questa sezione corrisponde al filtro.
           </li>
@@ -93,15 +84,8 @@
 
     <!-- CTA prenotazione + ritorno alla home -->
     <footer class="vw-menu-vert__cta" data-reveal>
-      <a
-        href="https://wa.me/393520029607?text=Salve%20forestiero%2C%20vorrei%20riservare%20un%20tavolo.%0A%0AGiorno%3A%20%0AOrario%3A%20%0ACoperti%3A%20%0ANome%3A%20"
-        class="vw-btn vw-btn--gold"
-        data-gunshot
-        data-cta="menu-vert-whatsapp"
-        rel="noopener"
-        target="_blank"
-      >
-        Riserva il posto su WhatsApp
+      <a href="https://wa.me/393520029607" class="vw-btn vw-btn--gold" data-gunshot>
+        Prenota su WhatsApp
       </a>
       <a href="index.html" class="vw-menu-vert__back">← Torna alla home</a>
     </footer>
