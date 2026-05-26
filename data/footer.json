@@ -25,10 +25,10 @@
   ],
   "newsletter": {
     "attiva": true,
-    "titolo": "Iscriviti alla newsletter del Saloon",
-    "sottotitolo": "Eventi, promo e il calendario del BBQ. Niente spam, parola di pistolero.",
+    "titolo": "Sali in sella alla newsletter",
+    "sottotitolo": "Eventi, drink rari e il calendario del BBQ. Niente spam, parola di pistolero.",
     "placeholder": "la-tua-mail@dominio.it",
-    "cta": "Iscrivimi",
+    "cta": "Saltami in groppa",
     "mailchimp_action": "https://xsolvestudio.us10.list-manage.com/subscribe/post?u=INSERIRE&id=INSERIRE",
     "gdpr_text": "Iscrivendoti accetti la nostra Privacy Policy."
   },

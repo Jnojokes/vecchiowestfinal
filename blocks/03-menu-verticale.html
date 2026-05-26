@@ -64,10 +64,12 @@
                     <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
                   </template>
                 </div>
-                <p class="vw-menu-vert__item-aller" x-show="item.allergeni?.length">
-                  <span class="vw-text-mono">Allergeni:</span>
-                  <span x-text="item.allergeni.join(', ')"></span>
-                </p>
+                <div class="vw-menu-vert__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni">
+                  <span class="vw-menu-vert__item-aller-label">Allergeni</span>
+                  <template x-for="a in (item.allergeni || [])" :key="a">
+                    <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
+                  </template>
+                </div>
               </div>
             </li>
           </template>

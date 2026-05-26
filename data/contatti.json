@@ -13,7 +13,7 @@
   },
   "telefono": "+39 352 002 9607",
   "whatsapp": "+39 352 002 9607",
-  "whatsapp_msg_default": "Ciao, vorrei prenotare un tavolo al Vecchio West",
+  "whatsapp_msg_default": "Salve forestiero, vorrei riservare un tavolo al Vecchio West.\n\nGiorno: \nOrario: \nCoperti: \nNome: ",
   "email": "info@vecchiowestpub.it",
   "maps_query": "Vecchio West, Strada Cura Mostrapiedi 2294, Sant'Elpidio a Mare",
   "google_maps_url": "https://maps.google.com/?q=Vecchio+West+Sant'Elpidio+a+Mare",

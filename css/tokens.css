@@ -28,11 +28,15 @@
   --vw-latin-cobalt: #2e4f8a;   /* cobalto profondo, non saturo */
   --vw-latin-accent: #c45a8a;
 
-  /* --- Tipografia --- */
+  /* --- Tipografia · upgrade editorial western italiano ---
+     Body switched from Inter (generico AI) a Fraunces:
+     serif variable italian-influenced, opt opsz 24 da display.
+     Sancreek aggiunto come display alternate billboard. */
   --font-display: 'Rye', 'Georgia', serif;
+  --font-display-alt: 'Sancreek', 'Rye', 'Georgia', serif;
   --font-headline: 'Oswald', 'Impact', sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'Special Elite', 'Courier New', monospace;
+  --font-body: 'Fraunces', 'Georgia', 'Times New Roman', serif;
+  --font-mono: 'DM Mono', 'Special Elite', 'Courier New', monospace;
 
   /* --- Spacing scale --- */
   --space-xs: 0.5rem;
@@ -84,4 +88,31 @@
   /* --- Grain / texture overlay (nuovo) --- */
   --grain-opacity: 0.045;
   --grain-z: 1;
+
+  /* ============================================================
+   *  PALETTE — Estensione marchigiana (A9)
+   * ============================================================ */
+  --vw-olive: #6b8a4a;
+  --vw-olive-soft: #a4b889;
+  --vw-olive-dark: #4d6633;
+  --vw-rust: #c45a3a;
+  --vw-rust-soft: #e8a292;
+
+  /* ============================================================
+   *  TOKEN SEMANTICI (A9)
+   * ============================================================ */
+  --vw-action-primary:        var(--vw-gold);
+  --vw-action-primary-hover:  #d9ad53;
+  --vw-action-primary-press:  var(--vw-gold-dark);
+  --vw-action-on-action:      var(--vw-bg);
+  --vw-state-success: var(--vw-olive);
+  --vw-state-warning: #d6a73a;
+  --vw-state-error:   var(--vw-rust);
+  --vw-divider:          rgba(200, 155, 60, 0.18);
+  --vw-divider-strong:   rgba(200, 155, 60, 0.35);
+  --vw-divider-on-paper: rgba(26, 18, 11, 0.18);
+  --vw-text-on-paper:        var(--vw-bg);
+  --vw-text-on-paper-muted:  rgba(26, 18, 11, 0.65);
+  --vw-text-on-paper-faint:  rgba(26, 18, 11, 0.40);
+  --vw-focus-ring: 0 0 0 3px rgba(200, 155, 60, 0.55);
 }

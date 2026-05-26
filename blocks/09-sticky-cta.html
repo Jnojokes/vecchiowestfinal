@@ -16,17 +16,24 @@
     <a
       :href="a.link"
       class="vw-sticky__btn"
-      :class="`vw-sticky__btn--${a.stile}`"
+      :class="{
+        [`vw-sticky__btn--${a.stile}`]: true,
+        'vw-sticky__btn--phone': a.icona === 'phone',
+        'vw-sticky__btn--wa': a.icona === 'whatsapp'
+      }"
+      :data-cta="`sticky-${a.icona}`"
       :target="a.link.startsWith('http') ? '_blank' : '_self'"
       :rel="a.link.startsWith('http') ? 'noopener' : ''"
     >
-      <template x-if="a.icona === 'whatsapp'">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.95 11.95 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.18-3.48-8.52z"/></svg>
-      </template>
-      <template x-if="a.icona === 'phone'">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-      </template>
-      <span x-text="a.testo"></span>
+      <span class="vw-sticky__btn-icon" aria-hidden="true">
+        <template x-if="a.icona === 'whatsapp'">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.52 3.48A11.95 11.95 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.18-3.48-8.52z"/></svg>
+        </template>
+        <template x-if="a.icona === 'phone'">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        </template>
+      </span>
+      <span class="vw-sticky__btn-label" x-text="a.testo"></span>
     </a>
   </template>
 </div>
@@ -72,5 +79,26 @@
     background: transparent;
     color: var(--vw-paper);
     border-color: var(--vw-paper-2);
+  }
+  .vw-sticky__btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: 50% 80%;
+  }
+  /* A8 · phone-shake icon su mobile */
+  @media (max-width: 767.98px) {
+    .vw-sticky__btn--phone .vw-sticky__btn-icon {
+      animation: vw-phone-pulse 2.6s ease-in-out infinite;
+    }
+  }
+  @keyframes vw-phone-pulse {
+    0%, 32%, 100% { transform: rotate(0); }
+    8%  { transform: rotate(-14deg); }
+    16% { transform: rotate(14deg); }
+    24% { transform: rotate(-8deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vw-sticky__btn--phone .vw-sticky__btn-icon { animation: none; }
   }
 </style>

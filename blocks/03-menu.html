@@ -16,20 +16,22 @@
       <p class="vw-menu__intro">Scottona marchigiana, olive ascolana, salame ventricina. Sourcing italiano, cottura sul barbecue del tuo tavolo.</p>
     </div>
 
-    <!-- Tab nav -->
-    <nav class="vw-menu__tabs" role="tablist">
-      <template x-for="sezione in data.sezioni" :key="sezione.id">
-        <button
-          class="vw-menu__tab"
-          :class="{ 'is-active': activeTab === sezione.id }"
-          @click="setTab(sezione.id)"
-          :aria-selected="activeTab === sezione.id"
-          role="tab"
-        >
-          <span x-text="sezione.titolo"></span>
-        </button>
-      </template>
-    </nav>
+    <!-- Tab nav · A4 scroll mask laterale -->
+    <div class="vw-menu__tabs-wrap">
+      <nav class="vw-menu__tabs vw-menu__tabs--scrollable" role="tablist">
+        <template x-for="sezione in data.sezioni" :key="sezione.id">
+          <button
+            class="vw-menu__tab"
+            :class="{ 'is-active': activeTab === sezione.id }"
+            @click="setTab(sezione.id)"
+            :aria-selected="activeTab === sezione.id"
+            role="tab"
+          >
+            <span x-text="sezione.titolo"></span>
+          </button>
+        </template>
+      </nav>
+    </div>
 
     <!-- Allergen filter -->
     <div class="vw-menu__filter" x-show="data.ricerca_allergeni_attiva">
@@ -59,10 +61,12 @@
                 <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
               </template>
             </div>
-            <p class="vw-menu__item-aller" x-show="item.allergeni?.length">
-              <span class="vw-text-mono">Allergeni:</span>
-              <span x-text="item.allergeni.join(', ')"></span>
-            </p>
+            <div class="vw-menu__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni">
+              <span class="vw-menu__item-aller-label">Allergeni</span>
+              <template x-for="a in (item.allergeni || [])" :key="a">
+                <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
+              </template>
+            </div>
           </div>
         </article>
       </template>

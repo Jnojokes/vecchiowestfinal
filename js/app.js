@@ -222,6 +222,21 @@
       formatData(iso) {
         return new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
       },
+      // A3 · iniziali + avatar hue stabile per nome
+      initials(nome) {
+        if (!nome) return '?';
+        const parti = String(nome).trim().split(/\s+/);
+        const ini = parti.length === 1
+          ? parti[0].slice(0, 2)
+          : (parti[0][0] + parti[parti.length - 1][0]);
+        return ini.toUpperCase();
+      },
+      avatarHue(nome) {
+        let h = 0;
+        const s = nome || '';
+        for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) & 0xffff;
+        return h % 360;
+      },
     }));
 
     // BLOCK 09 · Sticky CTA
@@ -366,8 +381,31 @@
       apri() {
         this.overlayOpen = true;
         document.body.style.overflow = 'hidden';
-        // Refresh cooldown (potrebbe essere scaduto nel frattempo)
         this.checkCooldown();
+        // A7 · porta focus al primo bottone del modal
+        this.$nextTick(() => {
+          const firstBtn = document.querySelector('.vw-roulette-modal .vw-btn, .vw-roulette-modal .vw-roulette-close');
+          if (firstBtn) firstBtn.focus();
+        });
+      },
+      // A7 · focus trap nel modal roulette (vanilla, no plugin)
+      trapFocus(e) {
+        if (!this.overlayOpen) return;
+        const modal = document.querySelector('.vw-roulette-modal');
+        if (!modal) return;
+        const focusable = modal.querySelectorAll(
+          'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       },
       chiudi() {
         this.overlayOpen = false;

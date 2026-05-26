@@ -22,20 +22,29 @@
     <div class="vw-rec__carousel">
       <button class="vw-rec__nav vw-rec__nav--prev" @click="prev()" aria-label="Precedente">‹</button>
 
-      <div class="vw-rec__track">
+      <div class="vw-rec__track" aria-live="polite" aria-atomic="true">
         <template x-for="(r, i) in data.recensioni" :key="i">
           <article
             class="vw-rec__card"
             :class="{ 'is-active': i === current }"
             :aria-hidden="i !== current"
           >
-            <div class="vw-rec__quote">"</div>
+            <header class="vw-rec__head">
+              <div
+                class="vw-rec__avatar"
+                :style="`--avatar-hue: ${avatarHue(r.autore)}`"
+                :aria-label="`Avatar di ${r.autore}`"
+              >
+                <span x-text="initials(r.autore)"></span>
+              </div>
+              <div class="vw-rec__meta">
+                <span class="vw-rec__author" x-text="r.autore"></span>
+                <time class="vw-rec__date" x-text="formatData(r.data)" :datetime="r.data"></time>
+              </div>
+              <span class="vw-rec__stars-sm" :aria-label="`Valutazione ${r.rating} su 5`" x-text="renderStars(r.rating)"></span>
+            </header>
+            <div class="vw-rec__quote" aria-hidden="true">"</div>
             <p class="vw-rec__text" x-text="r.testo"></p>
-            <footer class="vw-rec__footer">
-              <span class="vw-rec__author" x-text="r.autore"></span>
-              <span class="vw-rec__stars-sm" x-text="renderStars(r.rating)"></span>
-              <time class="vw-rec__date" x-text="formatData(r.data)"></time>
-            </footer>
           </article>
         </template>
       </div>
@@ -63,7 +72,33 @@
 </section>
 
 <style>
-  .vw-rec { background: var(--vw-bg-2); }
+  /* A5 · Sezione recensioni su fondo paper con bordi frastagliati saloon */
+  .vw-rec {
+    background:
+      radial-gradient(circle at 18% 0%, rgba(200, 155, 60, 0.12), transparent 55%),
+      radial-gradient(circle at 82% 100%, rgba(140, 47, 27, 0.10), transparent 50%),
+      var(--vw-paper);
+    color: var(--vw-ink);
+    position: relative;
+  }
+  .vw-rec::before,
+  .vw-rec::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 22px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 22' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,10 L92,18 L84,8 L76,18 L68,6 L60,16 L52,8 L44,18 L36,6 L28,16 L20,8 L12,18 L4,8 L0,14 Z' fill='%231a120b'/%3E%3C/svg%3E");
+    background-size: 90px 22px;
+    background-repeat: repeat-x;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .vw-rec::before { top: -1px; }
+  .vw-rec::after  { bottom: -1px; transform: scaleY(-1); }
+
+  .vw-rec h2 { color: var(--vw-ink); font-family: var(--font-display); }
+  .vw-rec .eyebrow { color: var(--vw-gold-dark); }
+
   .vw-rec__rating {
     display: flex;
     flex-direction: column;
@@ -71,8 +106,8 @@
     gap: 0.3rem;
     margin-top: 0.5rem;
   }
-  .vw-rec__stars { color: var(--vw-gold); font-size: 1.2rem; letter-spacing: 0.15em; }
-  .vw-rec__avg { color: var(--vw-paper-2); font-size: 0.85rem; }
+  .vw-rec__stars { color: var(--vw-gold-dark); font-size: 1.2rem; letter-spacing: 0.15em; }
+  .vw-rec__avg { color: rgba(26, 18, 11, 0.65); font-size: 0.85rem; font-family: var(--font-mono); }
 
   .vw-rec__carousel {
     position: relative;
@@ -84,17 +119,22 @@
   .vw-rec__track {
     flex: 1;
     position: relative;
-    min-height: 280px;
+    min-height: 300px;
   }
   .vw-rec__card {
     position: absolute;
     inset: 0;
-    background: var(--vw-paper);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.35)),
+      var(--vw-paper);
     color: var(--vw-ink);
     padding: var(--space-lg);
     border-radius: var(--radius-md);
+    border: 1px solid rgba(26, 18, 11, 0.10);
     border-top: 3px solid var(--vw-gold);
-    box-shadow: var(--shadow-md);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 14px 30px -16px rgba(26, 18, 11, 0.35);
     opacity: 0;
     transition: opacity .4s ease, transform .4s ease;
     transform: scale(0.96);
@@ -105,42 +145,92 @@
     transform: scale(1);
     pointer-events: auto;
   }
+
+  /* A3 · Header card recensione con avatar iniziali */
+  .vw-rec__head {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 0.7rem;
+  }
+  .vw-rec__avatar {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    background: hsl(var(--avatar-hue, 38), 40%, 22%);
+    color: var(--vw-gold);
+    border: 1.5px solid rgba(200, 155, 60, 0.50);
+    box-shadow:
+      inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+      0 2px 6px rgba(26, 18, 11, 0.20);
+    user-select: none;
+  }
+  .vw-rec__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    flex: 1;
+    min-width: 0;
+  }
+  .vw-rec__author {
+    font-family: var(--font-headline);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.88rem;
+    color: var(--vw-ink);
+  }
+  .vw-rec__date {
+    font-size: 0.74rem;
+    color: rgba(26, 18, 11, 0.55);
+    font-family: var(--font-mono);
+  }
+  .vw-rec__stars-sm {
+    color: var(--vw-gold-dark);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+  }
+
   .vw-rec__quote {
     font-family: var(--font-display);
     font-size: 3.5rem;
-    color: var(--vw-gold);
-    line-height: 0.8;
+    color: var(--vw-gold-dark);
+    line-height: 0.4;
     margin-bottom: 0.5rem;
+    opacity: 0.7;
   }
   .vw-rec__text {
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: var(--space-md);
+    font-family: var(--font-body);
+    font-variation-settings: 'opsz' 14, 'SOFT' 50;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: rgba(26, 18, 11, 0.88);
   }
-  .vw-rec__footer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-    align-items: center;
-    border-top: 1px dashed rgba(42, 29, 18, 0.3);
-    padding-top: var(--space-sm);
-  }
-  .vw-rec__author { font-family: var(--font-headline); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.85rem; }
-  .vw-rec__stars-sm { color: var(--vw-gold-dark); }
-  .vw-rec__date { margin-left: auto; font-size: 0.78rem; color: rgba(42, 29, 18, 0.7); }
 
   .vw-rec__nav {
     width: 44px; height: 44px;
-    background: var(--vw-bg);
-    border: 1px solid var(--vw-gold);
-    color: var(--vw-gold);
+    background: var(--vw-paper);
+    border: 1.5px solid var(--vw-gold-dark);
+    color: var(--vw-gold-dark);
     font-size: 1.5rem;
     border-radius: 50%;
     cursor: pointer;
     flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(26, 18, 11, 0.18);
   }
-  .vw-rec__nav:hover { background: var(--vw-gold); color: var(--vw-bg); }
+  .vw-rec__nav:hover {
+    background: var(--vw-gold);
+    color: var(--vw-bg);
+    border-color: var(--vw-gold);
+  }
 
   .vw-rec__dots {
     display: flex;
@@ -152,16 +242,17 @@
     width: 10px; height: 10px;
     border-radius: 50%;
     border: 0;
-    background: var(--vw-dust);
+    background: rgba(26, 18, 11, 0.25);
     cursor: pointer;
     transition: background .2s ease, transform .2s ease;
   }
-  .vw-rec__dot.is-active { background: var(--vw-gold); transform: scale(1.3); }
+  .vw-rec__dot.is-active { background: var(--vw-gold-dark); transform: scale(1.3); }
 
-  .vw-rec__cta { text-align: center; margin-top: var(--space-md); }
+  .vw-rec__cta { text-align: center; margin-top: var(--space-md); position: relative; z-index: 2; }
 
   @media (max-width: 640px) {
     .vw-rec__nav { width: 36px; height: 36px; font-size: 1.2rem; }
     .vw-rec__card { padding: var(--space-md); }
+    .vw-rec__avatar { width: 38px; height: 38px; font-size: 0.85rem; }
   }
 </style>
