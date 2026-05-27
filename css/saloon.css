@@ -1,0 +1,759 @@
+/* =========================================================
+   VECCHIO WEST · SALOON DESIGN PACK
+   Refactor visivo aderente al mock concept (top ticker,
+   cornici frame ornate, star sceriffo CTA, WANTED posters,
+   roulette wheel decorata).
+   ========================================================= */
+
+/* --- Fonts aggiuntivi: Smokum (grunge billboard western)
+   + Yellowtail (italic script per tagline saloon) --- */
+@import url('https://fonts.googleapis.com/css2?family=Smokum&family=Yellowtail&display=swap');
+
+:root {
+  --font-saloon: 'Smokum', 'Rye', 'Sancreek', 'Georgia', serif;
+  --font-script: 'Yellowtail', 'Fraunces', 'Georgia', cursive;
+  --vw-paper-grain: #ece2c8;
+  --vw-paper-dark: #c9b88c;
+  --vw-frame-gold: #c89b3c;
+  --vw-frame-gold-soft: #e3b75a;
+  --vw-deep: #100a06;
+  --vw-blood: #6b1d1d;
+  --top-bar-h: 32px;
+  --top-header-h: 60px;
+}
+
+/* =========================================================
+   1 · TOP TICKER + HEADER (rimpiazza sidebar laterale)
+   ========================================================= */
+.vw-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+}
+.vw-ticker {
+  height: var(--top-bar-h);
+  background: var(--vw-deep);
+  border-bottom: 1px solid rgba(200, 155, 60, 0.25);
+  overflow: hidden;
+  position: relative;
+}
+.vw-ticker__track {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+  animation: vw-ticker 30s linear infinite;
+  padding-left: 100%;
+}
+.vw-ticker__item {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--vw-gold-2);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: 0 1.5rem;
+  position: relative;
+}
+.vw-ticker__item::after {
+  content: '★';
+  color: var(--vw-gold);
+  margin-left: 1.5rem;
+  font-size: 0.85em;
+}
+@keyframes vw-ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-ticker__track { animation: none; padding-left: 0; }
+}
+
+.vw-top__header {
+  height: var(--top-header-h);
+  background:
+    linear-gradient(180deg, rgba(26, 18, 11, 0.95), rgba(26, 18, 11, 0.85)),
+    var(--vw-bg);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(200, 155, 60, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  position: relative;
+}
+
+/* Logo skull badge */
+.vw-top__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--vw-gold);
+}
+.vw-top__logo-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, #5a2a2a, var(--vw-blood) 60%, #2a0808);
+  border: 2px solid var(--vw-frame-gold);
+  box-shadow:
+    inset 0 -3px 8px rgba(0, 0, 0, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+  color: var(--vw-paper);
+  flex-shrink: 0;
+}
+.vw-top__logo-mark svg { width: 28px; height: 28px; }
+.vw-top__logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.vw-top__logo-text strong {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--vw-paper);
+}
+.vw-top__logo-text small {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  color: var(--vw-gold-2);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+/* Right cluster: status APERTI + hamburger */
+.vw-top__right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.vw-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--vw-paper);
+}
+.vw-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d63b3b;
+  box-shadow: 0 0 0 0 rgba(214, 59, 59, 0.6);
+  animation: vw-pulse-dot 2s ease-out infinite;
+}
+.vw-status--off .vw-status__dot { background: #777; box-shadow: none; animation: none; }
+@keyframes vw-pulse-dot {
+  0%   { box-shadow: 0 0 0 0 rgba(214, 59, 59, 0.6); }
+  70%  { box-shadow: 0 0 0 9px rgba(214, 59, 59, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(214, 59, 59, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-status__dot { animation: none; }
+}
+
+.vw-top__menu-btn {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid rgba(200, 155, 60, 0.35);
+  color: var(--vw-gold);
+  border-radius: 4px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.vw-top__menu-btn:hover { background: rgba(200, 155, 60, 0.08); }
+
+/* Desktop nav inline (>= 768px) */
+.vw-top__nav {
+  display: none;
+}
+@media (min-width: 768px) {
+  .vw-top__nav {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .vw-top__nav a {
+    font-family: var(--font-headline);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--vw-paper-2);
+    text-decoration: none;
+    position: relative;
+    padding: 0.25rem 0;
+  }
+  .vw-top__nav a:hover { color: var(--vw-gold); }
+  .vw-top__nav a.is-active { color: var(--vw-gold); }
+  .vw-top__nav a.is-active::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: var(--vw-gold);
+  }
+  .vw-top__menu-btn { display: none; }
+}
+
+/* Push the body below the top stack */
+body.has-top-bar { padding-top: calc(var(--top-bar-h) + var(--top-header-h)); }
+body.has-sidebar { padding-left: 0 !important; }
+
+/* =========================================================
+   2 · DRAWER OVERLAY MENU MOBILE · sostituisce sidebar
+   ========================================================= */
+.vw-overlay-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 195;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(60, 38, 22, 0.95), transparent 70%),
+    rgba(15, 10, 6, 0.97);
+  backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--top-bar-h) + var(--top-header-h) + 1rem) 2rem 2rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s ease;
+}
+.vw-overlay-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.vw-overlay-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+.vw-overlay-menu__link {
+  display: block;
+  font-family: var(--font-saloon);
+  font-size: clamp(2.2rem, 8vw, 3.6rem);
+  color: var(--vw-paper);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  transition: color .2s ease, transform .2s ease;
+}
+.vw-overlay-menu__link:hover,
+.vw-overlay-menu__link.is-active {
+  color: var(--vw-gold);
+  transform: translateY(-2px);
+}
+.vw-overlay-menu__foot {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--vw-paper-2);
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(200, 155, 60, 0.25);
+}
+
+/* =========================================================
+   3 · CORNICE FRAME ORNATA · per hero e blocchi importanti
+   Realizzata con SVG corners + double-line borders.
+   ========================================================= */
+.vw-frame {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2.5rem);
+}
+.vw-frame::before,
+.vw-frame::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+.vw-frame::before {
+  inset: 8px;
+  border: 1px solid rgba(200, 155, 60, 0.6);
+}
+.vw-frame::after {
+  inset: 14px;
+  border: 1px solid rgba(200, 155, 60, 0.25);
+}
+.vw-frame__corner {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  z-index: 2;
+  color: var(--vw-frame-gold);
+}
+.vw-frame__corner--tl { top: 4px; left: 4px; }
+.vw-frame__corner--tr { top: 4px; right: 4px; transform: scaleX(-1); }
+.vw-frame__corner--bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
+.vw-frame__corner--br { bottom: 4px; right: 4px; transform: scale(-1, -1); }
+
+/* =========================================================
+   4 · STAR SHERIFF CTA · pulsante stella 6 punte gigante
+   ========================================================= */
+.vw-star-cta {
+  --size: clamp(180px, 50vw, 260px);
+  width: var(--size);
+  aspect-ratio: 1;
+  display: inline-grid;
+  place-items: center;
+  position: relative;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  letter-spacing: 0.06em;
+  color: #2a1d12;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: transform .25s var(--vw-ease-out-back), filter .25s ease;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+.vw-star-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 30%, var(--vw-frame-gold-soft), var(--vw-frame-gold) 55%, #8a6a26 100%);
+  -webkit-clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+          clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+  box-shadow: inset 0 -8px 16px rgba(60, 38, 22, 0.4);
+}
+.vw-star-cta::after {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.15), transparent 60%);
+  -webkit-clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%,
+    21% 91%, 32% 57%, 2% 35%, 39% 35%);
+          clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%,
+    21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  pointer-events: none;
+}
+.vw-star-cta span { position: relative; z-index: 2; }
+.vw-star-cta:hover { transform: rotate(8deg) scale(1.04); filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.65)); }
+.vw-star-cta:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) {
+  .vw-star-cta:hover { transform: none; }
+}
+
+/* Mini star sheriff inline (per uso decorativo) */
+.vw-star-small {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background:
+    linear-gradient(180deg, var(--vw-frame-gold-soft), var(--vw-frame-gold));
+  -webkit-clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+          clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  vertical-align: middle;
+}
+
+/* =========================================================
+   5 · HERO SALOON · uso asset cinematic composito
+   (vw-hero-desktop.png su landscape, vw-hero-mobile.png su portrait)
+   L'immagine contiene gia titolo VECCHIO WEST + cowboys + sunset +
+   star PRENOTA + tagline. UI HTML fornisce ticker, header, hitbox.
+   ========================================================= */
+.vw-saloon-hero {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  /* Force ratio piu' wide del native asset 1376/768=1.79
+     per forzare crop verticale del "fake" UI top dell'immagine. */
+  aspect-ratio: 1376 / 530;
+  min-height: 480px;
+  max-height: calc(100svh - var(--top-bar-h) - var(--top-header-h));
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--vw-deep);
+}
+.vw-saloon-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.vw-saloon-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Mostra bottom dell'asset: lettere VECCHIO WEST + cowboys + sunset
+     + STAR PRENOTA + tagline. Top UI dell'asset viene croppata. */
+  object-position: center bottom;
+  filter: contrast(1.04) saturate(1.05);
+}
+.vw-saloon-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(15, 10, 6, 0.65) 0%, rgba(15, 10, 6, 0) 22%, rgba(15, 10, 6, 0) 78%, rgba(15, 10, 6, 0.55) 100%);
+}
+@media (max-aspect-ratio: 1/1) {
+  .vw-saloon-hero {
+    aspect-ratio: 768 / 1100;
+    max-height: calc(100svh - var(--top-bar-h) - var(--top-header-h));
+  }
+}
+
+/* Hitbox CTA cliccabili sopra l'immagine (textindent off-screen) */
+.vw-hero-hitbox {
+  position: absolute;
+  display: block;
+  text-indent: -9999px;
+  overflow: hidden;
+  z-index: 5;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(200, 155, 60, 0.25);
+}
+.vw-hero-hitbox:focus-visible {
+  outline: 2px dashed rgba(200, 155, 60, 0.85);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+/* STAR PRENOTA: centro-basso dell'asset, area circolare ~14% width */
+.vw-hero-hitbox--star {
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(110px, 14vw, 200px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+@media (max-aspect-ratio: 1/1) {
+  .vw-hero-hitbox--star {
+    top: 64%;
+    width: 42vw;
+  }
+}
+/* VEDI IL MENU (mobile: sotto la star, desktop: piazzato sul "VEDI IL MENU →" nella foto desktop) */
+.vw-hero-hitbox--menu {
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  width: clamp(140px, 22vw, 240px);
+  height: clamp(40px, 5vw, 60px);
+  border-radius: 999px;
+}
+@media (max-aspect-ratio: 1/1) {
+  .vw-hero-hitbox--menu {
+    bottom: 10%;
+    width: 55vw;
+  }
+}
+/* ENTRA NEL SALOON (scroll hint bottom-right desktop, bottom mobile) */
+.vw-hero-hitbox--scroll {
+  right: 4%;
+  bottom: 3%;
+  width: clamp(120px, 18vw, 220px);
+  height: 36px;
+}
+@media (max-aspect-ratio: 1/1) {
+  .vw-hero-hitbox--scroll {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    bottom: 2%;
+    width: 60vw;
+  }
+}
+
+/* =========================================================
+   6 · WANTED POSTER · menu items
+   ========================================================= */
+.vw-wanted-board {
+  position: relative;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(40, 22, 12, 0.4) 0px, rgba(40, 22, 12, 0.4) 110px,
+      rgba(60, 32, 18, 0.4) 110px, rgba(60, 32, 18, 0.4) 220px),
+    linear-gradient(180deg, rgba(40, 22, 12, 0.92), rgba(20, 12, 6, 0.95));
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 3rem);
+  border-radius: var(--radius-md);
+}
+
+.vw-wanted-grid {
+  display: grid;
+  gap: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+  grid-template-columns: 1fr;
+  align-items: start;
+  perspective: 1200px;
+}
+@media (min-width: 640px) {
+  .vw-wanted-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .vw-wanted-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.vw-wanted {
+  position: relative;
+  background:
+    radial-gradient(ellipse at top, rgba(255, 255, 255, 0.1), transparent 60%),
+    linear-gradient(180deg, var(--vw-paper-grain), var(--vw-paper-dark) 90%);
+  color: var(--vw-deep);
+  padding: 1rem 1rem 1.25rem;
+  border-radius: 2px;
+  box-shadow:
+    0 12px 28px -10px rgba(0, 0, 0, 0.6),
+    0 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transform: rotate(var(--wanted-rot, -1deg));
+  transition: transform .35s var(--vw-ease-out-back), box-shadow .25s ease;
+  text-decoration: none;
+  display: block;
+}
+.vw-wanted:nth-child(2n) { --wanted-rot: 1.2deg; }
+.vw-wanted:nth-child(3n) { --wanted-rot: -0.6deg; }
+.vw-wanted:nth-child(4n) { --wanted-rot: 0.8deg; }
+.vw-wanted:hover {
+  transform: rotate(0) translateY(-6px) scale(1.02);
+  box-shadow:
+    0 22px 40px -10px rgba(0, 0, 0, 0.7),
+    0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.vw-wanted::before,
+.vw-wanted::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+/* Pin chiodo top center */
+.vw-wanted::before {
+  top: -7px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  background:
+    radial-gradient(circle at 35% 30%, #d4b06a, #a07a2a 60%, #5a3f10);
+  border-radius: 50%;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.6),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.4);
+  z-index: 3;
+}
+/* Paper texture border irregolare */
+.vw-wanted::after {
+  inset: 6px;
+  border: 1px solid rgba(60, 32, 18, 0.4);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+.vw-wanted__head {
+  text-align: center;
+  font-family: var(--font-saloon);
+  font-size: 1.3rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vw-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+.vw-wanted__head::before,
+.vw-wanted__head::after {
+  content: '★';
+  color: var(--vw-frame-gold);
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+.vw-wanted__img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid rgba(60, 32, 18, 0.5);
+  background: #2a1d12;
+  filter: contrast(1.05) saturate(0.95);
+}
+.vw-wanted__name {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--vw-deep);
+  margin: 0.75rem 0 0.35rem;
+  line-height: 1;
+}
+.vw-wanted__reward {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--vw-frame-gold);
+}
+.vw-wanted__reward strong {
+  font-family: var(--font-headline);
+  color: var(--vw-deep);
+  font-weight: 700;
+  margin-left: 0.35rem;
+}
+.vw-wanted__desc {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: rgba(42, 29, 18, 0.75);
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* =========================================================
+   7 · SECTION TITLE BIG SALOON
+   ========================================================= */
+.vw-saloon-title {
+  font-family: var(--font-saloon);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 7vw, 5rem);
+  line-height: 0.9;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--vw-paper);
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+.vw-saloon-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--vw-gold);
+  text-align: center;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+.vw-saloon-tagline {
+  font-family: var(--font-script);
+  font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+  color: var(--vw-frame-gold-soft);
+  text-align: center;
+  margin: 0.4rem 0 1rem;
+}
+
+/* =========================================================
+   8 · ROULETTE WHEEL UPGRADE
+   Background atmospheric + sheriff badge on top
+   ========================================================= */
+.vw-roulette-wheel {
+  background:
+    conic-gradient(
+      from -90deg,
+      var(--vw-blood) 0deg 45deg,
+      var(--vw-frame-gold) 45deg 90deg,
+      var(--vw-blood) 90deg 135deg,
+      var(--vw-frame-gold) 135deg 180deg,
+      var(--vw-blood) 180deg 225deg,
+      var(--vw-frame-gold) 225deg 270deg,
+      var(--vw-blood) 270deg 315deg,
+      var(--vw-frame-gold) 315deg 360deg
+    );
+  position: relative;
+}
+.vw-roulette-wheel::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      var(--vw-frame-gold) 0deg 5deg,
+      var(--vw-gold-dark) 5deg 10deg);
+  z-index: -1;
+}
+.vw-roulette-pointer {
+  width: 0;
+  height: 0;
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-top: 28px solid var(--vw-frame-gold);
+  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.7));
+}
+
+/* =========================================================
+   9 · UTILITY · grano texture overlay paper su sezioni paper
+   ========================================================= */
+.vw-paper-grain {
+  position: relative;
+}
+.vw-paper-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.25  0 0 0 0 0.10  0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   10 · OLD SIDEBAR · hide se .has-top-bar
+   ========================================================= */
+body.has-top-bar .vw-sidebar,
+body.has-top-bar .vw-sidebar__toggle,
+body.has-top-bar .vw-sidebar__backdrop {
+  display: none !important;
+}
+body.has-top-bar.has-sidebar { padding-left: 0; }

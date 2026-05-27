@@ -1,74 +1,106 @@
 <!-- =========================================================
-     BLOCK 00 · SIDEBAR VERTICALE + DRAWER MOBILE (B5)
-     Markup minimale, Alpine.js gestisce stato + scroll-spy.
-     B5: drawer reattivo, ESC, chiusura su click voce,
-         focus trap mobile, burger animato croce-on-open.
+     BLOCK 00 · TOP HEADER (ticker + logo skull + nav + status APERTI + hamburger)
+     Refactor 2026: sostituisce la sidebar verticale con un
+     top bar ispirato ai mock design.
      ========================================================= -->
 <div x-data="vwNav('data/nav.json')" x-init="init()">
-  <aside
-    class="vw-sidebar"
+  <header class="vw-top" role="banner">
+    <!-- Ticker scroll -->
+    <div class="vw-ticker" aria-hidden="true">
+      <div class="vw-ticker__track">
+        <span class="vw-ticker__item">Spaghetti Western Italiano</span>
+        <span class="vw-ticker__item">BBQ al tavolo</span>
+        <span class="vw-ticker__item">A 15 min da Civitanova</span>
+        <span class="vw-ticker__item">Prenotazioni aperte</span>
+        <span class="vw-ticker__item">Spaghetti Western Italiano</span>
+        <span class="vw-ticker__item">BBQ al tavolo</span>
+        <span class="vw-ticker__item">A 15 min da Civitanova</span>
+        <span class="vw-ticker__item">Prenotazioni aperte</span>
+      </div>
+    </div>
+
+    <!-- Header principale -->
+    <div class="vw-top__header">
+      <a href="#hero" class="vw-top__logo" @click="open = false" data-gunshot>
+        <span class="vw-top__logo-mark" aria-hidden="true">
+          <!-- skull bull mini -->
+          <svg viewBox="0 0 32 32" fill="currentColor">
+            <path d="M16 4C10 4 6 8 6 13c0 2.5 1 4.5 2.5 6L7 22h3l1-2h10l1 2h3l-1.5-3c1.5-1.5 2.5-3.5 2.5-6 0-5-4-9-10-9zM12 14a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm8 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM4 13l-2 4 3-1zM28 13l2 4-3-1z"/>
+          </svg>
+        </span>
+        <span class="vw-top__logo-text">
+          <strong x-text="data.brand || 'Vecchio West'"></strong>
+          <small>Per chi ha fame davvero</small>
+        </span>
+      </a>
+
+      <!-- Nav inline desktop -->
+      <nav aria-label="Navigazione principale">
+        <ul class="vw-top__nav" role="list">
+          <template x-for="(voce, i) in (data.voci || []).filter(v => v.id !== 'hero')" :key="i">
+            <li>
+              <a
+                :href="voce.href"
+                :class="{ 'is-active': voce.id === activeId }"
+                @click="onVoceClick(voce, $event)"
+                data-gunshot
+                x-text="voce.label"
+              ></a>
+            </li>
+          </template>
+        </ul>
+      </nav>
+
+      <div class="vw-top__right">
+        <span class="vw-status" aria-label="Stato apertura locale">
+          <span class="vw-status__dot" aria-hidden="true"></span>
+          <span>Aperti</span>
+        </span>
+        <button
+          class="vw-top__menu-btn"
+          type="button"
+          :aria-expanded="open.toString()"
+          aria-controls="vw-overlay-menu"
+          :aria-label="open ? 'Chiudi menu' : 'Apri menu'"
+          @click="open = !open"
+        >
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+            <line x1="4" y1="7"  x2="20" y2="7"/>
+            <line x1="4" y1="12" x2="20" y2="12"/>
+            <line x1="4" y1="17" x2="20" y2="17"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Overlay menu mobile (drawer fullscreen) -->
+  <nav
+    id="vw-overlay-menu"
+    class="vw-overlay-menu"
     :class="{ 'is-open': open }"
     @keydown.escape.window="open && (open = false)"
     @keydown.tab="open && trapFocus($event)"
-    aria-label="Navigazione principale"
+    aria-label="Menu mobile"
   >
-    <!-- Brand -->
-    <a href="#hero" class="vw-sidebar__brand" data-gunshot @click="open = false">
-      <span class="vw-sidebar__brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-          <path d="M12 2l2.5 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 2z"/>
-        </svg>
-      </span>
-      <span class="vw-sidebar__brand-text" x-text="data.brand || 'Vecchio West'"></span>
-    </a>
-
-    <!-- Voci di navigazione -->
-    <ul class="vw-sidebar__nav" role="list">
+    <ul class="vw-overlay-menu__list" role="list">
       <template x-for="(voce, i) in (data.voci || [])" :key="i">
-        <li class="vw-sidebar__item">
+        <li>
           <a
             :href="voce.href"
-            class="vw-sidebar__link"
+            class="vw-overlay-menu__link"
             :class="{ 'is-active': voce.id === activeId }"
             @click="onVoceClick(voce, $event)"
-            data-gunshot
-          >
-            <span class="vw-sidebar__icon" aria-hidden="true" x-html="voce.icon || '•'"></span>
-            <span class="vw-sidebar__label" x-text="voce.label"></span>
-          </a>
+            x-text="voce.label"
+          ></a>
         </li>
       </template>
     </ul>
-
-    <!-- CTA -->
-    <div class="vw-sidebar__cta" x-show="data.cta && data.cta.href">
-      <a :href="data.cta?.href" target="_blank" rel="noopener" class="vw-btn" data-gunshot data-magnetic>
-        <span x-text="data.cta?.label || 'Riserva il posto'"></span>
+    <div class="vw-overlay-menu__foot">
+      <span>Casette d'Ete · Stagione 2026</span><br>
+      <a :href="data.cta?.href || '#'" target="_blank" rel="noopener" style="color: var(--vw-gold); text-decoration: none; margin-top: 0.4rem; display: inline-block">
+        <span x-text="data.cta?.label || 'Riserva il posto'"></span> →
       </a>
     </div>
-  </aside>
-
-  <!-- Backdrop mobile -->
-  <div
-    class="vw-sidebar__backdrop"
-    :class="{ 'is-visible': open }"
-    x-show="open"
-    x-cloak
-    @click="open = false"
-    aria-hidden="true"
-  ></div>
-
-  <!-- Toggle mobile (burger animato 3-line) -->
-  <button
-    class="vw-sidebar__toggle"
-    type="button"
-    :aria-expanded="open.toString()"
-    aria-controls="vw-sidebar-nav"
-    :aria-label="open ? 'Chiudi menu' : 'Apri menu'"
-    @click="open = !open"
-  >
-    <span class="vw-burger" aria-hidden="true">
-      <span></span><span></span><span></span>
-    </span>
-  </button>
+  </nav>
 </div>
