@@ -9,14 +9,14 @@
     },
     {
       "id": "menu",
-      "label": "Menu",
+      "label": "Menù",
       "href": "#menu",
       "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><path d='M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3V4z'/><line x1='9' y1='9' x2='15' y2='9'/><line x1='9' y1='13' x2='15' y2='13'/></svg>"
     },
     {
-      "id": "bbq",
-      "label": "BBQ al tavolo",
-      "href": "#bbq",
+      "id": "all-you-can-eat",
+      "label": "All you can eat di carne",
+      "href": "#all-you-can-eat",
       "icon": "<svg viewBox='0 0 24 24' width='20' height='20' fill='none' stroke='currentColor' stroke-width='1.8'><path d='M4 9h16l-2 6a4 4 0 01-4 3h-4a4 4 0 01-4-3L4 9z'/><line x1='12' y1='3' x2='12' y2='7'/><line x1='9' y1='5' x2='9' y2='7'/><line x1='15' y1='5' x2='15' y2='7'/></svg>"
     },
     {

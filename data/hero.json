@@ -1,10 +1,10 @@
 {
   "_note": "BLOCK 01 · Hero. Per cambiare il video di sfondo: sostituisci 'video_url'. Se il video manca, viene mostrato 'image_fallback'. I CTA hanno testo + link (anchor #id, URL esterno o tel:/whatsapp).",
   "claim": "Benvenuti nel Vecchio West",
-  "claim_secondario": "Spaghetti western italiano · Hamburgheria · BBQ al tuo tavolo",
+  "claim_secondario": "Spaghetti western italiano · Hamburgheria · All you can eat di carne",
   "cta_primario": {
     "testo": "Prenota il tavolo",
-    "link": "https://wa.me/393520029607?text=Ciao%20vorrei%20prenotare%20un%20tavolo%20al%20Vecchio%20West",
+    "link": "https://wa.me/393520029607?text=Salve%20forestiero%2C%20vorrei%20riservare%20un%20tavolo%20al%20Vecchio%20West",
     "stile": "oro"
   },
   "cta_secondario": {
