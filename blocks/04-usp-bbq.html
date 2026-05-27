@@ -3,24 +3,36 @@
      Dati: /data/usp_bbq.json
      ============================================================ -->
 <section
-  id="bbq"
+  id="all-you-can-eat"
   class="vw-section vw-usp"
   x-data="vwBlock('usp_bbq', 'data/usp_bbq.json')"
   x-cloak
 >
   <div class="vw-container vw-usp__grid">
     <div class="vw-usp__media">
-      <img
-        :src="data.foto"
-        :alt="data.foto_alt"
-        class="vw-usp__img"
-        loading="lazy"
-      />
+      <template x-if="data.foto">
+        <img
+          :src="data.foto"
+          :alt="data.foto_alt"
+          class="vw-usp__img"
+          loading="lazy"
+        />
+      </template>
+      <template x-if="!data.foto">
+        <div class="vw-usp__placeholder" aria-hidden="true">
+          <svg viewBox="0 0 80 80" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="14" y="14" width="52" height="52" rx="2"/>
+            <circle cx="40" cy="40" r="12"/>
+            <path d="M14 56l16-16 12 12 10-10 14 14"/>
+          </svg>
+          <p>Foto in arrivo</p>
+        </div>
+      </template>
       <div class="vw-usp__media-frame" aria-hidden="true"></div>
     </div>
 
     <div class="vw-usp__content">
-      <p class="eyebrow">L'USP del Vecchio West</p>
+      <p class="eyebrow">Il format</p>
       <h2 class="vw-usp__title" x-text="data.titolo"></h2>
       <p class="vw-usp__claim" x-text="data.claim"></p>
 
@@ -59,6 +71,30 @@
     object-fit: cover;
     filter: sepia(0.3) saturate(0.9) contrast(1.05);
     border-radius: var(--radius-md);
+  }
+  /* Placeholder se foto non ancora disponibile */
+  .vw-usp__placeholder {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background:
+      repeating-linear-gradient(45deg, rgba(200, 155, 60, 0.03) 0 12px, rgba(200, 155, 60, 0.06) 12px 24px),
+      var(--vw-bg-2);
+    border: 1px solid rgba(200, 155, 60, 0.35);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--vw-gold);
+  }
+  .vw-usp__placeholder p {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--vw-paper-2);
+    margin: 0;
   }
   .vw-usp__media-frame {
     position: absolute;

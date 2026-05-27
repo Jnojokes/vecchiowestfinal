@@ -1,29 +1,29 @@
 {
-  "_note": "BLOCK 04 · USP Hero BBQ al tavolo. Split-screen: 'foto' a sinistra, claim+step a destra. Modifica i 3 step per cambiare il funzionamento.",
-  "titolo": "Il BBQ è al tuo tavolo",
-  "claim": "Acquisti la carne, accendi il barbecue, cuoci come piace a te. La griglia è la tua, lo spettacolo è di tutti.",
-  "foto": "assets/img/bbq-tavolo.jpg",
-  "foto_alt": "Barbecue acceso al centro di una tavolata Vecchio West",
+  "_note": "BLOCK 04 · All you can eat di carne (ex BBQ al tavolo). Split-screen placeholder a sinistra (foto da scattare al pub), claim+step a destra.",
+  "titolo": "All you can eat di carne",
+  "claim": "Una griglia per ogni tavolo. Carne fresca a volontà, salse e contorni inclusi. Cuoci come piace a te, mangi finché hai fame davvero.",
+  "foto": "",
+  "foto_alt": "",
   "step": [
     {
       "numero": "01",
       "titolo": "Scegli la carne",
-      "testo": "Scottona marchigiana, costine, salsicce, pollo. Tutto fresco, sourcing locale."
+      "testo": "Scottona marchigiana, costine, salsicce, pollo, arrosticini. Tutto fresco, sourcing locale."
     },
     {
       "numero": "02",
-      "titolo": "Ti portiamo il BBQ",
+      "titolo": "Ti portiamo la griglia",
       "testo": "Ogni tavolo ha la sua griglia personale, brace già pronta e pinze."
     },
     {
       "numero": "03",
       "titolo": "Cuoci e mangia",
-      "testo": "Tempi tuoi, cotture tue. Noi ti portiamo contorni, salse e birra fredda."
+      "testo": "Tempi tuoi, cotture tue. Salse, contorni e birra fredda inclusi nel format."
     }
   ],
   "cta": {
-    "testo": "Prenota il tavolo BBQ",
-    "link": "https://wa.me/393520029607?text=Ciao%20vorrei%20prenotare%20un%20tavolo%20BBQ"
+    "testo": "Prenota l'All you can eat",
+    "link": "https://wa.me/393520029607?text=Salve%20forestiero%2C%20vorrei%20prenotare%20un%20tavolo%20All%20you%20can%20eat%20di%20carne"
   },
   "parallax": true
 }

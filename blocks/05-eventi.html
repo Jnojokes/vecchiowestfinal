@@ -1,13 +1,12 @@
 <!-- ============================================================
-     BLOCK 05 · EVENTI PROSSIMI (DINAMICO)
-     Dati: /data/eventi.json
-     Mostra solo eventi con data > oggi, max 3
+     BLOCK 05 · EVENTI (Coming soon, brief 2026-05-27)
+     Le card eventi sono state rimosse: lasciato solo titolo +
+     messaggio "Coming soon". Tornera dinamico quando il cliente
+     ci passa il calendario reale.
      ============================================================ -->
 <section
   id="eventi"
-  class="vw-section vw-eventi"
-  x-data="vwEventi('data/eventi.json')"
-  x-cloak
+  class="vw-section vw-eventi vw-eventi--coming-soon"
 >
   <div class="vw-container">
     <div class="vw-section__head vw-section__head--bold">
@@ -16,105 +15,41 @@
       <div class="vw-divider"><svg viewBox="0 0 24 24"><path d="M12 2l2.39 7.35H22l-6.19 4.5L18.2 21 12 16.5 5.8 21l2.39-7.15L2 9.35h7.61z"/></svg></div>
     </div>
 
-    <div class="vw-eventi__grid" x-show="eventiVisibili.length">
-      <template x-for="ev in eventiVisibili" :key="ev.id">
-        <article class="vw-eventi__card vw-card vw-card--wood" :class="`theme-${ev.theme||'western'}`">
-          <div class="vw-eventi__media">
-            <img :src="ev.immagine" :alt="ev.titolo" loading="lazy" />
-          </div>
-          <div class="vw-eventi__body">
-            <!-- B8 · urgency chip "Stasera/Domani/Tra X giorni" -->
-            <template x-if="labelRelativa(ev.data_inizio)">
-              <span class="vw-evento__urgency" x-text="labelRelativa(ev.data_inizio)"></span>
-            </template>
-            <time class="vw-eventi__data" :datetime="ev.data_inizio">
-              <strong x-text="formatGiorno(ev.data_inizio)"></strong>
-              <span x-text="formatMese(ev.data_inizio)"></span>
-              <em x-text="formatOra(ev.data_inizio)"></em>
-            </time>
-            <h3 class="vw-eventi__title" x-text="ev.titolo"></h3>
-            <p class="vw-eventi__desc" x-text="ev.descrizione_breve"></p>
-            <a :href="addToCalendarUrl(ev)" target="_blank" rel="noopener" class="vw-btn vw-btn--ghost vw-eventi__cta" x-text="ev.cta_testo || 'Salva la data'"></a>
-          </div>
-        </article>
-      </template>
+    <div class="vw-coming-soon">
+      <p class="vw-coming-soon__head">Coming soon</p>
+      <p class="vw-coming-soon__body">
+        A breve troverai qui il calendario delle serate e gli eventi del saloon.
+      </p>
     </div>
-
-    <p class="vw-eventi__empty" x-show="!eventiVisibili.length" x-text="data.empty_message || 'Nessun evento programmato nei prossimi giorni. Torna a trovarci presto.'"></p>
   </div>
 </section>
 
 <style>
-  .vw-eventi__grid {
-    display: grid;
-    gap: var(--space-md);
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 700px) {
-    .vw-eventi__grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (min-width: 1000px) {
-    .vw-eventi__grid { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  .vw-eventi__card {
-    background: var(--vw-bg-2);
-    border: 1px solid rgba(200, 155, 60, 0.2);
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
-  }
-  .vw-eventi__card:hover {
-    transform: translateY(-4px);
-    border-color: var(--vw-gold);
-    box-shadow: var(--shadow-md);
-  }
-  .vw-eventi__card.theme-latin { border-top: 3px solid var(--vw-latin-magenta); }
-  .vw-eventi__card.theme-western { border-top: 3px solid var(--vw-gold); }
-  /* Override .vw-card padding per eventi (body ha proprio padding) */
-  .vw-eventi__card.vw-card { padding: 0; border-radius: var(--radius-md); }
-
-  .vw-eventi__media {
-    aspect-ratio: 16/10;
-    overflow: hidden;
-    background: var(--vw-bg);
-  }
-  .vw-eventi__media img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    filter: sepia(0.25) saturate(0.9);
-  }
-  .vw-eventi__card.theme-latin .vw-eventi__media img { filter: saturate(1.1) contrast(1.05); }
-
-  .vw-eventi__body { padding: var(--space-md); }
-  .vw-eventi__data {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin-bottom: 0.5rem;
-    color: var(--vw-gold);
-    font-family: var(--font-headline);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-  .vw-eventi__data strong { font-size: 1.4rem; line-height: 1; }
-  .vw-eventi__data span { font-size: 0.85rem; }
-  .vw-eventi__data em { font-style: normal; margin-left: auto; color: var(--vw-paper-2); font-size: 0.85rem; }
-  .vw-eventi__title {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-  .vw-eventi__desc {
-    color: var(--vw-paper-2);
-    font-size: 0.9rem;
-    margin-bottom: var(--space-md);
-  }
-  .vw-eventi__cta { width: 100%; }
-  .vw-eventi__empty {
+  .vw-eventi--coming-soon { padding-bottom: var(--space-xl); }
+  .vw-coming-soon {
     text-align: center;
+    max-width: 540px;
+    margin: var(--space-lg) auto;
+    padding: clamp(2rem, 5vw, 3rem) clamp(1.2rem, 4vw, 2.5rem);
+    border: 1px dashed rgba(200, 155, 60, 0.35);
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(ellipse at top, rgba(200, 155, 60, 0.05), transparent 60%),
+      rgba(26, 18, 11, 0.4);
+  }
+  .vw-coming-soon__head {
+    font-family: var(--font-saloon, 'Smokum', 'Rye', serif);
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: var(--vw-gold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0 0 0.6rem;
+  }
+  .vw-coming-soon__body {
+    font-family: var(--font-script, 'Yellowtail', cursive);
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
     color: var(--vw-paper-2);
-    padding: var(--space-xl) 0;
-    font-style: italic;
+    margin: 0;
   }
 </style>
