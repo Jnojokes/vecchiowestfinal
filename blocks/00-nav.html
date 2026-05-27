@@ -21,7 +21,7 @@
 
     <!-- Header principale -->
     <div class="vw-top__header">
-      <a href="#hero" class="vw-top__logo" @click="open = false" data-gunshot aria-label="Vecchio West · Home">
+      <a :href="resolveHref({ href: '#hero' })" class="vw-top__logo" @click="open = false" data-gunshot aria-label="Vecchio West · Home">
         <img
           src="assets/img/logo-vw-sm.png"
           alt="Vecchio West"
@@ -42,7 +42,7 @@
           <template x-for="(voce, i) in (data.voci || []).filter(v => v.id !== 'hero')" :key="i">
             <li>
               <a
-                :href="voce.href"
+                :href="resolveHref(voce)"
                 :class="{ 'is-active': voce.id === activeId }"
                 @click="onVoceClick(voce, $event)"
                 data-gunshot
@@ -89,7 +89,7 @@
       <template x-for="(voce, i) in (data.voci || [])" :key="i">
         <li>
           <a
-            :href="voce.href"
+            :href="resolveHref(voce)"
             class="vw-overlay-menu__link"
             :class="{ 'is-active': voce.id === activeId }"
             @click="onVoceClick(voce, $event)"

@@ -363,6 +363,18 @@
         const id = (voce.href || '').replace(/^#/, '');
         if (id) this.activeId = id;
       },
+      // Risolve href: se la sezione esiste local, usa anchor;
+      // se siamo fuori dalla home e la sezione non esiste, prefissa
+      // con index.html (es. /menu → index.html#bbq).
+      resolveHref(voce) {
+        if (!voce?.href) return '#';
+        if (!voce.href.startsWith('#')) return voce.href;
+        const id = voce.href.replace(/^#/, '');
+        if (document.getElementById(id)) return voce.href;
+        const path = window.location.pathname || '';
+        const isHome = path === '/' || path.endsWith('/index.html') || path === '' || /\/$/.test(path);
+        return isHome ? voce.href : 'index.html' + voce.href;
+      },
       // B5 · focus trap mobile dentro l'aside drawer (vanilla, no plugin)
       trapFocus(e) {
         if (!this.open) return;
