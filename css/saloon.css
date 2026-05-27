@@ -406,10 +406,9 @@ body.has-sidebar { padding-left: 0 !important; }
   position: relative;
   width: 100%;
   margin: 0;
-  /* Force ratio piu' wide del native asset 1376/768=1.79
-     per forzare crop verticale del "fake" UI top dell'immagine. */
-  aspect-ratio: 1376 / 530;
-  min-height: 480px;
+  /* Asset clean (no fake UI) → mostra la composizione intera */
+  aspect-ratio: 1376 / 768;
+  min-height: 520px;
   max-height: calc(100svh - var(--top-bar-h) - var(--top-header-h));
   isolation: isolate;
   overflow: hidden;
@@ -424,9 +423,7 @@ body.has-sidebar { padding-left: 0 !important; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Mostra bottom dell'asset: lettere VECCHIO WEST + cowboys + sunset
-     + STAR PRENOTA + tagline. Top UI dell'asset viene croppata. */
-  object-position: center bottom;
+  object-position: center center;
   filter: contrast(1.04) saturate(1.05);
 }
 .vw-saloon-hero::after {
@@ -436,12 +433,13 @@ body.has-sidebar { padding-left: 0 !important; }
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(15, 10, 6, 0.65) 0%, rgba(15, 10, 6, 0) 22%, rgba(15, 10, 6, 0) 78%, rgba(15, 10, 6, 0.55) 100%);
+    linear-gradient(180deg, rgba(15, 10, 6, 0.45) 0%, rgba(15, 10, 6, 0) 18%, rgba(15, 10, 6, 0) 82%, rgba(15, 10, 6, 0.55) 100%);
 }
 @media (max-aspect-ratio: 1/1) {
   .vw-saloon-hero {
-    aspect-ratio: 768 / 1100;
+    aspect-ratio: 768 / 1376;
     max-height: calc(100svh - var(--top-bar-h) - var(--top-header-h));
+    min-height: 600px;
   }
 }
 
@@ -693,43 +691,21 @@ body.has-sidebar { padding-left: 0 !important; }
 }
 
 /* =========================================================
-   8 · ROULETTE WHEEL UPGRADE
-   Background atmospheric + sheriff badge on top
+   8 · ROULETTE · le regole vivono in global.css (12 settori
+   da 30°, allineati con la logica spin di vwRoulette).
+   Saloon non sovrascrive. Aggiungo solo decorations leggere
+   sul wrapper modal/title senza toccare wheel/pointer.
    ========================================================= */
-.vw-roulette-wheel {
-  background:
-    conic-gradient(
-      from -90deg,
-      var(--vw-blood) 0deg 45deg,
-      var(--vw-frame-gold) 45deg 90deg,
-      var(--vw-blood) 90deg 135deg,
-      var(--vw-frame-gold) 135deg 180deg,
-      var(--vw-blood) 180deg 225deg,
-      var(--vw-frame-gold) 225deg 270deg,
-      var(--vw-blood) 270deg 315deg,
-      var(--vw-frame-gold) 315deg 360deg
-    );
-  position: relative;
+.vw-roulette-modal { position: relative; }
+.vw-roulette-title {
+  font-family: var(--font-saloon);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
-.vw-roulette-wheel::before {
-  content: '';
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  background:
-    repeating-conic-gradient(
-      from 0deg,
-      var(--vw-frame-gold) 0deg 5deg,
-      var(--vw-gold-dark) 5deg 10deg);
-  z-index: -1;
-}
-.vw-roulette-pointer {
-  width: 0;
-  height: 0;
-  border-left: 18px solid transparent;
-  border-right: 18px solid transparent;
-  border-top: 28px solid var(--vw-frame-gold);
-  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.7));
+.vw-roulette-sub {
+  font-family: var(--font-script);
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
 }
 
 /* =========================================================
