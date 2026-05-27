@@ -21,7 +21,7 @@
 
     <!-- Header principale -->
     <div class="vw-top__header">
-      <a :href="resolveHref({ href: '#hero' })" class="vw-top__logo" @click="open = false" data-gunshot aria-label="Vecchio West · Home">
+      <a :href="resolveHref({ href: '#hero' })" class="vw-top__logo" @click="setTimeout(() => open = false, 60)" aria-label="Vecchio West · Home">
         <img
           src="assets/img/logo-vw-sm.png"
           alt="Vecchio West"
@@ -44,8 +44,6 @@
               <a
                 :href="resolveHref(voce)"
                 :class="{ 'is-active': voce.id === activeId }"
-                @click="onVoceClick(voce, $event)"
-                data-gunshot
                 x-text="voce.label"
               ></a>
             </li>
@@ -92,7 +90,7 @@
             :href="resolveHref(voce)"
             class="vw-overlay-menu__link"
             :class="{ 'is-active': voce.id === activeId }"
-            @click="onVoceClick(voce, $event)"
+            @click="setTimeout(() => { open = false; }, 60)"
             x-text="voce.label"
           ></a>
         </li>

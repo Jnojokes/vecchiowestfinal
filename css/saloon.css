@@ -181,6 +181,7 @@
     padding: 0;
   }
   .vw-top__nav a {
+    display: inline-block;
     font-family: var(--font-headline);
     font-size: 0.82rem;
     text-transform: uppercase;
@@ -188,7 +189,10 @@
     color: var(--vw-paper-2);
     text-decoration: none;
     position: relative;
-    padding: 0.25rem 0;
+    z-index: 10;
+    padding: 0.5rem 0;
+    pointer-events: auto;
+    cursor: pointer;
   }
   .vw-top__nav a:hover { color: var(--vw-gold); }
   .vw-top__nav a.is-active { color: var(--vw-gold); }
@@ -196,9 +200,10 @@
     content: '';
     position: absolute;
     left: 0; right: 0;
-    bottom: -4px;
+    bottom: 0;
     height: 1px;
     background: var(--vw-gold);
+    pointer-events: none;
   }
   .vw-top__menu-btn { display: none; }
 }
@@ -228,11 +233,13 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   padding: calc(var(--top-bar-h) + var(--top-header-h) + 1rem) 2rem 2rem;
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: opacity .3s ease, visibility .3s ease;
 }
 .vw-overlay-menu.is-open {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 .vw-overlay-menu__list {
   list-style: none;
@@ -247,6 +254,10 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
 }
 .vw-overlay-menu__link {
   display: block;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+  cursor: pointer;
   font-family: var(--font-saloon);
   font-size: clamp(2.2rem, 8vw, 3.6rem);
   color: var(--vw-paper);
@@ -255,6 +266,7 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   line-height: 1;
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   transition: color .2s ease, transform .2s ease;
+  padding: 0.3em 1em;
 }
 .vw-overlay-menu__link:hover,
 .vw-overlay-menu__link.is-active {
