@@ -397,28 +397,34 @@
       },
     }));
 
-    // BLOCK 11 · Roulette overlay (lottery / always_win)
+    // BLOCK 11 · Roulette ROSSO/NERO (brief 2026-05-27).
+    // Flow: scelta colore → spin → esito. La probabilità di vincita
+    // NON è esposta all'utente in alcun copy. Configurabile in
+    // data.probabilita_vittoria (default 0.04 = 1/25).
     Alpine.data('vwRoulette', (path) => ({
       data: {
         attivo: false,
-        mode: 'lottery',
         probabilita_vittoria: 0.04,
         cooldown_ore: 24,
         auto_open_dopo_secondi: 0,
-        titolo: 'Roulette del West',
-        sottotitolo: '',
+        titolo: 'Tenta la sorte',
+        sottotitolo_choose: 'Scegli il tuo colore.',
+        sottotitolo_choose_sub: 'Punta su rosso o nero. Poi gira la ruota.',
+        label_red: 'Rosso',
+        label_black: 'Nero',
+        cta_spin: 'Gira la ruota',
+        premio_titolo: 'Hai vinto la Golden Nugget!',
         premio_descrizione: '',
+        consolazione_titolo: 'Niente da fare, cowboy.',
         consolazione: '',
         disclaimer: '',
-        codice_prefix: 'VW',
-        hub_label_default: 'WEST',
-        hub_label_win: 'WIN!',
-        hub_label_lose: 'MISS',
+        codice_prefix: 'GN',
       },
       overlayOpen: false,
+      userChoice: null,      // 'red' | 'black'
       spinning: false,
       rotazioneTotale: 0,
-      risultato: null, // 'win' | 'lose' | null
+      risultato: null,       // 'win' | 'lose' | null
       codice: '',
       cooldownAttivo: false,
       cooldownFormatted: '',
@@ -428,9 +434,11 @@
         return this.data?.attivo === true && !this.cooldownAttivo;
       },
       get hubLabel() {
-        if (this.risultato === 'win') return this.data.hub_label_win || 'WIN!';
-        if (this.risultato === 'lose') return this.data.hub_label_lose || 'MISS';
-        return this.data.hub_label_default || 'WEST';
+        if (this.risultato === 'win') return '★';
+        if (this.risultato === 'lose') return '—';
+        if (this.userChoice === 'red') return 'R';
+        if (this.userChoice === 'black') return 'N';
+        return 'VW';
       },
       async init() {
         const cfg = await fetchJSON(path);
@@ -459,11 +467,25 @@
         this.overlayOpen = true;
         document.body.style.overflow = 'hidden';
         this.checkCooldown();
+        // Reset userChoice ad ogni apertura, ma solo se NON c'è risultato
+        // (in cooldown vediamo l'esito precedente)
+        if (!this.risultato && !this.cooldownAttivo) this.userChoice = null;
         // A7 · porta focus al primo bottone del modal
         this.$nextTick(() => {
-          const firstBtn = document.querySelector('.vw-roulette-modal .vw-btn, .vw-roulette-modal .vw-roulette-close');
+          const firstBtn = document.querySelector('.vw-roulette-modal .vw-roulette-color, .vw-roulette-modal .vw-btn, .vw-roulette-modal .vw-roulette-close');
           if (firstBtn) firstBtn.focus();
         });
+      },
+      // Step 1 · scelta colore
+      scegliColore(color) {
+        if (this.spinning || this.cooldownAttivo) return;
+        if (color !== 'red' && color !== 'black') return;
+        this.userChoice = color;
+      },
+      // Reset dopo aver scelto, prima dello spin (bottone "Cambia colore")
+      reset() {
+        if (this.spinning) return;
+        this.userChoice = null;
       },
       // A7 · focus trap nel modal roulette (vanilla, no plugin)
       trapFocus(e) {
@@ -521,6 +543,7 @@
           } else if (last.esito === 'lose') {
             this.risultato = 'lose';
           }
+          if (last.userChoice) this.userChoice = last.userChoice;
           this.updateCooldownFormatted(scadenza);
           if (this._cooldownTimer) clearInterval(this._cooldownTimer);
           this._cooldownTimer = setInterval(() => {
@@ -560,61 +583,60 @@
       },
       spin() {
         if (this.spinning || this.cooldownAttivo) return;
+        if (!this.userChoice) return; // prerequisito: scelta colore
         this.spinning = true;
         this.risultato = null;
 
-        // Decisione: lottery vs always_win
-        let vince;
-        if (this.data.mode === 'always_win') {
-          vince = true;
-        } else {
-          const p = Number(this.data.probabilita_vittoria || 0);
-          vince = Math.random() < p;
-        }
+        // Decide vincita: probabilità configurabile, NON esposta in copy.
+        const p = Number(this.data.probabilita_vittoria || 0.04);
+        const vince = Math.random() < p;
 
-        // Calcola rotazione: 6-10 giri completi + offset finale che
-        // posiziona il pointer (top) su settore vincente/non vincente.
-        // La ruota CSS ha 12 settori da 30° alternati rosso/nero/oro.
-        // Settori "oro" (vincenti visivamente) sono a 60-90°, 180-210°, 300-330°
-        // (centri: 75°, 195°, 315°).
-        // Settori "nero" o "rosso" (non vincenti) sono i restanti.
+        // Wheel a 12 settori rosso/nero alternati (da 30° ciascuno):
+        //   ROSSO: 0–30, 60–90, 120–150, 180–210, 240–270, 300–330
+        //          centri: 15, 75, 135, 195, 255, 315
+        //   NERO:  30–60, 90–120, 150–180, 210–240, 270–300, 330–360
+        //          centri: 45, 105, 165, 225, 285, 345
+        const centriRosso = [15, 75, 135, 195, 255, 315];
+        const centriNero  = [45, 105, 165, 225, 285, 345];
+
+        // winningColor = userChoice se vince, opposto se perde
+        const winningColor = vince
+          ? this.userChoice
+          : (this.userChoice === 'red' ? 'black' : 'red');
+        const targets = winningColor === 'red' ? centriRosso : centriNero;
+        const target = targets[Math.floor(Math.random() * targets.length)];
+
         const giri = 6 + Math.floor(Math.random() * 5); // 6..10
-        const centriVincita = [75, 195, 315];
-        const centriPerdita = [15, 45, 105, 135, 165, 225, 255, 285, 345];
-        const target = vince
-          ? centriVincita[Math.floor(Math.random() * centriVincita.length)]
-          : centriPerdita[Math.floor(Math.random() * centriPerdita.length)];
-        // Il pointer è in alto (rotazione 0 = settore in alto).
-        // Per portare il settore "target" sotto il pointer dobbiamo ruotare
-        // di -target (in senso orario) + giri completi. Aggiungiamo alla
-        // rotazione attuale per evitare reset visivi.
         const finalAngle = giri * 360 - target;
         this.rotazioneTotale = this.rotazioneTotale + finalAngle;
 
-        // Aspetta la fine della transizione CSS (--roulette-spin-duration)
-        const durMs = 4000; // ~ var(--roulette-spin-duration)
+        const durMs = 4000;
         setTimeout(() => {
           this.spinning = false;
           if (vince) {
             this.risultato = 'win';
             this.codice = this.generaCodice();
-            this.salvaEsito('win', this.codice);
+            this.salvaEsito('win', this.codice, this.userChoice);
           } else {
             this.risultato = 'lose';
-            this.salvaEsito('lose', null);
+            this.salvaEsito('lose', null, this.userChoice);
           }
         }, durMs + 80);
       },
-      salvaEsito(esito, codice) {
+      salvaEsito(esito, codice, choice) {
         try {
           localStorage.setItem(
             'vw_roulette_last',
-            JSON.stringify({ timestamp: Date.now(), esito, codice })
+            JSON.stringify({
+              timestamp: Date.now(),
+              esito,
+              codice,
+              userChoice: choice || null
+            })
           );
         } catch (err) {
           console.warn('[VW] roulette save error', err);
         }
-        // Avvia il timer di cooldown immediato
         this.checkCooldown();
       },
     }));

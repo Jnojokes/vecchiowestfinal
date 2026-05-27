@@ -599,19 +599,20 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
     0 0 0 4px var(--vw-bg-2),
     0 0 0 6px var(--vw-gold-dark),
     var(--shadow-lg);
+  /* 12 settori alternati ROSSO/NERO (rosso = 0–30, 60–90, ...) */
   background: conic-gradient(
     from -90deg,
     #8c2f1b 0deg 30deg,
     #1a120b 30deg 60deg,
-    #c89b3c 60deg 90deg,
+    #8c2f1b 60deg 90deg,
     #1a120b 90deg 120deg,
     #8c2f1b 120deg 150deg,
     #1a120b 150deg 180deg,
-    #c89b3c 180deg 210deg,
+    #8c2f1b 180deg 210deg,
     #1a120b 210deg 240deg,
     #8c2f1b 240deg 270deg,
     #1a120b 270deg 300deg,
-    #c89b3c 300deg 330deg,
+    #8c2f1b 300deg 330deg,
     #1a120b 330deg 360deg
   );
   transition: transform var(--roulette-spin-duration) var(--vw-ease-spin);

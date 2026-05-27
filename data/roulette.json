@@ -1,26 +1,27 @@
 {
   "attivo": true,
-  "mode": "lottery",
-  "_commento_mode": "Valori ammessi: 'lottery' (1 su N vince, default) | 'always_win' (vince sempre, conforme art.6 DPR 430/2001 — manifestazione di sorte non soggetta).",
+  "_commento_brief": "Brief 2026-05-27: niente probabilità esposta in copy/tooltip. La probabilità di vincita è SOLO config interna.",
 
   "probabilita_vittoria": 0.04,
-  "_commento_probabilita": "0.04 = 1 colpo su 25 vince. Usato solo se mode = 'lottery'.",
+  "_commento_probabilita": "Configurabile lato server in futuro. NON va mai esposta all'utente.",
 
   "cooldown_ore": 24,
-  "_commento_cooldown": "Ore di attesa fra due tentativi dallo stesso browser (localStorage).",
+  "_commento_cooldown": "Ore di attesa fra due tentativi dallo stesso browser (localStorage TTL).",
 
   "auto_open_dopo_secondi": 0,
-  "_commento_auto_open": "0 = nessuna apertura automatica. Inserire un valore > 0 per aprire la roulette dopo X secondi dal caricamento.",
+  "_commento_auto_open": "0 = nessuna apertura automatica. Inserire > 0 per aprire dopo X secondi dal load.",
 
-  "titolo": "Roulette del West",
-  "sottotitolo": "Gira la ruota: 1 colpo su 25 vince una birra alla spina",
-  "premio_descrizione": "Una birra alla spina (media) offerta dalla casa.",
-  "consolazione": "Il vecchio Tex ha sbagliato mira. La fortuna gira veloce — riprova domani.",
-  "codice_prefix": "VW",
+  "titolo": "Tenta la sorte",
+  "sottotitolo_choose": "Scegli il tuo colore.",
+  "sottotitolo_choose_sub": "Punta su rosso o nero. Poi gira la ruota.",
+  "label_red": "Rosso",
+  "label_black": "Nero",
+  "cta_spin": "Gira la ruota",
+  "premio_titolo": "Hai vinto la Golden Nugget!",
+  "premio_descrizione": "Una Golden Nugget offerta dalla casa. Mostra il codice al banco per riscattare.",
+  "consolazione_titolo": "Niente da fare, cowboy.",
+  "consolazione": "La fortuna gira veloce — riprova domani.",
+  "codice_prefix": "GN",
 
-  "disclaimer": "Manifestazione di sorte interna al locale. Codice valido una sola volta, da mostrare al banco entro la chiusura della serata in cui è stato generato. Non cumulabile con altre offerte. Sotto i 18 anni: bevanda analcolica equivalente.",
-
-  "hub_label_default": "WEST",
-  "hub_label_win": "WIN!",
-  "hub_label_lose": "MISS"
+  "disclaimer": "Manifestazione di sorte interna al locale. Codice valido una sola volta, da mostrare al banco entro la chiusura della serata. Non cumulabile con altre offerte. Sotto i 18 anni: bevanda analcolica equivalente."
 }

@@ -1,19 +1,20 @@
 <!-- =========================================================
-     BLOCK 11 · ROULETTE OVERLAY
-     Spin con probabilità configurabile (default 1/25)
-     Modalità: lottery (default) | always_win
+     BLOCK 11 · ROULETTE ROSSO/NERO (brief 2026-05-27)
+     Flow: scelta colore → spin → esito. Probabilità di vittoria
+     in config server-side, NON esposta all'utente.
+     Cooldown 24h tramite localStorage.
      ========================================================= -->
 <div x-data="vwRoulette('data/roulette.json')" x-init="init()">
 
-  <!-- Trigger floating (visibile solo se attivo e non in cooldown) -->
+  <!-- Trigger floating -->
   <button
     type="button"
     class="vw-roulette-trigger"
     x-show="data.attivo && triggerVisibile"
     x-cloak
     @click="apri()"
-    aria-label="Tenta la fortuna alla roulette"
-    title="Tenta la fortuna"
+    aria-label="Tenta la sorte"
+    title="Tenta la sorte"
     data-gunshot
   >
     <span aria-hidden="true">🎯</span>
@@ -21,6 +22,7 @@
 
   <!-- Overlay -->
   <div
+    id="roulette"
     class="vw-roulette-overlay"
     x-show="overlayOpen"
     x-cloak
@@ -29,41 +31,72 @@
     @keydown.tab="trapFocus($event)"
     role="dialog"
     aria-modal="true"
-    :aria-label="data.titolo || 'Roulette del West'"
+    :aria-label="data.titolo || 'Tenta la sorte'"
   >
     <div class="vw-roulette-modal" @click.stop>
       <button class="vw-roulette-close" type="button" @click="chiudi()" aria-label="Chiudi">×</button>
 
       <p class="eyebrow">Round of the House</p>
-      <h2 class="vw-roulette-title" x-text="data.titolo || 'Roulette del West'"></h2>
-      <p class="vw-roulette-sub" x-text="data.sottotitolo || 'Gira la ruota: 1 colpo su 25 vince una birra alla spina'"></p>
+      <h2 class="vw-roulette-title" x-text="data.titolo || 'Tenta la sorte'"></h2>
 
-      <!-- Ruota -->
-      <div class="vw-roulette-wheel-wrap">
-        <div class="vw-roulette-pointer" aria-hidden="true"></div>
-        <div
-          class="vw-roulette-wheel"
-          :class="{ 'is-spinning': spinning }"
-          :style="`transform: rotate(${rotazioneTotale}deg);`"
-        ></div>
-        <div class="vw-roulette-hub" aria-hidden="true">
-          <span x-text="hubLabel"></span>
+      <!-- STEP 1 · scelta colore (visibile finché userChoice non è settato e non c'è risultato) -->
+      <div class="vw-roulette-step vw-roulette-step--choose" x-show="!userChoice && !risultato && !cooldownAttivo" x-cloak>
+        <p class="vw-roulette-sub" x-text="data.sottotitolo_choose || 'Scegli il tuo colore.'"></p>
+        <p class="vw-roulette-sub-faint" x-text="data.sottotitolo_choose_sub || 'Punta su rosso o nero. Poi gira la ruota.'"></p>
+        <div class="vw-roulette-colors">
+          <button
+            type="button"
+            class="vw-roulette-color vw-roulette-color--red"
+            @click="scegliColore('red')"
+            data-gunshot
+            :aria-label="`Scegli ${data.label_red || 'Rosso'}`"
+          >
+            <span x-text="data.label_red || 'Rosso'"></span>
+          </button>
+          <button
+            type="button"
+            class="vw-roulette-color vw-roulette-color--black"
+            @click="scegliColore('black')"
+            data-gunshot
+            :aria-label="`Scegli ${data.label_black || 'Nero'}`"
+          >
+            <span x-text="data.label_black || 'Nero'"></span>
+          </button>
         </div>
       </div>
 
-      <!-- Azioni -->
-      <div class="vw-roulette-actions" x-show="!risultato && !cooldownAttivo">
-        <button
-          type="button"
-          class="vw-btn"
-          @click="spin()"
-          :disabled="spinning"
-          data-gunshot
-        >
-          <span x-show="!spinning">Spara il colpo</span>
-          <span x-show="spinning">…</span>
-        </button>
-        <button type="button" class="vw-btn vw-btn--ghost" @click="chiudi()">Lascia stare</button>
+      <!-- STEP 2 · spin (visibile dopo scelta colore) -->
+      <div class="vw-roulette-step vw-roulette-step--spin" x-show="userChoice && !risultato" x-cloak>
+        <p class="vw-roulette-sub">
+          Hai puntato su
+          <strong class="vw-roulette-choice-tag" :class="`vw-roulette-choice-tag--${userChoice}`" x-text="userChoice === 'red' ? (data.label_red || 'Rosso') : (data.label_black || 'Nero')"></strong>
+        </p>
+
+        <div class="vw-roulette-wheel-wrap">
+          <div class="vw-roulette-pointer" aria-hidden="true"></div>
+          <div
+            class="vw-roulette-wheel"
+            :class="{ 'is-spinning': spinning }"
+            :style="`transform: rotate(${rotazioneTotale}deg);`"
+          ></div>
+          <div class="vw-roulette-hub" aria-hidden="true">
+            <span x-text="hubLabel"></span>
+          </div>
+        </div>
+
+        <div class="vw-roulette-actions">
+          <button
+            type="button"
+            class="vw-btn"
+            @click="spin()"
+            :disabled="spinning"
+            data-gunshot
+          >
+            <span x-show="!spinning" x-text="data.cta_spin || 'Gira la ruota'"></span>
+            <span x-show="spinning">Sta girando…</span>
+          </button>
+          <button type="button" class="vw-btn vw-btn--ghost" @click="reset()" x-show="!spinning">Cambia colore</button>
+        </div>
       </div>
 
       <!-- Cooldown -->
@@ -71,20 +104,20 @@
         Hai già tentato la sorte. Torna fra <span x-text="cooldownFormatted"></span>.
       </div>
 
-      <!-- Risultato -->
+      <!-- STEP 3 · risultato -->
       <div class="vw-roulette-result" x-show="risultato" x-cloak>
         <template x-if="risultato === 'win'">
           <div>
-            <h3 class="vw-roulette-result__title">🍻 Hai vinto!</h3>
-            <p x-text="data.premio_descrizione || 'Una birra alla spina offerta dalla casa.'"></p>
+            <h3 class="vw-roulette-result__title">🎉 <span x-text="data.premio_titolo || 'Hai vinto la Golden Nugget!'"></span></h3>
+            <p x-text="data.premio_descrizione || 'Una Golden Nugget offerta dalla casa.'"></p>
             <span class="vw-roulette-result__code" x-text="codice"></span>
-            <p class="vw-roulette-meta">Mostra questo codice al banco entro le 02:00 di stasera. Valido una sola volta.</p>
+            <p class="vw-roulette-meta">Mostra questo codice al banco entro la chiusura della serata. Valido una sola volta.</p>
           </div>
         </template>
         <template x-if="risultato === 'lose'">
           <div>
-            <h3 class="vw-roulette-result__title">Niente birra, stavolta</h3>
-            <p x-text="data.consolazione || 'Il vecchio Tex ha sbagliato mira. Riprova fra 24 ore.'"></p>
+            <h3 class="vw-roulette-result__title" x-text="data.consolazione_titolo || 'Niente da fare, cowboy.'"></h3>
+            <p x-text="data.consolazione || 'La fortuna gira veloce — riprova domani.'"></p>
             <div class="vw-roulette-actions" style="margin-top: 1rem;">
               <button type="button" class="vw-btn vw-btn--ghost" @click="chiudi()">Chiudi</button>
             </div>
@@ -97,3 +130,77 @@
   </div>
 
 </div>
+
+<style>
+  /* Step 1 · scelta colore */
+  .vw-roulette-step--choose {
+    margin: var(--space-md) 0;
+    text-align: center;
+  }
+  .vw-roulette-sub-faint {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--vw-paper-2);
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-md);
+  }
+  .vw-roulette-colors {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-sm);
+  }
+  .vw-roulette-color {
+    flex: 1 1 130px;
+    max-width: 200px;
+    min-height: 130px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--vw-gold);
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--vw-paper);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  }
+  .vw-roulette-color--red {
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.10), transparent 60%),
+      linear-gradient(180deg, #a83333, #8B1A1A);
+  }
+  .vw-roulette-color--black {
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.08), transparent 60%),
+      linear-gradient(180deg, #2a2a2a, #1A1A1A);
+  }
+  .vw-roulette-color:hover {
+    transform: translateY(-3px);
+    border-color: var(--vw-gold-2);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6), 0 0 0 4px rgba(200, 155, 60, 0.18);
+  }
+  .vw-roulette-color:active { transform: scale(0.97); }
+
+  /* Step 2 · tag scelta */
+  .vw-roulette-choice-tag {
+    display: inline-block;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    font-family: var(--font-headline);
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0 0.25rem;
+    color: var(--vw-paper);
+  }
+  .vw-roulette-choice-tag--red {
+    background: linear-gradient(180deg, #a83333, #8B1A1A);
+    border: 1px solid rgba(200, 155, 60, 0.5);
+  }
+  .vw-roulette-choice-tag--black {
+    background: linear-gradient(180deg, #2a2a2a, #1A1A1A);
+    border: 1px solid rgba(200, 155, 60, 0.5);
+  }
+</style>
