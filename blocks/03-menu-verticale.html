@@ -1,8 +1,10 @@
 <!-- ============================================================
      BLOCK 03 · MENU VERTICALE (pagina standalone /menu.html)
      Dati: /data/menu.json
-     Riutilizza il componente Alpine `vwMenu` ma con layout monocolonna
-     stile "locandina del menù", senza tabs.
+     Layout locandina vintage western. Card piatto con foto opzionale.
+     NB: data-reveal RIMOSSO dagli elementi generati dinamicamente
+     da Alpine (l'IntersectionObserver di app.js gira prima del
+     render Alpine e non li trova mai).
      ============================================================ -->
 <section
   id="menu"
@@ -13,7 +15,8 @@
   <div class="vw-menu-vert__container">
 
     <!-- Intestazione -->
-    <header class="vw-menu-vert__head" data-reveal>
+    <header class="vw-menu-vert__head">
+      <img src="assets/img/logo-vw.png" alt="" class="vw-menu-vert__logo" width="120" height="120" />
       <p class="eyebrow">Il menù completo</p>
       <h1 class="vw-menu-vert__title">Vecchio West</h1>
       <div class="vw-divider"><svg viewBox="0 0 24 24"><path d="M12 2l2.39 7.35H22l-6.19 4.5L18.2 21 12 16.5 5.8 21l2.39-7.15L2 9.35h7.61z"/></svg></div>
@@ -24,7 +27,7 @@
     </header>
 
     <!-- Filtro allergeni · B4 multi-toggle a chip -->
-    <div class="vw-allergen-filter vw-menu-vert__filter" x-show="data.ricerca_allergeni_attiva" data-reveal role="group" aria-label="Filtra per allergeni da escludere">
+    <div class="vw-allergen-filter vw-menu-vert__filter" x-show="data.ricerca_allergeni_attiva" role="group" aria-label="Filtra per allergeni da escludere">
       <span class="vw-allergen-filter__label">Escludi:</span>
       <template x-for="a in allergeniDisponibili" :key="a">
         <button
@@ -45,9 +48,9 @@
       >Azzera filtri</button>
     </div>
 
-    <!-- Sezioni: una sotto l'altra, niente tabs -->
+    <!-- Sezioni: una sotto l'altra -->
     <template x-for="sezione in data.sezioni" :key="sezione.id">
-      <article class="vw-menu-vert__sezione" data-reveal>
+      <article class="vw-menu-vert__sezione">
         <header class="vw-menu-vert__sezione-head">
           <h2 class="vw-menu-vert__sezione-titolo" x-text="sezione.titolo"></h2>
           <span class="vw-menu-vert__sezione-rule" aria-hidden="true"></span>
@@ -58,24 +61,29 @@
             x-for="item in (sezione.items || []).filter(i => !(i.allergeni || []).some(a => filtriAllergeni.includes(a)))"
             :key="item.nome"
           >
-            <li class="vw-menu-vert__item">
-              <div class="vw-menu-vert__item-row">
-                <h3 class="vw-menu-vert__item-name" x-text="item.nome"></h3>
-                <span class="vw-menu-vert__item-dots" aria-hidden="true"></span>
-                <span class="vw-menu-vert__item-price" x-text="`€ ${item.prezzo}`"></span>
+            <li class="vw-menu-vert__item" :class="{ 'vw-menu-vert__item--with-photo': item.foto }">
+              <div class="vw-menu-vert__item-photo" x-show="item.foto" aria-hidden="true">
+                <img :src="item.foto" :alt="item.nome" loading="lazy" />
               </div>
-              <p class="vw-menu-vert__item-desc" x-text="item.descrizione" x-show="item.descrizione"></p>
-              <div class="vw-menu-vert__item-meta">
-                <div class="vw-menu-vert__item-badges" x-show="item.badge?.length">
-                  <template x-for="b in item.badge" :key="b">
-                    <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
-                  </template>
+              <div class="vw-menu-vert__item-body">
+                <div class="vw-menu-vert__item-row">
+                  <h3 class="vw-menu-vert__item-name" x-text="item.nome"></h3>
+                  <span class="vw-menu-vert__item-dots" aria-hidden="true"></span>
+                  <span class="vw-menu-vert__item-price" x-text="`€ ${item.prezzo}`"></span>
                 </div>
-                <div class="vw-menu-vert__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni">
-                  <span class="vw-menu-vert__item-aller-label">Allergeni</span>
-                  <template x-for="a in (item.allergeni || [])" :key="a">
-                    <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
-                  </template>
+                <p class="vw-menu-vert__item-desc" x-text="item.descrizione" x-show="item.descrizione"></p>
+                <div class="vw-menu-vert__item-meta" x-show="item.badge?.length || item.allergeni?.length">
+                  <div class="vw-menu-vert__item-badges" x-show="item.badge?.length">
+                    <template x-for="b in item.badge" :key="b">
+                      <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
+                    </template>
+                  </div>
+                  <div class="vw-menu-vert__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni">
+                    <span class="vw-menu-vert__item-aller-label">Allergeni</span>
+                    <template x-for="a in (item.allergeni || [])" :key="a">
+                      <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
+                    </template>
+                  </div>
                 </div>
               </div>
             </li>
@@ -91,13 +99,78 @@
       </article>
     </template>
 
-    <!-- CTA prenotazione + ritorno alla home -->
-    <footer class="vw-menu-vert__cta" data-reveal>
-      <a href="https://wa.me/393520029607" class="vw-btn vw-btn--gold" data-gunshot>
-        Prenota su WhatsApp
-      </a>
+    <!-- Banner prenotazione cliccabile con immagine -->
+    <a
+      class="vw-prenota-banner"
+      href="https://wa.me/393520029607?text=Salve%20forestiero%2C%20vorrei%20riservare%20un%20tavolo.%0A%0AGiorno%3A%20%0AOrario%3A%20%0ACoperti%3A%20%0ANome%3A%20"
+      target="_blank"
+      rel="noopener"
+      data-gunshot
+      data-magnetic
+      data-cta="menu-vert-prenota-banner"
+      aria-label="Prenota il tuo tavolo su WhatsApp"
+    >
+      <img src="assets/img/poster/cappello-whiskey.png" alt="" />
+      <div class="vw-prenota-banner__content">
+        <span class="vw-prenota-banner__eyebrow">Hai fame davvero?</span>
+        <span class="vw-prenota-banner__title">Riserva il posto</span>
+        <span class="vw-prenota-banner__sub">Whatsapp · risposta in pochi minuti</span>
+        <span class="vw-prenota-banner__cta">Prenota ora →</span>
+      </div>
+    </a>
+
+    <!-- Footer CTA + ritorno alla home -->
+    <footer class="vw-menu-vert__cta">
       <a href="index.html" class="vw-menu-vert__back">← Torna alla home</a>
     </footer>
 
   </div>
 </section>
+
+<style>
+  /* Layout item · supporto foto laterale */
+  .vw-menu-vert__head {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(200, 155, 60, 0.2);
+  }
+  .vw-menu-vert__logo {
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--space-md);
+    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+  }
+  .vw-menu-vert__item--with-photo {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  .vw-menu-vert__item-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--vw-bg-2);
+    border: 1px solid rgba(200, 155, 60, 0.25);
+    flex-shrink: 0;
+  }
+  .vw-menu-vert__item-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.05) saturate(1.05);
+  }
+  @media (max-width: 640px) {
+    .vw-menu-vert__item--with-photo {
+      grid-template-columns: 72px 1fr;
+      gap: 0.75rem;
+    }
+    .vw-menu-vert__item-photo {
+      width: 72px;
+      height: 72px;
+    }
+  }
+</style>

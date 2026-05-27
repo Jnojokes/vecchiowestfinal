@@ -30,7 +30,9 @@
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="256x256" href="assets/img/logo-vw-sm.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png" />
+  <link rel="preload" as="image" href="assets/img/logo-vw.png" />
 
   <!-- Preload critical -->
   <link rel="preload" as="font" type="font/woff2" href="assets/fonts/Rye-Regular.woff2" crossorigin />
@@ -80,6 +82,12 @@
 </head>
 
 <body x-data class="has-sidebar has-top-bar">
+
+  <!-- Splash loading (rimosso quando Alpine carica) -->
+  <div class="vw-splash" aria-hidden="true">
+    <img class="vw-splash__logo" src="assets/img/logo-vw.png" alt="Vecchio West" />
+    <p class="vw-splash__text">Sto sellando i cavalli…</p>
+  </div>
 
   <!-- C1 · Skip-to-main-content (WCAG 2.4.1) -->
   <a href="#main" class="vw-skip-link">Salta al contenuto principale</a>
