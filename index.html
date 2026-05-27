@@ -159,7 +159,13 @@
   -->
 
   <style>
-    /* x-cloak gestito dal CSS globale tramite .vw-loading class */
+    /* Critical inline CSS · splash overlay (no dependence on saloon.css) */
+    .vw-splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:radial-gradient(circle at center,rgba(60,38,22,.95),rgba(15,10,6,1)),#1a120b;transition:opacity .5s ease,visibility .5s ease}
+    .vw-splash__logo{width:clamp(140px,28vw,220px);height:auto;animation:vw-splash-pulse 2s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(0,0,0,.6))}
+    .vw-splash__text{font-family:'Special Elite','Courier New',monospace;font-size:.78rem;letter-spacing:.32em;color:#c89b3c;text-transform:uppercase;text-align:center;margin:0}
+    @keyframes vw-splash-pulse{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.06);opacity:1}}
+    html:not(.vw-loading) .vw-splash{opacity:0;visibility:hidden;pointer-events:none}
+    @media (prefers-reduced-motion: reduce){.vw-splash__logo{animation:none}}
   </style>
 </head>
 
@@ -167,9 +173,13 @@
 
   <!-- Splash loading (rimosso quando Alpine carica) -->
   <div class="vw-splash" aria-hidden="true">
-    <img class="vw-splash__logo" src="assets/img/logo-vw.png" alt="Vecchio West" />
+    <img class="vw-splash__logo" src="assets/img/logo-vw.png" alt="Vecchio West" width="220" height="220" style="width:clamp(140px,28vw,220px);height:auto" />
     <p class="vw-splash__text">Sto sellando i cavalli…</p>
   </div>
+  <script>
+    /* Safety: rimuovi splash dopo 6s anche se Alpine non termina */
+    setTimeout(function(){ document.documentElement.classList.remove('vw-loading'); }, 6000);
+  </script>
 
   <!-- C1 · Skip-to-main-content (WCAG 2.4.1) -->
   <a href="#main" class="vw-skip-link">Salta al contenuto principale</a>
