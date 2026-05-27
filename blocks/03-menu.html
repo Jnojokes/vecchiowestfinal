@@ -33,23 +33,32 @@
       </nav>
     </div>
 
-    <!-- Allergen filter -->
-    <div class="vw-menu__filter" x-show="data.ricerca_allergeni_attiva">
-      <label class="vw-menu__filter-label">
-        <span>Escludi allergene:</span>
-        <select x-model="filtroAllergene" @change="filtraAllergeni()">
-          <option value="">Nessuno</option>
-          <template x-for="a in allergeniDisponibili" :key="a">
-            <option :value="a" x-text="a"></option>
-          </template>
-        </select>
-      </label>
+    <!-- Allergen filter · B4 multi-toggle a chip -->
+    <div class="vw-allergen-filter" x-show="data.ricerca_allergeni_attiva" role="group" aria-label="Filtra per allergeni da escludere">
+      <span class="vw-allergen-filter__label">Escludi:</span>
+      <template x-for="a in allergeniDisponibili" :key="a">
+        <button
+          type="button"
+          class="vw-chip vw-chip--toggle"
+          :class="{ 'is-active': filtriAllergeni.includes(a) }"
+          :aria-pressed="filtriAllergeni.includes(a).toString()"
+          @click="toggleAllergene(a)"
+        >
+          <span x-text="a"></span>
+        </button>
+      </template>
+      <button
+        type="button"
+        class="vw-chip--clear"
+        x-show="filtriAllergeni.length > 0"
+        @click="filtriAllergeni = []"
+      >Azzera filtri</button>
     </div>
 
     <!-- Piatti -->
     <div class="vw-menu__items" role="tabpanel">
       <template x-for="item in itemsVisibili" :key="item.nome">
-        <article class="vw-menu__item">
+        <article class="vw-menu__item vw-card vw-card--wood">
           <div class="vw-menu__item-body">
             <header class="vw-menu__item-head">
               <h3 class="vw-menu__item-name" x-text="item.nome"></h3>
@@ -147,6 +156,8 @@
     padding: var(--space-md);
     transition: border-color .2s ease, transform .2s ease;
   }
+  /* Override .vw-card padding/radius su menu items per mantenere look */
+  .vw-menu__item.vw-card { padding: var(--space-md); border-radius: var(--radius-md); }
   .vw-menu__item:hover { border-color: var(--vw-gold); transform: translateY(-2px); }
 
   .vw-menu__item-head {

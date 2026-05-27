@@ -123,11 +123,11 @@
       },
     }));
 
-    // BLOCK 03 · Menu
+    // BLOCK 03 · Menu (B4: filtro allergeni multi-toggle)
     Alpine.data('vwMenu', (path) => ({
       data: { sezioni: [] },
       activeTab: '',
-      filtroAllergene: '',
+      filtriAllergeni: [],
       itemsVisibili: [],
       allergeniDisponibili: [],
       async init() {
@@ -139,15 +139,20 @@
         );
         this.allergeniDisponibili = Array.from(set).sort();
         this.aggiornaItems();
+        this.$watch('filtriAllergeni', () => this.aggiornaItems());
       },
       setTab(id) { this.activeTab = id; this.aggiornaItems(); },
-      filtraAllergeni() { this.aggiornaItems(); },
+      toggleAllergene(all) {
+        const idx = this.filtriAllergeni.indexOf(all);
+        if (idx === -1) this.filtriAllergeni.push(all);
+        else this.filtriAllergeni.splice(idx, 1);
+      },
       aggiornaItems() {
         const sezione = this.data.sezioni?.find((s) => s.id === this.activeTab);
         const items = sezione?.items || [];
-        this.itemsVisibili = this.filtroAllergene
-          ? items.filter((i) => !(i.allergeni || []).includes(this.filtroAllergene))
-          : items;
+        this.itemsVisibili = this.filtriAllergeni.length === 0
+          ? items
+          : items.filter((i) => !(i.allergeni || []).some((a) => this.filtriAllergeni.includes(a)));
       },
     }));
 
@@ -170,6 +175,22 @@
       formatGiorno(iso) { return new Date(iso).getDate(); },
       formatMese(iso) { return new Date(iso).toLocaleString('it-IT', { month: 'short' }).toUpperCase(); },
       formatOra(iso) { return new Date(iso).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }); },
+      // B8 · label "Stasera/Domani/Tra X giorni" per urgenza
+      labelRelativa(iso) {
+        if (!iso) return null;
+        const target = new Date(iso);
+        const now = new Date();
+        const d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const d1 = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+        const diffDays = Math.round((d1 - d0) / 86400000);
+        if (diffDays === 0) return 'Stasera';
+        if (diffDays === 1) return 'Domani';
+        if (diffDays === 2) return 'Dopodomani';
+        if (diffDays > 2 && diffDays <= 7) return `Tra ${diffDays} giorni`;
+        if (diffDays > 7 && diffDays <= 14) return 'Prossima settimana';
+        if (diffDays < 0) return 'Concluso';
+        return null;
+      },
       addToCalendarUrl(ev) {
         const fmt = (d) => new Date(d).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
         const params = new URLSearchParams({
@@ -200,16 +221,34 @@
       next() { const len = this.assetVisibili.length; this.lightboxIndex = (this.lightboxIndex + 1) % len; },
     }));
 
-    // BLOCK 07 · Recensioni Carousel
+    // BLOCK 07 · Recensioni Carousel (B2 SVG stars stamp + B3 swipe touch)
     Alpine.data('vwRecensioni', (path) => ({
       data: { recensioni: [] },
       current: 0,
       autoplay: null,
+      touchStartX: 0,
+      _starsObserver: null,
       async init() {
         this.data = await fetchJSON(path);
         if (this.data.recensioni?.length > 1) {
           this.autoplay = setInterval(() => this.next(), 6000);
         }
+        // B2 · IntersectionObserver stamp animation stelle
+        this.$nextTick(() => {
+          if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            this.$root.querySelectorAll('.vw-stars').forEach((el) => el.classList.add('is-visible'));
+            return;
+          }
+          this._starsObserver = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-visible');
+                this._starsObserver.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.4 });
+          this.$root.querySelectorAll('.vw-stars').forEach((el) => this._starsObserver.observe(el));
+        });
       },
       get mediaRating() {
         const arr = this.data.recensioni || [];
@@ -221,6 +260,17 @@
       renderStars(n) { const full = Math.round(n); return '★'.repeat(full) + '☆'.repeat(5 - full); },
       formatData(iso) {
         return new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
+      },
+      // B3 · swipe touch nativo (threshold 50px)
+      onTouchStart(e) {
+        this.touchStartX = e.touches[0].clientX;
+        if (this.autoplay) { clearInterval(this.autoplay); this.autoplay = null; }
+      },
+      onTouchEnd(e) {
+        const endX = e.changedTouches[0].clientX;
+        const delta = endX - this.touchStartX;
+        if (delta < -50) this.next();
+        else if (delta > 50) this.prev();
       },
       // A3 · iniziali + avatar hue stabile per nome
       initials(nome) {
@@ -264,12 +314,13 @@
       _observer: null,
       async init() {
         this.data = await fetchJSON(path);
-        // Marca il body così il layout desktop spinge il contenuto
         document.body.classList.add('has-sidebar');
-
-        // Scroll-spy via IntersectionObserver: la voce "attiva" è la sezione
-        // più visibile. Usiamo gli href #id come riferimento.
         this.$nextTick(() => this.setupScrollSpy());
+        // B5 · body overflow lock quando drawer mobile aperto
+        this.$watch('open', (val) => {
+          const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+          if (isMobile) document.body.style.overflow = val ? 'hidden' : '';
+        });
       },
       setupScrollSpy() {
         const ids = (this.data.voci || [])
@@ -307,16 +358,30 @@
         else this.activeId = ids[0];
       },
       onVoceClick(voce, ev) {
-        // Su mobile chiudi il drawer dopo il click
-        const sidebar = document.querySelector('.vw-sidebar');
-        if (sidebar && sidebar.classList.contains('is-open')) {
-          sidebar.classList.remove('is-open');
-        }
-        // Se è un anchor interno e l'id esiste, lascia che il browser gestisca
-        // lo smooth scroll (html { scroll-behavior: smooth }).
-        // Aggiorna activeId immediatamente per feedback visivo.
+        // B5 · chiusura drawer al click di una voce
+        this.open = false;
         const id = (voce.href || '').replace(/^#/, '');
         if (id) this.activeId = id;
+      },
+      // B5 · focus trap mobile dentro l'aside drawer (vanilla, no plugin)
+      trapFocus(e) {
+        if (!this.open) return;
+        const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+        if (!isMobile) return;
+        const root = e.currentTarget;
+        const focusable = root.querySelectorAll(
+          'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+        );
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
       },
     }));
 

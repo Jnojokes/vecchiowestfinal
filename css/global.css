@@ -847,7 +847,6 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
 
 /* =========================================================
    ATMOSFERA · vignette overlay sezioni
-   Usabile con .vw-section--vignette
    ========================================================= */
 .vw-section--vignette::after {
   content: '';
@@ -856,4 +855,268 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
   pointer-events: none;
   background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.35) 100%);
   z-index: 1;
+}
+
+/* =========================================================
+   CARD SYSTEM · 3 tier (B1)
+   Coesiste con .vw-card-paper legacy.
+   - --paper:   eroe, sfondo cream
+   - --wood:    portante, sfondo legno scuro stratificato
+   - --minimal: secondaria, trasparente + bordo sottile
+   ========================================================= */
+.vw-card {
+  background: var(--vw-paper);
+  color: var(--vw-ink);
+  border-radius: var(--radius-md);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.vw-card--paper {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 60%),
+    var(--vw-paper);
+  border: 1px solid rgba(200, 155, 60, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 10px 24px -12px rgba(0, 0, 0, 0.55);
+}
+.vw-card--paper:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 18px 32px -14px rgba(0, 0, 0, 0.7);
+}
+
+.vw-card--wood {
+  background:
+    linear-gradient(180deg, rgba(60, 38, 22, 0.55), rgba(40, 24, 14, 0.75)),
+    var(--vw-bg-2);
+  color: var(--vw-paper);
+  border: 1px solid rgba(200, 155, 60, 0.22);
+  box-shadow: 0 6px 16px -8px rgba(0, 0, 0, 0.5);
+}
+.vw-card--wood:hover {
+  transform: translateY(-2px);
+  border-color: rgba(200, 155, 60, 0.45);
+}
+
+.vw-card--minimal {
+  background: transparent;
+  border: 1px solid rgba(200, 155, 60, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  box-shadow: none;
+  color: inherit;
+}
+.vw-card--minimal:hover {
+  border-color: rgba(200, 155, 60, 0.45);
+  background: rgba(200, 155, 60, 0.04);
+}
+
+/* DESIGN BOOST · perforazione "biglietto saloon" su menu items
+   Realizzata via radial-gradient repeating sui lati.
+   Attiva con .vw-card--ticket sui menu items. */
+.vw-card--ticket {
+  background:
+    radial-gradient(circle at left 0, transparent 6px, transparent 7px, var(--vw-bg-2) 7.5px),
+    radial-gradient(circle at right 0, transparent 6px, transparent 7px, var(--vw-bg-2) 7.5px),
+    linear-gradient(180deg, rgba(60, 38, 22, 0.65), rgba(40, 24, 14, 0.80));
+  -webkit-mask:
+    radial-gradient(circle 7px at left center, transparent 98%, #000 100%) left/12px 22px repeat-y,
+    radial-gradient(circle 7px at right center, transparent 98%, #000 100%) right/12px 22px repeat-y,
+    linear-gradient(#000, #000);
+  -webkit-mask-composite: source-over;
+          mask-composite: add;
+}
+
+/* =========================================================
+   TACTILE FEEDBACK :active (B6) · pressione mobile
+   ========================================================= */
+.vw-btn,
+.vw-chip,
+.vw-sidebar__link,
+button:not([disabled]) {
+  transition:
+    transform .12s cubic-bezier(.4, 0, .6, 1),
+    box-shadow .12s cubic-bezier(.4, 0, .6, 1),
+    background-color .2s ease,
+    color .2s ease,
+    border-color .2s ease;
+  -webkit-tap-highlight-color: transparent;
+  transform-origin: center;
+}
+.vw-btn:active,
+.vw-chip:active,
+.vw-sidebar__link:active,
+button:not([disabled]):active {
+  transform: scale(0.96);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+@media (hover: hover) and (pointer: fine) {
+  .vw-btn:active,
+  button:not([disabled]):active { transform: scale(0.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-btn:active,
+  .vw-chip:active,
+  button:not([disabled]):active { transform: none; }
+}
+
+/* =========================================================
+   CHIP TOGGLE multi (B4 · filtro allergeni)
+   ========================================================= */
+.vw-chip--toggle {
+  background: transparent;
+  border: 1px solid rgba(200, 155, 60, 0.35);
+  color: var(--vw-paper);
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  text-transform: lowercase;
+}
+.vw-chip--toggle:hover {
+  border-color: var(--vw-gold);
+  background: rgba(200, 155, 60, 0.08);
+  color: var(--vw-gold-2);
+}
+.vw-chip--toggle.is-active {
+  background: var(--vw-gold);
+  color: var(--vw-bg);
+  border-color: var(--vw-gold);
+  text-decoration: line-through;
+}
+.vw-chip--clear {
+  background: transparent;
+  border: 1px dashed rgba(240, 227, 200, 0.4);
+  color: rgba(240, 227, 200, 0.7);
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.vw-chip--clear:hover {
+  color: var(--vw-paper);
+  border-color: var(--vw-paper-2);
+}
+.vw-allergen-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+}
+.vw-allergen-filter__label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--vw-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-right: 0.25rem;
+}
+
+/* =========================================================
+   STARS SVG (B2) · stamp animation cinematica
+   Difese: width/height fissi su .vw-star, max-width sul wrap.
+   ========================================================= */
+@keyframes vw-star-stamp {
+  0%   { transform: scale(0.4) rotate(-15deg); opacity: 0; }
+  60%  { transform: scale(1.2) rotate(2deg);   opacity: 1; }
+  100% { transform: scale(1)   rotate(0);      opacity: 1; }
+}
+.vw-stars {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+  color: rgba(200, 155, 60, 0.30);
+  vertical-align: middle;
+  line-height: 0;
+  max-width: 140px;
+}
+.vw-star {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  transition: transform .2s ease;
+}
+.vw-star--full,
+.vw-star--half { color: var(--vw-gold); }
+.vw-stars.is-visible .vw-star--full,
+.vw-stars.is-visible .vw-star--half {
+  animation: vw-star-stamp .45s cubic-bezier(.34, 1.56, .64, 1) backwards;
+  animation-delay: var(--vw-star-delay, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .vw-stars.is-visible .vw-star { animation: none; }
+}
+
+/* =========================================================
+   URGENCY CHIP (B8) · etichetta tape "Stasera/Domani/..."
+   ========================================================= */
+.vw-evento__urgency {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  background: var(--vw-gold);
+  color: var(--vw-bg);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+  transform: rotate(-1.5deg);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  /* tape look: bordi leggermente irregolari */
+  border-radius: 1px 3px 1px 3px;
+}
+.vw-evento__urgency--past {
+  background: rgba(120, 80, 40, 0.30);
+  color: var(--vw-paper-2);
+}
+
+/* =========================================================
+   DRAWER MOBILE (B5) · burger animato + transitions
+   Adattamento su .vw-sidebar esistente (no duplicazione).
+   ========================================================= */
+.vw-sidebar__toggle .vw-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+}
+.vw-sidebar__toggle .vw-burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--vw-gold);
+  transition: transform .3s ease, opacity .3s ease;
+  border-radius: 1px;
+}
+.vw-sidebar.is-open ~ .vw-sidebar__toggle .vw-burger span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.vw-sidebar.is-open ~ .vw-sidebar__toggle .vw-burger span:nth-child(2) {
+  opacity: 0;
+}
+.vw-sidebar.is-open ~ .vw-sidebar__toggle .vw-burger span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+.vw-sidebar__backdrop {
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.vw-sidebar__backdrop.is-visible {
+  display: block;
+  opacity: 1;
 }
