@@ -659,6 +659,45 @@
     );
   }
 
+  // ---------- Magnetic CTA (C4) ----------
+  // Solo pointer fine, rispetta prefers-reduced-motion.
+  function initMagnetic() {
+    if (!window.matchMedia) return;
+    if (window.matchMedia('(hover: none)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const elements = document.querySelectorAll('[data-magnetic]');
+    if (!elements.length) return;
+    const STRENGTH = 0.25;
+    const RADIUS = 80;
+    elements.forEach((el) => {
+      let rafId = null;
+      const onMove = (e) => {
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const distance = Math.hypot(dx, dy);
+        if (distance < RADIUS + Math.max(rect.width, rect.height) / 2) {
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(() => {
+            el.style.transform = `translate(${dx * STRENGTH}px, ${dy * STRENGTH}px)`;
+          });
+        } else if (el.style.transform) {
+          el.style.transform = '';
+        }
+      };
+      const onLeave = () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        el.style.transform = '';
+        el.style.transition = 'transform .35s cubic-bezier(.34, 1.56, .64, 1)';
+        setTimeout(() => { el.style.transition = ''; }, 400);
+      };
+      document.addEventListener('mousemove', onMove, { passive: true });
+      el.addEventListener('mouseleave', onLeave);
+    });
+  }
+
   // ---------- IntersectionObserver per [data-reveal] ----------
   function attivaReveal() {
     const elementi = Array.from(document.querySelectorAll('[data-reveal]'));
@@ -690,6 +729,7 @@
       // Effetti globali dopo che il DOM è completo
       attivaGunshotLayer();
       attivaReveal();
+      initMagnetic();
 
       // Inietta Alpine DINAMICAMENTE dopo che il DOM è completo
       const s = document.createElement('script');

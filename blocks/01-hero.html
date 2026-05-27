@@ -5,7 +5,7 @@
      ============================================================ -->
 <section
   id="hero"
-  class="vw-hero"
+  class="vw-hero vw-hero--cinematic vw-section--vignette"
   x-data="vwBlock('hero', 'data/hero.json')"
   x-cloak
 >
@@ -31,22 +31,25 @@
     ></div>
   </div>
 
-  <div class="vw-container vw-hero__content">
-    <div class="vw-hero__logo" aria-hidden="true">
-      <span class="vw-hero__logo-frame">★</span>
-    </div>
-    <h1 class="vw-hero__claim vw-anim-fade-up" x-text="data.claim"></h1>
-    <p class="vw-hero__claim-2 vw-anim-fade-up" x-text="data.claim_secondario"></p>
-
-    <div class="vw-hero__cta vw-anim-fade-up">
+  <div class="vw-container vw-hero__content vw-stagger">
+    <p class="eyebrow" x-show="data.eyebrow !== false">Saloon · Sant'Elpidio a Mare</p>
+    <h1 class="vw-hero__claim" x-text="data.claim"></h1>
+    <p class="vw-hero__claim-2" x-text="data.claim_secondario"></p>
+    <div class="vw-hero__cta">
       <a
         :href="data.cta_primario?.link"
         class="vw-btn"
+        data-gunshot
+        data-magnetic
+        data-cta="hero-primary"
         x-text="data.cta_primario?.testo"
       ></a>
       <a
         :href="data.cta_secondario?.link"
         class="vw-btn vw-btn--ghost"
+        data-gunshot
+        data-magnetic
+        data-cta="hero-secondary"
         x-text="data.cta_secondario?.testo"
       ></a>
     </div>

@@ -1120,3 +1120,115 @@ button:not([disabled]):active {
   display: block;
   opacity: 1;
 }
+
+/* =========================================================
+   CURSOR MIRINO (C2) · galleria con mirino dorato
+   ========================================================= */
+.vw-galleria,
+.vw-galleria * {
+  cursor: url('../assets/img/cursor-mirino.svg') 14 14, crosshair;
+}
+@media (hover: none) {
+  .vw-galleria,
+  .vw-galleria * { cursor: auto; }
+}
+
+/* =========================================================
+   ORNAMENTI DECORATIVI · stelle sceriffo angoli sezione
+   Usabile con .vw-section--ornament. SVG inline come bg.
+   ========================================================= */
+.vw-section--ornament::before {
+  content: '';
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  opacity: 0.35;
+  background: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c89b3c'%3E%3Cpath d='M12 2l2.5 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 2z'/%3E%3C/svg%3E") no-repeat center / contain;
+  z-index: 1;
+}
+
+/* =========================================================
+   HERO BOOST · asymmetric + cinematic stagger
+   Aggiungere classe .vw-hero--cinematic al contenitore.
+   ========================================================= */
+.vw-hero--cinematic .vw-hero__content {
+  position: relative;
+}
+.vw-hero--cinematic .eyebrow {
+  display: inline-block;
+  letter-spacing: 0.4em;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(200, 155, 60, 0.45);
+  background: rgba(26, 18, 11, 0.55);
+  border-radius: 999px;
+  margin-bottom: var(--space-sm);
+}
+.vw-hero--cinematic .vw-hero__claim {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.vw-hero--cinematic .vw-hero__claim-2 {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+}
+.vw-hero--cinematic .vw-hero__claim-2::before,
+.vw-hero--cinematic .vw-hero__claim-2::after {
+  content: '✦';
+  display: inline-block;
+  margin: 0 0.6em;
+  color: var(--vw-gold);
+  font-size: 0.7em;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+/* =========================================================
+   PAPER NOISE TEXTURE OVERLAY · per sezioni paper
+   ========================================================= */
+.vw-rec::after {
+  background-color: transparent;
+}
+.vw-rec {
+  position: relative;
+}
+.vw-rec > .vw-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   STAGGER BOOST · default child fade-up con delay graduali
+   Su hero per cinematic intro
+   ========================================================= */
+.vw-stagger > * {
+  animation: vw-fade-up .9s var(--vw-ease-bullet) both;
+}
+.vw-stagger > *:nth-child(1) { animation-delay: 80ms; }
+.vw-stagger > *:nth-child(2) { animation-delay: 220ms; }
+.vw-stagger > *:nth-child(3) { animation-delay: 380ms; }
+.vw-stagger > *:nth-child(4) { animation-delay: 560ms; }
+.vw-stagger > *:nth-child(5) { animation-delay: 760ms; }
+@media (prefers-reduced-motion: reduce) {
+  .vw-stagger > * { animation: none; }
+}
+
+/* =========================================================
+   SECTION HEADER · display alt "Sancreek" per i titoli sezione
+   Optional via .vw-section__head--bold
+   ========================================================= */
+.vw-section__head--bold h2 {
+  font-family: var(--font-display-alt);
+  letter-spacing: 0.04em;
+  font-size: clamp(2rem, 5vw, 3.6rem);
+}
