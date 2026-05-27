@@ -312,6 +312,8 @@
       activeId: '',
       open: false,
       _observer: null,
+      _navLock: false,
+      _navLockTimer: null,
       async init() {
         this.data = await fetchJSON(path);
         document.body.classList.add('has-sidebar');
@@ -337,6 +339,10 @@
         // Soglia: una sezione è "attiva" quando la sua zona centrale è in viewport
         this._observer = new IntersectionObserver(
           (entries) => {
+            // Durante uno scroll programmatico da navTo() lo scroll-spy non
+            // deve sovrascrivere activeId (altrimenti l'underline "salta" sulle
+            // sezioni attraversate invece di restare sulla voce cliccata).
+            if (this._navLock) return;
             // Prendi l'entry con intersectionRatio maggiore tra quelle che intersecano
             const visibili = entries
               .filter((e) => e.isIntersecting)
@@ -357,11 +363,52 @@
         if (hash && ids.includes(hash)) this.activeId = hash;
         else this.activeId = ids[0];
       },
-      onVoceClick(voce, ev) {
-        // B5 · chiusura drawer al click di una voce
+      // Navigazione esplicita al click di una voce nav.
+      // Prende il controllo dello scroll invece di affidarsi all'anchor
+      // nativo + scroll-behavior:smooth (inaffidabile con click ravvicinati
+      // e in conflitto con lo scroll-spy). Se la sezione NON è in pagina
+      // (es. #eventi da /menu) lascia agire l'href nativo (index.html#id).
+      navTo(voce, ev) {
+        const id = (voce && voce.href ? voce.href : '').replace(/^#/, '');
+        const el = id ? document.getElementById(id) : null;
+        if (!el) return; // sezione non in questa pagina → href nativo full-page
+
+        if (ev && ev.preventDefault) ev.preventDefault();
+
+        // Chiudi il drawer mobile e sblocca lo scroll del body
         this.open = false;
-        const id = (voce.href || '').replace(/^#/, '');
-        if (id) this.activeId = id;
+        document.body.style.overflow = '';
+
+        // Feedback immediato sull'underline + blocca lo scroll-spy durante
+        // lo scroll programmatico
+        this._navLock = true;
+        this.activeId = id;
+
+        const reduce = window.matchMedia &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+
+        // Aggiorna l'hash senza innescare un secondo salto nativo
+        try { history.replaceState(null, '', '#' + id); } catch (_) {}
+
+        // La roulette si apre via hashchange: replaceState non lo emette,
+        // quindi lo dispatchiamo a mano (l'hash è già #roulette).
+        if (id === 'roulette') {
+          window.dispatchEvent(new Event('hashchange'));
+        }
+
+        // Rilascia il lock a scroll concluso (fallback temporale; scrollend
+        // dove supportato lo anticipa).
+        if (this._navLockTimer) clearTimeout(this._navLockTimer);
+        this._navLockTimer = setTimeout(() => { this._navLock = false; }, 700);
+        if ('onscrollend' in window) {
+          const release = () => {
+            this._navLock = false;
+            if (this._navLockTimer) clearTimeout(this._navLockTimer);
+            window.removeEventListener('scrollend', release);
+          };
+          window.addEventListener('scrollend', release, { once: true });
+        }
       },
       // Risolve href: se la sezione esiste local, usa anchor;
       // se siamo fuori dalla home e la sezione non esiste, prefissa
