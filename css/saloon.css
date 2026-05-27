@@ -207,6 +207,11 @@
 body.has-top-bar { padding-top: calc(var(--top-bar-h) + var(--top-header-h)); }
 body.has-sidebar { padding-left: 0 !important; }
 
+/* Anchor jump compensa l'header fixed: la sezione target si ferma
+   sotto il top stack invece di restarne coperta. */
+html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); }
+[id] { scroll-margin-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); }
+
 /* =========================================================
    2 · DRAWER OVERLAY MENU MOBILE · sostituisce sidebar
    ========================================================= */
