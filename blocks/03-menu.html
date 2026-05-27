@@ -1,5 +1,5 @@
 <!-- ============================================================
-     BLOCK 03 · MENU TABS
+     BLOCK 03 · MENU "I RICERCATI" (WANTED poster board)
      Dati: /data/menu.json
      ============================================================ -->
 <section
@@ -9,16 +9,15 @@
   x-cloak
 >
   <div class="vw-container">
-    <div class="vw-section__head">
-      <p class="eyebrow">Il menù</p>
-      <h2>Spaghetti western italiano</h2>
-      <div class="vw-divider"><svg viewBox="0 0 24 24"><path d="M12 2l2.39 7.35H22l-6.19 4.5L18.2 21 12 16.5 5.8 21l2.39-7.15L2 9.35h7.61z"/></svg></div>
-      <p class="vw-menu__intro">Scottona marchigiana, olive ascolana, salame ventricina. Sourcing italiano, cottura sul barbecue del tuo tavolo.</p>
-    </div>
+    <header class="vw-section__head">
+      <p class="vw-saloon-eyebrow">Il menu</p>
+      <h2 class="vw-saloon-title">I Ricercati</h2>
+      <p class="vw-saloon-tagline">Spaghetti western italiano. Premiati al morso.</p>
+    </header>
 
-    <!-- Tab nav · A4 scroll mask laterale -->
+    <!-- Tab nav con stella sceriffo sull'attivo -->
     <div class="vw-menu__tabs-wrap">
-      <nav class="vw-menu__tabs vw-menu__tabs--scrollable" role="tablist">
+      <nav class="vw-menu__tabs vw-menu__tabs--scrollable vw-menu__tabs--saloon" role="tablist">
         <template x-for="sezione in data.sezioni" :key="sezione.id">
           <button
             class="vw-menu__tab"
@@ -27,13 +26,14 @@
             :aria-selected="activeTab === sezione.id"
             role="tab"
           >
+            <span class="vw-star-small" aria-hidden="true" x-show="activeTab === sezione.id"></span>
             <span x-text="sezione.titolo"></span>
           </button>
         </template>
       </nav>
     </div>
 
-    <!-- Allergen filter · B4 multi-toggle a chip -->
+    <!-- Filtro allergeni chip multi-toggle -->
     <div class="vw-allergen-filter" x-show="data.ricerca_allergeni_attiva" role="group" aria-label="Filtra per allergeni da escludere">
       <span class="vw-allergen-filter__label">Escludi:</span>
       <template x-for="a in allergeniDisponibili" :key="a">
@@ -55,32 +55,33 @@
       >Azzera filtri</button>
     </div>
 
-    <!-- Piatti -->
-    <div class="vw-menu__items" role="tabpanel">
-      <template x-for="item in itemsVisibili" :key="item.nome">
-        <article class="vw-menu__item vw-card vw-card--wood">
-          <div class="vw-menu__item-body">
-            <header class="vw-menu__item-head">
-              <h3 class="vw-menu__item-name" x-text="item.nome"></h3>
-              <span class="vw-menu__item-price" x-text="`€ ${item.prezzo}`"></span>
+    <!-- WANTED poster board -->
+    <div class="vw-wanted-board" role="tabpanel">
+      <div class="vw-wanted-grid">
+        <template x-for="item in itemsVisibili" :key="item.nome">
+          <article class="vw-wanted" tabindex="0">
+            <header class="vw-wanted__head">
+              <span>Wanted</span>
             </header>
-            <p class="vw-menu__item-desc" x-text="item.descrizione"></p>
-            <div class="vw-menu__item-badges" x-show="item.badge?.length">
-              <template x-for="b in item.badge" :key="b">
-                <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
-              </template>
-            </div>
-            <div class="vw-menu__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni">
-              <span class="vw-menu__item-aller-label">Allergeni</span>
+            <img
+              class="vw-wanted__img"
+              :src="item.foto"
+              :alt="`${item.nome} — ${item.descrizione}`"
+              loading="lazy"
+            />
+            <h3 class="vw-wanted__name" x-text="item.nome"></h3>
+            <p class="vw-wanted__reward">Reward <strong x-text="`€ ${item.prezzo}`"></strong></p>
+            <p class="vw-wanted__desc" x-text="item.descrizione" x-show="item.descrizione"></p>
+            <div class="vw-menu__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni" style="justify-content: center;">
               <template x-for="a in (item.allergeni || [])" :key="a">
                 <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
               </template>
             </div>
-          </div>
-        </article>
-      </template>
+          </article>
+        </template>
+      </div>
       <p class="vw-menu__empty" x-show="itemsVisibili.length === 0">
-        Nessun piatto disponibile con questo filtro.
+        Nessun ricercato in questa sezione con questi filtri.
       </p>
     </div>
   </div>
@@ -88,109 +89,49 @@
 
 <style>
   .vw-section__head { text-align: center; margin-bottom: var(--space-lg); }
-  .vw-menu__intro { max-width: 640px; margin: 0 auto; color: var(--vw-paper-2); }
 
   .vw-menu__tabs {
     display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
     gap: 0.25rem;
     overflow-x: auto;
-    padding-bottom: 0.5rem;
-    margin: var(--space-md) -1rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding: 0.5rem 1rem;
+    margin: var(--space-md) auto;
     scrollbar-width: none;
   }
   .vw-menu__tabs::-webkit-scrollbar { display: none; }
   .vw-menu__tab {
     background: transparent;
-    border: 1px solid var(--vw-dust);
+    border: 0;
     color: var(--vw-paper-2);
-    padding: 0.6rem 1.2rem;
+    padding: 0.6rem 1rem;
     font-family: var(--font-headline);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.18em;
     font-size: 0.82rem;
     cursor: pointer;
-    border-radius: var(--radius-sm);
     white-space: nowrap;
-    transition: all .2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: color .2s ease;
+    position: relative;
   }
-  .vw-menu__tab:hover { border-color: var(--vw-gold); color: var(--vw-gold); }
-  .vw-menu__tab.is-active {
-    background: var(--vw-gold);
-    border-color: var(--vw-gold);
-    color: var(--vw-bg);
+  .vw-menu__tab:not(:last-child)::after {
+    content: '·';
+    position: absolute;
+    right: -0.1rem;
+    color: var(--vw-dust);
   }
+  .vw-menu__tab:hover { color: var(--vw-paper); }
+  .vw-menu__tab.is-active { color: var(--vw-gold); }
 
-  .vw-menu__filter {
-    margin: var(--space-md) 0;
-    text-align: right;
-    font-size: 0.85rem;
-  }
-  .vw-menu__filter-label {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    color: var(--vw-paper-2);
-  }
-  .vw-menu__filter select {
-    background: var(--vw-bg-2);
-    color: var(--vw-paper);
-    border: 1px solid var(--vw-dust);
-    padding: 0.35rem 0.6rem;
-    font-family: var(--font-body);
-    border-radius: var(--radius-sm);
-  }
-
-  .vw-menu__items {
-    display: grid;
-    gap: var(--space-md);
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 768px) {
-    .vw-menu__items { grid-template-columns: 1fr 1fr; gap: var(--space-md) var(--space-lg); }
-  }
-
-  .vw-menu__item {
-    background: rgba(240, 227, 200, 0.04);
-    border: 1px solid rgba(200, 155, 60, 0.18);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    transition: border-color .2s ease, transform .2s ease;
-  }
-  /* Override .vw-card padding/radius su menu items per mantenere look */
-  .vw-menu__item.vw-card { padding: var(--space-md); border-radius: var(--radius-md); }
-  .vw-menu__item:hover { border-color: var(--vw-gold); transform: translateY(-2px); }
-
-  .vw-menu__item-head {
-    display: flex; align-items: baseline; gap: 1rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px dashed rgba(200, 155, 60, 0.3);
-    padding-bottom: 0.5rem;
-  }
-  .vw-menu__item-name {
-    flex: 1;
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    color: var(--vw-paper);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .vw-menu__item-price {
-    font-family: var(--font-headline);
-    color: var(--vw-gold);
-    font-size: 1.1rem;
-    white-space: nowrap;
-  }
-  .vw-menu__item-desc { color: var(--vw-paper-2); font-size: 0.93rem; margin-bottom: 0.6rem; }
-  .vw-menu__item-badges { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
-  .vw-menu__item-aller {
-    margin-top: 0.5rem;
-    font-size: 0.78rem;
-    color: var(--vw-sand);
-  }
   .vw-menu__empty {
     text-align: center;
     color: var(--vw-paper-2);
     padding: var(--space-lg);
-    font-style: italic;
+    font-family: var(--font-script);
+    font-size: 1.2rem;
   }
 </style>
