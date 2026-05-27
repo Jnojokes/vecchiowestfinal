@@ -55,23 +55,22 @@
       >Azzera filtri</button>
     </div>
 
-    <!-- WANTED poster board -->
+    <!-- WANTED poster board (solo tipografia, no foto piatto) -->
     <div class="vw-wanted-board" role="tabpanel">
       <div class="vw-wanted-grid">
         <template x-for="item in itemsVisibili" :key="item.nome">
-          <article class="vw-wanted" tabindex="0">
+          <article class="vw-wanted vw-wanted--text" tabindex="0">
             <header class="vw-wanted__head">
               <span>Wanted</span>
             </header>
-            <img
-              class="vw-wanted__img"
-              :src="item.foto"
-              :alt="`${item.nome} — ${item.descrizione}`"
-              loading="lazy"
-            />
             <h3 class="vw-wanted__name" x-text="item.nome"></h3>
             <p class="vw-wanted__reward">Reward <strong x-text="`€ ${item.prezzo}`"></strong></p>
             <p class="vw-wanted__desc" x-text="item.descrizione" x-show="item.descrizione"></p>
+            <div class="vw-wanted__badges" x-show="item.badge?.length">
+              <template x-for="b in item.badge" :key="b">
+                <span class="vw-badge" :class="`vw-badge--${b.toLowerCase()}`" x-text="b"></span>
+              </template>
+            </div>
             <div class="vw-menu__item-aller" x-show="item.allergeni?.length" role="list" aria-label="Allergeni" style="justify-content: center;">
               <template x-for="a in (item.allergeni || [])" :key="a">
                 <span class="vw-chip vw-chip--allergen" role="listitem" x-text="a"></span>
@@ -83,6 +82,7 @@
       <p class="vw-menu__empty" x-show="itemsVisibili.length === 0">
         Nessun ricercato in questa sezione con questi filtri.
       </p>
+      <p class="vw-menu__note" x-show="data.sezioni?.find(s => s.id === activeTab)?.nota" x-text="data.sezioni?.find(s => s.id === activeTab)?.nota"></p>
     </div>
   </div>
 </section>

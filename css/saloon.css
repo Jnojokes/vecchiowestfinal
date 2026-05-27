@@ -651,6 +651,63 @@ body.has-sidebar { padding-left: 0 !important; }
   text-align: center;
 }
 
+/* WANTED text-only (no img): piu' verticale e focalizzato sul nome */
+.vw-wanted--text {
+  padding: 1.25rem 1.2rem 1.5rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: center;
+}
+.vw-wanted--text .vw-wanted__head {
+  font-size: 1.1rem;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px dashed rgba(60, 32, 18, 0.35);
+}
+.vw-wanted--text .vw-wanted__name {
+  font-family: var(--font-saloon);
+  font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+  letter-spacing: 0.02em;
+  margin: 0.4rem 0 0.35rem;
+  line-height: 1;
+}
+.vw-wanted--text .vw-wanted__reward {
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.4rem;
+}
+.vw-wanted--text .vw-wanted__reward strong {
+  font-size: 1.1rem;
+  color: var(--vw-deep);
+}
+.vw-wanted--text .vw-wanted__desc {
+  font-size: 0.84rem;
+  color: rgba(42, 29, 18, 0.78);
+  margin: 0.35rem auto 0.5rem;
+  max-width: 36ch;
+}
+
+.vw-wanted__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  justify-content: center;
+  margin: 0.3rem 0 0.2rem;
+}
+
+.vw-menu__note {
+  margin: 1.4rem auto 0;
+  max-width: 600px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: rgba(240, 227, 200, 0.75);
+  font-style: italic;
+}
+
 /* =========================================================
    7 · SECTION TITLE BIG SALOON
    ========================================================= */
