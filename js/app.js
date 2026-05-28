@@ -862,6 +862,45 @@
     elementi.forEach((el) => obs.observe(el));
   }
 
+  // ---------- Scroll all'ancora iniziale dopo il caricamento async dei blocchi ----------
+  // I blocchi (e quindi le sezioni #eventi, #contatti, ...) vengono iniettati dopo
+  // il load: il salto nativo all'hash avviene quando la sezione non esiste ancora,
+  // quindi la pagina resta in cima. Qui riallineiamo allo #hash ogni volta che il
+  // layout cresce (Alpine riempie i blocchi async), fermandoci se l'utente scrolla
+  // a mano o dopo ~3s. `scroll-margin-top` su [id] gestisce l'offset dell'header.
+  function scrollToInitialHash() {
+    const id = (window.location.hash || '').replace(/^#/, '');
+    if (!id || id === 'roulette') return; // #roulette apre l'overlay (vwRoulette.handleHash)
+    let yProgrammatico = null;
+    let stop = false;
+    const align = () => {
+      if (stop) return;
+      // Stop se l'utente ha scrollato manualmente
+      if (yProgrammatico !== null && Math.abs(window.scrollY - yProgrammatico) > 8) {
+        stop = true;
+        return;
+      }
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'auto', block: 'start' });
+      yProgrammatico = window.scrollY;
+    };
+    align();
+    // Riallinea quando il body cresce (blocchi Alpine che si riempiono)
+    let ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => align());
+      ro.observe(document.body);
+    }
+    // Safety: fallback su intervallo se ResizeObserver non disponibile
+    const fallback = setInterval(align, 200);
+    setTimeout(() => {
+      stop = true;
+      clearInterval(fallback);
+      if (ro) { try { ro.disconnect(); } catch (_) {} }
+    }, 3000);
+  }
+
   // ---------- Bootstrap completo ----------
   async function bootstrap() {
     try {
@@ -879,6 +918,7 @@
       s.onload = () => {
         console.log('[VW] Alpine caricato');
         document.documentElement.classList.remove('vw-loading');
+        scrollToInitialHash();
       };
       s.onerror = (e) => {
         console.error('[VW] Errore caricamento Alpine', e);
