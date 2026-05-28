@@ -450,15 +450,15 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   filter: contrast(1.04) saturate(1.05);
 }
 @media (max-aspect-ratio: 1/1) {
+  /* Mobile: container con aspect ratio uguale all'asset (2480/3312),
+     niente min-height né max-height, full width senza taglio.
+     Backdrop sfocato riabilitato per riempire eventuali letterbox. */
   .vw-saloon-hero {
-    aspect-ratio: 768 / 1376;
-    max-height: calc(100svh - var(--top-bar-h) - var(--top-header-h));
-    min-height: 600px;
+    aspect-ratio: 2480 / 3312;
+    max-height: none;
+    min-height: 0;
   }
-  /* Mobile invariato rispetto a prima: cover a tutto schermo, niente
-     backdrop sfocato; ripristino la vignette gradiente originale. */
-  .vw-saloon-hero::before { display: none; }
-  .vw-saloon-hero__bg img { object-fit: cover; }
+  .vw-saloon-hero__bg img { object-fit: contain; }
   .vw-saloon-hero::after {
     content: '';
     position: absolute;
