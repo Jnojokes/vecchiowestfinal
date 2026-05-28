@@ -634,23 +634,21 @@
         this.spinning = true;
         this.risultato = null;
 
-        // Decide vincita: probabilità configurabile, NON esposta in copy.
-        const p = Number(this.data.probabilita_vittoria || 0.04);
-        const vince = Math.random() < p;
-
         // Wheel a 12 settori rosso/nero alternati (da 30° ciascuno):
-        //   ROSSO: 0–30, 60–90, 120–150, 180–210, 240–270, 300–330
-        //          centri: 15, 75, 135, 195, 255, 315
-        //   NERO:  30–60, 90–120, 150–180, 210–240, 270–300, 330–360
-        //          centri: 45, 105, 165, 225, 285, 345
+        //   ROSSO centri: 15, 75, 135, 195, 255, 315
+        //   NERO  centri: 45, 105, 165, 225, 285, 345
         const centriRosso = [15, 75, 135, 195, 255, 315];
         const centriNero  = [45, 105, 165, 225, 285, 345];
 
-        // winningColor = userChoice se vince, opposto se perde
-        const winningColor = vince
+        // Vincita con probabilità configurata (default 1/20 = 5%).
+        // Il visual è coerente con l'esito: si vince → atterra sul colore scelto,
+        // si perde → atterra sull'opposto. Visual = outcome.
+        const p = Number(this.data.probabilita_vittoria || 0.05);
+        const vince = Math.random() < p;
+        const landedColor = vince
           ? this.userChoice
           : (this.userChoice === 'red' ? 'black' : 'red');
-        const targets = winningColor === 'red' ? centriRosso : centriNero;
+        const targets = landedColor === 'red' ? centriRosso : centriNero;
         const target = targets[Math.floor(Math.random() * targets.length)];
 
         const giri = 6 + Math.floor(Math.random() * 5); // 6..10

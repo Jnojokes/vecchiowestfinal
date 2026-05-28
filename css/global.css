@@ -204,6 +204,12 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); line-height: 1.2; }
 .vw-loading [x-cloak] {
   visibility: hidden;
 }
+/* Overlay roulette: nascosto in modo robusto finché Alpine non rimuove x-cloak,
+   per evitare il flash full-screen quando .vw-loading viene tolto prima che
+   x-show="overlayOpen" sia stato applicato. */
+.vw-roulette-overlay[x-cloak] {
+  display: none !important;
+}
 
 /* =========================================================
    GRAIN TEXTURE OVERLAY (nuovo)
