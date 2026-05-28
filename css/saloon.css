@@ -424,32 +424,49 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   overflow: hidden;
   background: var(--vw-deep);
 }
-.vw-saloon-hero__bg {
+/* Backdrop sfocato dietro: riempie i lati con una copia sfocata della
+   stessa immagine, così su DESKTOP il poster intero resta visibile
+   (object-fit: contain) senza bande nere e senza tagli sopra/sotto. */
+.vw-saloon-hero::before {
+  content: '';
   position: absolute;
   inset: 0;
   z-index: 0;
+  background: url('../assets/img/hero/vw-hero-desktop.png') center center / cover no-repeat;
+  filter: blur(30px) brightness(0.5) saturate(1.1);
+  transform: scale(1.12);
+  pointer-events: none;
+}
+.vw-saloon-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 .vw-saloon-hero__bg img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;          /* poster intero, mai tagliato (desktop) */
   object-position: center center;
   filter: contrast(1.04) saturate(1.05);
-}
-.vw-saloon-hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(15, 10, 6, 0.45) 0%, rgba(15, 10, 6, 0) 18%, rgba(15, 10, 6, 0) 82%, rgba(15, 10, 6, 0.55) 100%);
 }
 @media (max-aspect-ratio: 1/1) {
   .vw-saloon-hero {
     aspect-ratio: 768 / 1376;
     max-height: calc(100svh - var(--top-bar-h) - var(--top-header-h));
     min-height: 600px;
+  }
+  /* Mobile invariato rispetto a prima: cover a tutto schermo, niente
+     backdrop sfocato; ripristino la vignette gradiente originale. */
+  .vw-saloon-hero::before { display: none; }
+  .vw-saloon-hero__bg img { object-fit: cover; }
+  .vw-saloon-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(15, 10, 6, 0.45) 0%, rgba(15, 10, 6, 0) 18%, rgba(15, 10, 6, 0) 82%, rgba(15, 10, 6, 0.55) 100%);
   }
 }
 
