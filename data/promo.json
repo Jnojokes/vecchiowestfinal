@@ -9,15 +9,5 @@
   "theme": "western",
   "auto_dismiss_seconds": 12,
   "dismissable": true,
-  "rotazione": [
-    {
-      "active": true,
-      "title": "★ Gratta-e-Vinci · Cerca il volantino per Civitanova",
-      "subtitle": "Birra alla spina omaggio per chi vince — porta la cartolina al locale",
-      "cta_text": "Come funziona",
-      "cta_link": "#gratta",
-      "expires_at": "2026-07-31T23:59:00+02:00",
-      "theme": "festive"
-    }
-  ]
+  "rotazione": []
 }
