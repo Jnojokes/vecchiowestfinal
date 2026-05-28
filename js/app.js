@@ -652,7 +652,10 @@
         const target = targets[Math.floor(Math.random() * targets.length)];
 
         const giri = 6 + Math.floor(Math.random() * 5); // 6..10
-        const finalAngle = giri * 360 - target;
+        // +90° compensa l'offset `from -90deg` del conic-gradient della ruota
+        // (vedi .vw-roulette-wheel in css/global.css): porta il settore-gradiente
+        // `target` esattamente sotto il pointer (top = 12 in punto).
+        const finalAngle = giri * 360 - target + 90;
         this.rotazioneTotale = this.rotazioneTotale + finalAngle;
 
         const durMs = 4000;
