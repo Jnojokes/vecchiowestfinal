@@ -37,7 +37,7 @@
     { "testo": "Cookie Policy", "link": "/cookie.html" },
     { "testo": "Note legali", "link": "/legal.html" }
   ],
-  "partita_iva": "P.IVA da inserire",
+  "partita_iva": "P.IVA 02182000436",
   "crediti": "Powered by XSolve Studio · Stagione 2026",
   "crediti_link": "https://xsolvestudio.com"
 }
