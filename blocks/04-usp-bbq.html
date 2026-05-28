@@ -36,6 +36,11 @@
       <h2 class="vw-usp__title" x-text="data.titolo"></h2>
       <p class="vw-usp__claim" x-text="data.claim"></p>
 
+      <div class="vw-usp__price-row" x-show="data.prezzo_label || data.dettagli">
+        <span class="vw-usp__price" x-show="data.prezzo_label" x-text="data.prezzo_label"></span>
+        <span class="vw-usp__info" x-show="data.dettagli" x-text="data.dettagli"></span>
+      </div>
+
       <ol class="vw-usp__steps">
         <template x-for="(step, i) in data.step" :key="i">
           <li class="vw-usp__step">
@@ -110,6 +115,26 @@
     color: var(--vw-paper-2);
     margin-bottom: var(--space-md);
     max-width: 50ch;
+  }
+  .vw-usp__price-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    margin-bottom: var(--space-md);
+  }
+  .vw-usp__price {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    line-height: 1;
+    color: var(--vw-gold-2);
+  }
+  .vw-usp__info {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--vw-paper-2);
   }
   .vw-usp__steps {
     list-style: none;

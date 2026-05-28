@@ -60,11 +60,8 @@
       <div class="vw-wanted-grid">
         <template x-for="item in itemsVisibili" :key="item.nome">
           <article class="vw-wanted vw-wanted--text" tabindex="0">
-            <header class="vw-wanted__head">
-              <span>Wanted</span>
-            </header>
             <h3 class="vw-wanted__name" x-text="item.nome"></h3>
-            <p class="vw-wanted__reward">Reward <strong x-text="`€ ${item.prezzo}`"></strong></p>
+            <p class="vw-wanted__price"><strong x-text="`€ ${item.prezzo}`"></strong></p>
             <p class="vw-wanted__desc" x-text="item.descrizione" x-show="item.descrizione"></p>
             <div class="vw-wanted__badges" x-show="item.badge?.length">
               <template x-for="b in item.badge" :key="b">

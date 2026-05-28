@@ -12,14 +12,14 @@
   <div class="vw-container">
     <div class="vw-section__head vw-section__head--bold">
       <p class="eyebrow">La taglia del Vecchio West</p>
-      <h2>Dicono di noi</h2>
-      <div class="vw-rec__rating" x-show="data.rating_medio_visibile">
+      <h2 x-text="data.recensioni?.length ? 'Dicono di noi' : 'Sei passato di qui?'"></h2>
+      <div class="vw-rec__rating" x-show="data.rating_medio_visibile && data.recensioni?.length">
         <span class="vw-rec__stars" x-text="renderStars(mediaRating)"></span>
         <span class="vw-rec__avg" x-text="`${mediaRating.toFixed(1)} su 5 · ${data.recensioni?.length || 0} recensioni`"></span>
       </div>
     </div>
 
-    <div class="vw-rec__carousel">
+    <div class="vw-rec__carousel" x-show="data.recensioni?.length">
       <button class="vw-rec__nav vw-rec__nav--prev" @click="prev()" aria-label="Precedente">‹</button>
 
       <div
@@ -72,7 +72,7 @@
       <button class="vw-rec__nav vw-rec__nav--next" @click="next()" aria-label="Successivo">›</button>
     </div>
 
-    <div class="vw-rec__dots">
+    <div class="vw-rec__dots" x-show="data.recensioni?.length">
       <template x-for="(r, i) in data.recensioni" :key="i">
         <button
           class="vw-rec__dot"
@@ -83,8 +83,9 @@
       </template>
     </div>
 
-    <div class="vw-rec__cta">
-      <a :href="data.cta_lascia_recensione?.link_short" target="_blank" rel="noopener" class="vw-btn">
+    <div class="vw-rec__cta" :class="{ 'vw-rec__cta--solo': !data.recensioni?.length }">
+      <p class="vw-rec__cta-lead" x-show="!data.recensioni?.length">Sei stato da noi? Raccontaci com'è andata.</p>
+      <a :href="data.cta_lascia_recensione?.link_short" target="_blank" rel="noopener" class="vw-btn vw-rec__cta-btn">
         <span x-text="data.cta_lascia_recensione?.testo"></span>
       </a>
     </div>
@@ -268,6 +269,19 @@
   .vw-rec__dot.is-active { background: var(--vw-gold-dark); transform: scale(1.3); }
 
   .vw-rec__cta { text-align: center; margin-top: var(--space-md); position: relative; z-index: 2; }
+  .vw-rec__cta--solo { margin-top: var(--space-sm); padding: var(--space-md) 0 var(--space-sm); }
+  .vw-rec__cta-lead {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: rgba(26, 18, 11, 0.82);
+    margin-bottom: var(--space-md);
+  }
+  .vw-rec__cta--solo .vw-rec__cta-btn {
+    font-size: 1rem;
+    padding: 1rem 2.4rem;
+    box-shadow: 0 10px 26px -12px rgba(26, 18, 11, 0.55);
+  }
 
   @media (max-width: 640px) {
     .vw-rec__nav { width: 36px; height: 36px; font-size: 1.2rem; }

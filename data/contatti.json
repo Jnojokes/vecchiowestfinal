@@ -20,13 +20,13 @@
   "apple_maps_url": "https://maps.apple.com/?q=Vecchio+West+Sant'Elpidio+a+Mare",
   "indicazioni_url": "https://www.google.com/maps/dir/?api=1&destination=Vecchio+West+Sant'Elpidio+a+Mare",
   "orari": [
-    { "giorno": "Lunedì", "apertura": "Chiuso", "chiusura": "" },
-    { "giorno": "Martedì", "apertura": "19:00", "chiusura": "00:30" },
-    { "giorno": "Mercoledì", "apertura": "19:00", "chiusura": "00:30" },
-    { "giorno": "Giovedì", "apertura": "19:00", "chiusura": "00:30" },
-    { "giorno": "Venerdì", "apertura": "19:00", "chiusura": "02:00" },
-    { "giorno": "Sabato", "apertura": "19:00", "chiusura": "02:00" },
-    { "giorno": "Domenica", "apertura": "12:00", "chiusura": "23:30" }
+    { "giorno": "Lunedì", "turni": [] },
+    { "giorno": "Martedì", "turni": [ { "da": "12:00", "a": "14:00" }, { "da": "19:00", "a": "00:30" } ] },
+    { "giorno": "Mercoledì", "turni": [ { "da": "12:00", "a": "14:00" }, { "da": "19:00", "a": "00:30" } ] },
+    { "giorno": "Giovedì", "turni": [ { "da": "12:00", "a": "14:00" }, { "da": "19:00", "a": "00:30" } ] },
+    { "giorno": "Venerdì", "turni": [ { "da": "12:00", "a": "14:00" }, { "da": "19:00", "a": "02:00" } ] },
+    { "giorno": "Sabato", "turni": [ { "da": "12:00", "a": "14:00" }, { "da": "19:00", "a": "02:00" } ] },
+    { "giorno": "Domenica", "turni": [ { "da": "12:00", "a": "23:30" } ] }
   ],
   "mappa_stile_sepia": true
 }

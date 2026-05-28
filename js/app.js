@@ -695,6 +695,64 @@
     };
   });
 
+  // ---------- Suono sparo (Web Audio API, sintetizzato — nessun file) ----------
+  let vwAudioCtx = null;
+  function playGunshot() {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!vwAudioCtx) vwAudioCtx = new AC();
+      const ctx = vwAudioCtx;
+      // AudioContext può partire sospeso: resume entro il gesto utente (click)
+      if (ctx.state === 'suspended') ctx.resume();
+      const now = ctx.currentTime;
+
+      // 1) Crack: burst di rumore bianco con inviluppo esponenziale + lowpass calante
+      const dur = 0.18;
+      const frames = Math.floor(ctx.sampleRate * dur);
+      const buffer = ctx.createBuffer(1, frames, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < frames; i++) {
+        const env = Math.pow(1 - i / frames, 2);
+        data[i] = (Math.random() * 2 - 1) * env;
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = 'lowpass';
+      noiseFilter.frequency.setValueAtTime(3500, now);
+      noiseFilter.frequency.exponentialRampToValueAtTime(600, now + dur);
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.9, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.0008, now + dur);
+      noise.connect(noiseFilter).connect(noiseGain);
+
+      // 2) Thump: corpo grave per dare "calibro"
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(45, now + 0.12);
+      const oscGain = ctx.createGain();
+      oscGain.gain.setValueAtTime(0.7, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+      osc.connect(oscGain);
+
+      // Master: volume complessivo contenuto
+      const master = ctx.createGain();
+      master.gain.value = 0.35;
+      noiseGain.connect(master);
+      oscGain.connect(master);
+      master.connect(ctx.destination);
+
+      noise.start(now);
+      noise.stop(now + dur);
+      osc.start(now);
+      osc.stop(now + 0.15);
+    } catch (e) {
+      /* audio non disponibile: fallisce in silenzio */
+    }
+  }
+
   // ---------- Effetto gunshot globale (delegation) ----------
   function attivaGunshotLayer() {
     let layer = document.querySelector('.vw-gunshot-layer');
@@ -710,7 +768,9 @@
       (ev) => {
         const target = ev.target.closest('[data-gunshot]');
         if (!target) return;
-        // Rispetta reduced-motion
+        // Suono sparo (audio, indipendente da reduced-motion)
+        playGunshot();
+        // Rispetta reduced-motion (solo effetti visivi)
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const x = ev.clientX;
         const y = ev.clientY;

@@ -567,81 +567,34 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
 
 .vw-wanted {
   position: relative;
-  background:
-    radial-gradient(ellipse at top, rgba(255, 255, 255, 0.1), transparent 60%),
-    linear-gradient(180deg, var(--vw-paper-grain), var(--vw-paper-dark) 90%);
-  color: var(--vw-deep);
-  padding: 1rem 1rem 1.25rem;
-  border-radius: 2px;
-  box-shadow:
-    0 12px 28px -10px rgba(0, 0, 0, 0.6),
-    0 2px 6px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(180deg, var(--vw-bg-2), #20160d);
+  color: var(--vw-paper);
+  padding: 1.25rem 1.25rem 1.4rem;
+  border: 1px solid var(--vw-divider-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
-  transform: rotate(var(--wanted-rot, -1deg));
-  transition: transform .35s var(--vw-ease-out-back), box-shadow .25s ease;
+  transition: transform .3s var(--vw-ease-out-back), box-shadow .25s ease, border-color .25s ease;
   text-decoration: none;
   display: block;
 }
-.vw-wanted:nth-child(2n) { --wanted-rot: 1.2deg; }
-.vw-wanted:nth-child(3n) { --wanted-rot: -0.6deg; }
-.vw-wanted:nth-child(4n) { --wanted-rot: 0.8deg; }
 .vw-wanted:hover {
-  transform: rotate(0) translateY(-6px) scale(1.02);
+  transform: translateY(-4px);
+  border-color: var(--vw-gold);
   box-shadow:
-    0 22px 40px -10px rgba(0, 0, 0, 0.7),
-    0 4px 10px rgba(0, 0, 0, 0.4);
+    var(--shadow-lg),
+    0 0 0 1px rgba(200, 155, 60, 0.25);
 }
-.vw-wanted::before,
+/* Bordo oro interno sottile (no chiodo, no texture carta) */
 .vw-wanted::after {
   content: '';
   position: absolute;
-  pointer-events: none;
-}
-/* Pin chiodo top center */
-.vw-wanted::before {
-  top: -7px;
-  left: 50%;
-  width: 14px;
-  height: 14px;
-  margin-left: -7px;
-  background:
-    radial-gradient(circle at 35% 30%, #d4b06a, #a07a2a 60%, #5a3f10);
-  border-radius: 50%;
-  box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.6),
-    inset 0 -1px 2px rgba(0, 0, 0, 0.4);
-  z-index: 3;
-}
-/* Paper texture border irregolare */
-.vw-wanted::after {
-  inset: 6px;
-  border: 1px solid rgba(60, 32, 18, 0.4);
-  border-radius: 1px;
+  inset: 5px;
+  border: 1px solid rgba(200, 155, 60, 0.18);
+  border-radius: var(--radius-sm);
   pointer-events: none;
 }
 
-.vw-wanted__head {
-  text-align: center;
-  font-family: var(--font-saloon);
-  font-size: 1.3rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--vw-deep);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding-bottom: 0.5rem;
-  position: relative;
-  z-index: 2;
-}
-.vw-wanted__head::before,
-.vw-wanted__head::after {
-  content: '★';
-  color: var(--vw-frame-gold);
-  font-size: 0.75em;
-  opacity: 0.7;
-}
 .vw-wanted__img {
   display: block;
   width: 100%;
@@ -657,30 +610,24 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   font-size: 1.5rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--vw-deep);
-  margin: 0.75rem 0 0.35rem;
+  color: var(--vw-gold-2);
+  margin: 0.25rem 0 0.35rem;
   line-height: 1;
 }
-.vw-wanted__reward {
+.vw-wanted__price {
   text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--vw-frame-gold);
-}
-.vw-wanted__reward strong {
   font-family: var(--font-headline);
-  color: var(--vw-deep);
-  font-weight: 700;
-  margin-left: 0.35rem;
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  color: var(--vw-paper);
+  margin: 0.1rem 0 0.3rem;
 }
+.vw-wanted__price strong { font-weight: 700; }
 .vw-wanted__desc {
   font-family: var(--font-body);
-  font-style: italic;
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: rgba(42, 29, 18, 0.75);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--vw-paper-2);
   margin-top: 0.5rem;
   text-align: center;
 }
@@ -694,31 +641,21 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   justify-content: flex-start;
   text-align: center;
 }
-.vw-wanted--text .vw-wanted__head {
-  font-size: 1.1rem;
-  padding-bottom: 0.4rem;
-  margin-bottom: 0.6rem;
-  border-bottom: 1px dashed rgba(60, 32, 18, 0.35);
-}
 .vw-wanted--text .vw-wanted__name {
   font-family: var(--font-saloon);
   font-size: clamp(1.4rem, 2.4vw, 1.8rem);
   letter-spacing: 0.02em;
-  margin: 0.4rem 0 0.35rem;
+  margin: 0.2rem 0 0.35rem;
   line-height: 1;
 }
-.vw-wanted--text .vw-wanted__reward {
-  font-size: 0.9rem;
-  letter-spacing: 0.12em;
-  margin-bottom: 0.4rem;
-}
-.vw-wanted--text .vw-wanted__reward strong {
-  font-size: 1.1rem;
-  color: var(--vw-deep);
+.vw-wanted--text .vw-wanted__price {
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
 }
 .vw-wanted--text .vw-wanted__desc {
-  font-size: 0.84rem;
-  color: rgba(42, 29, 18, 0.78);
+  font-size: 0.9rem;
+  color: var(--vw-paper-2);
   margin: 0.35rem auto 0.5rem;
   max-width: 36ch;
 }
