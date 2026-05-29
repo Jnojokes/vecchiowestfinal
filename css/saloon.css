@@ -10,7 +10,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Smokum&family=Yellowtail&display=swap');
 
 :root {
-  --font-saloon: 'Smokum', 'Rye', 'Sancreek', 'Georgia', serif;
+  --font-saloon: 'Oswald', 'Impact', 'Arial Narrow', sans-serif;
   --font-script: 'Yellowtail', 'Fraunces', 'Georgia', cursive;
   --vw-paper-grain: #ece2c8;
   --vw-paper-dark: #c9b88c;
