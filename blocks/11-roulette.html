@@ -108,10 +108,23 @@
       <div class="vw-roulette-result" x-show="risultato" x-cloak>
         <template x-if="risultato === 'win'">
           <div>
-            <h3 class="vw-roulette-result__title">🎉 <span x-text="data.premio_titolo || 'Hai vinto la Golden Nugget!'"></span></h3>
-            <p x-text="data.premio_descrizione || 'Una Golden Nugget offerta dalla casa.'"></p>
+            <h3 class="vw-roulette-result__title">🎉 <span x-text="data.premio_titolo || 'Hai vinto una birra alla spina!'"></span></h3>
+            <p x-text="data.premio_descrizione || 'Una birra alla spina offerta dalla casa.'"></p>
             <span class="vw-roulette-result__code" x-text="codice"></span>
             <p class="vw-roulette-meta">Mostra questo codice al banco entro la chiusura della serata. Valido una sola volta.</p>
+            <div class="vw-roulette-actions" style="margin-top: 1.2rem;">
+              <a
+                :href="`https://wa.me/${(data.whatsapp_numero || '393520029607').replace(/\D/g,'')}?text=${encodeURIComponent((data.whatsapp_msg_template || 'Ho vinto una birra alla spina. Codice: {CODICE}').replace('{CODICE}', codice))}`"
+                target="_blank"
+                rel="noopener"
+                class="vw-btn"
+                data-gunshot
+                data-cta="roulette-win-whatsapp"
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" style="margin-right:0.4rem;vertical-align:-3px"><path d="M20.52 3.48A11.95 11.95 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.18-3.48-8.52zM12 22a9.93 9.93 0 0 1-5.07-1.39l-.36-.21-3.66.96.98-3.57-.24-.37A9.93 9.93 0 0 1 2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z"/></svg>
+                <span x-text="data.cta_prenota_win_testo || 'Prenota su WhatsApp'"></span>
+              </a>
+            </div>
           </div>
         </template>
         <template x-if="risultato === 'lose'">

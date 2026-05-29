@@ -17,11 +17,14 @@
   "label_red": "Rosso",
   "label_black": "Nero",
   "cta_spin": "Gira la ruota",
-  "premio_titolo": "Hai vinto la Golden Nugget!",
-  "premio_descrizione": "Una Golden Nugget offerta dalla casa. Mostra il codice al banco per riscattare.",
+  "premio_titolo": "Hai vinto una birra alla spina!",
+  "premio_descrizione": "Una birra alla spina offerta dalla casa. Mostra il codice al banco per riscattare.",
+  "whatsapp_numero": "+39 352 002 9607",
+  "whatsapp_msg_template": "Salve forestiero! Ho vinto una birra alla spina alla roulette 🎉\n\nCodice omaggio: {CODICE}\n\nVorrei prenotare un tavolo per riscattarla.\n\nGiorno: \nOrario: \nCoperti: \nNome: ",
+  "cta_prenota_win_testo": "Prenota su WhatsApp",
   "consolazione_titolo": "Niente da fare, cowboy.",
   "consolazione": "La fortuna gira veloce — riprova domani.",
-  "codice_prefix": "GN",
+  "codice_prefix": "BR",
 
   "disclaimer": "Manifestazione di sorte interna al locale. Codice valido una sola volta, da mostrare al banco entro la chiusura della serata. Non cumulabile con altre offerte. Sotto i 18 anni: bevanda analcolica equivalente."
 }
