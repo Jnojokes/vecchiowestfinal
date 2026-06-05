@@ -1,8 +1,8 @@
 {
   "_note": "BLOCK 02 · Promo Banner DINAMICO. Per attivare/disattivare la striscia: 'active' true/false. La striscia si auto-nasconde dopo 'auto_dismiss_seconds' o quando l'utente la chiude. Se 'expires_at' < oggi, viene ignorata anche se active=true. 'theme': western | latin | festive.",
-  "active": true,
-  "title": "★ Golden Nugget · Prima settimana dall'inaugurazione",
-  "subtitle": "Ordina il Doppio Tex o il Tex Mex: trova la pepita d'oro nelle patatine e vinci 4 cene gratis.",
+  "active": false,
+  "title": "",
+  "subtitle": "",
   "cta_text": "",
   "cta_link": "",
   "expires_at": "2026-06-05T23:59:00+02:00",
