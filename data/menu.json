@@ -3,29 +3,133 @@
   "ricerca_allergeni_attiva": true,
   "sezioni": [
     {
-      "id": "stuzzichini",
-      "titolo": "Stuzzichini",
-      "icona": "snack",
-      "items": [
-        { "nome": "Nachos con salsa dip piccante", "descrizione": "", "prezzo": "3,00", "badge": [], "allergeni": [] },
-        { "nome": "Affettati e formaggi nostrani", "descrizione": "Selezione di salumi e formaggi locali", "prezzo": "10,00", "badge": ["MARCHIGIANO"], "allergeni": ["lattosio"] },
-        { "nome": "Crostini con prosciutto nazionale", "descrizione": "Prosciutto crudo di Parma su pane abbrustolito", "prezzo": "5,00", "badge": [], "allergeni": ["glutine"] },
-        { "nome": "Caprese Special", "descrizione": "Fior di latte, pomodoro Pachino, glassa al basilico, rucoletta", "prezzo": "8,00", "badge": [], "allergeni": ["lattosio"] },
-        { "nome": "Crostino prosciutto crudo, mozzarella e funghi", "descrizione": "", "prezzo": "6,50", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Crostini con ciauscolo, tartufo e pecorino", "descrizione": "Ciauscolo marchigiano, tartufo, pecorino stagionato", "prezzo": "7,00", "badge": ["MARCHIGIANO"], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Bastoncini di polentina e salsa cheddar", "descrizione": "", "prezzo": "4,00", "badge": [], "allergeni": ["lattosio"] },
-        { "nome": "Bastoncini di formaggio e verdure", "descrizione": "", "prezzo": "4,00", "badge": [], "allergeni": ["lattosio"] },
-        { "nome": "Bastoncini di mozzarelline", "descrizione": "", "prezzo": "4,00", "badge": [], "allergeni": ["lattosio", "glutine"] }
-      ]
-    },
-    {
       "id": "primi",
       "titolo": "Primi piatti",
       "icona": "pasta",
       "items": [
-        { "nome": "Tortellini o pennette norcina", "descrizione": "Crema, salsiccia, funghi", "prezzo": "9,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Pennette fumé", "descrizione": "Pomodoro, panna, prosciutto, mozzarella affumicata", "prezzo": "8,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Tortellini o pennette boscaiola", "descrizione": "Panna, funghi, salsiccia", "prezzo": "9,00", "badge": [], "allergeni": ["glutine", "lattosio"] }
+        {
+          "nome": "Tortellini o pennette norcina",
+          "descrizione": "Crema, salsiccia, funghi",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Pennette fumé",
+          "descrizione": "Pomodoro, panna, prosciutto, mozzarella affumicata",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Tortellini o pennette boscaiola",
+          "descrizione": "Panna, funghi, salsiccia",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stuzzichini",
+      "titolo": "Stuzzichini al chill",
+      "icona": "snack",
+      "items": [
+        {
+          "nome": "Nachos con salsa dip piccante",
+          "descrizione": "",
+          "prezzo": "3,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "Affettati e formaggi nostrani",
+          "descrizione": "Selezione di salumi e formaggi locali",
+          "prezzo": "10,00",
+          "badge": [
+            "MARCHIGIANO"
+          ],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Crostini con prosciutto nazionale",
+          "descrizione": "Prosciutto crudo di Parma su pane abbrustolito",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Caprese Special",
+          "descrizione": "Fior di latte, pomodoro Pachino, glassa al basilico, rucoletta",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Crostino prosciutto crudo, mozzarella e funghi",
+          "descrizione": "",
+          "prezzo": "6,50",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Crostini con ciauscolo, tartufo e pecorino",
+          "descrizione": "Ciauscolo marchigiano, tartufo, pecorino stagionato",
+          "prezzo": "7,00",
+          "badge": [
+            "MARCHIGIANO"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Bastoncini di polentina e salsa cheddar",
+          "descrizione": "",
+          "prezzo": "4,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Bastoncini di formaggio e verdure",
+          "descrizione": "",
+          "prezzo": "4,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Bastoncini di mozzarelline",
+          "descrizione": "",
+          "prezzo": "4,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio",
+            "glutine"
+          ]
+        }
       ]
     },
     {
@@ -33,19 +137,124 @@
       "titolo": "Piatti unici",
       "icona": "plate",
       "items": [
-        { "nome": "Buffalo Bill", "descrizione": "Bresaola di bufala, olio e glassa di balsamico, rucola, grana e pomodoro", "prezzo": "13,00", "badge": [], "allergeni": ["lattosio"] },
-        { "nome": "Arrosticini", "descrizione": "8 pezzi con patate arrosto e insalatina mista", "prezzo": "12,00", "badge": ["TOP"], "allergeni": [] },
-        { "nome": "Butch Cassidy", "descrizione": "Alette di pollo piccanti (5 pz), insalata mista, salsa BBQ, pomodori, anelli di cipolla", "prezzo": "12,00", "badge": ["PICCANTE"], "allergeni": ["glutine"] },
-        { "nome": "Taglia del Fuorilegge", "descrizione": "Tagliata di pollo agli agrumi, verdure grigliate, cicoria saltata, patate arrosto", "prezzo": "12,00", "badge": [], "allergeni": [] },
-        { "nome": "Mississippi", "descrizione": "Hamburger 200gr, patate fritte, pomodoro, bacon, misticanza", "prezzo": "13,00", "badge": [], "allergeni": ["glutine"] },
-        { "nome": "Indianapolis", "descrizione": "Costarelle di maiale in salsa BBQ piccante, patate fritte, rucoletta, pomodorini", "prezzo": "12,00", "badge": ["PICCANTE"], "allergeni": [] },
-        { "nome": "Grand Canyon", "descrizione": "Tagliata di scottona 300gr marchigiana, rucola, pomodorini, grana", "prezzo": "18,00", "badge": ["MARCHIGIANO", "TOP"], "allergeni": ["lattosio"] },
-        { "nome": "Wisconsin", "descrizione": "Tagliata di scottona 300gr marchigiana al rosmarino, patate al forno", "prezzo": "17,00", "badge": ["MARCHIGIANO"], "allergeni": [] },
-        { "nome": "Vecchio West", "descrizione": "Fagioli alla messicana con cotiche + polentina e bruschette", "prezzo": "8,00", "badge": ["TOP"], "allergeni": ["glutine"] },
-        { "nome": "Trinità", "descrizione": "Fagioli alla messicana con salsiccia + polentina e bruschette", "prezzo": "8,50", "badge": [], "allergeni": ["glutine"] },
-        { "nome": "Geronimo", "descrizione": "Salsiccia con patate arrosto", "prezzo": "12,00", "badge": [], "allergeni": [] },
-        { "nome": "BBQ Ribs", "descrizione": "Costine di maiale, salsa BBQ, cipolla croccante, patate fritte, crauti", "prezzo": "12,00", "badge": [], "allergeni": [] },
-        { "nome": "Pollo del Vecchio Resciffo", "descrizione": "Cotoletta di pollo 200gr, patate fritte, insalata", "prezzo": "11,00", "badge": [], "allergeni": ["glutine"] }
+        {
+          "nome": "Buffalo Bill",
+          "descrizione": "Bresaola di bufala, olio e glassa di balsamico, rucola, grana e pomodoro",
+          "prezzo": "13,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Arrosticini",
+          "descrizione": "8 pezzi con patate arrosto e insalatina mista",
+          "prezzo": "12,00",
+          "badge": [
+            "TOP"
+          ],
+          "allergeni": []
+        },
+        {
+          "nome": "Butch Cassidy",
+          "descrizione": "Alette di pollo piccanti (5 pz), insalata mista, salsa BBQ, pomodori, anelli di cipolla",
+          "prezzo": "12,00",
+          "badge": [
+            "PICCANTE"
+          ],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Taglia del Fuorilegge",
+          "descrizione": "Tagliata di pollo agli agrumi, verdure grigliate, cicoria saltata, patate arrosto",
+          "prezzo": "12,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "Mississippi",
+          "descrizione": "Hamburger 200gr, patate fritte, pomodoro, bacon, misticanza",
+          "prezzo": "13,00",
+          "badge": [],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Indianapolis",
+          "descrizione": "Costarelle di maiale in salsa BBQ piccante, patate fritte, rucoletta, pomodorini",
+          "prezzo": "12,00",
+          "badge": [
+            "PICCANTE"
+          ],
+          "allergeni": []
+        },
+        {
+          "nome": "Grand Canyon",
+          "descrizione": "Tagliata di scottona 300gr marchigiana, rucola, pomodorini, grana",
+          "prezzo": "18,00",
+          "badge": [
+            "MARCHIGIANO",
+            "TOP"
+          ],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Wisconsin",
+          "descrizione": "Tagliata di scottona 300gr marchigiana al rosmarino, patate al forno",
+          "prezzo": "17,00",
+          "badge": [
+            "MARCHIGIANO"
+          ],
+          "allergeni": []
+        },
+        {
+          "nome": "Vecchio West",
+          "descrizione": "Fagioli alla messicana con cotiche + polentina e bruschette",
+          "prezzo": "8,00",
+          "badge": [
+            "TOP"
+          ],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Trinità",
+          "descrizione": "Fagioli alla messicana con salsiccia + polentina e bruschette",
+          "prezzo": "8,50",
+          "badge": [],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Geronimo",
+          "descrizione": "Salsiccia con patate arrosto",
+          "prezzo": "12,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "BBQ Ribs",
+          "descrizione": "Costine di maiale, salsa BBQ, cipolla croccante, patate fritte, crauti",
+          "prezzo": "12,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "Pollo del Vecchio Resciffo",
+          "descrizione": "Cotoletta di pollo 200gr, patate fritte, insalata",
+          "prezzo": "11,00",
+          "badge": [],
+          "allergeni": [
+            "glutine"
+          ]
+        }
       ]
     },
     {
@@ -53,22 +262,187 @@
       "titolo": "Hamburger",
       "icona": "burger",
       "items": [
-        { "nome": "Oregon", "descrizione": "Hamburger 200gr, lattuga, pomodoro, ketchup, maionese, patate fritte", "prezzo": "12,00", "badge": [], "allergeni": ["glutine", "uova"] },
-        { "nome": "Minnesota", "descrizione": "Hamburger 200gr, speck croccante, cheddar, pomodoro, insalata, salsa piccante, ketchup, maionese, patate fritte", "prezzo": "14,00", "badge": ["PICCANTE"], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Black Macigno", "descrizione": "Hamburger 200gr, pancetta croccante, cheddar, cipolla caramellata, pomodoro, insalata, ketchup, maionese, patate fritte", "prezzo": "14,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "New Mexico", "descrizione": "Hamburger 200gr, salsa messicana, bacon, formaggio, lattuga, pomodoro, cetriolini, patate fritte", "prezzo": "13,00", "badge": ["PICCANTE"], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Un Dollaro d'Onore", "descrizione": "Hamburger 200gr, pomodoro, lattuga, speck croccante, scamorza affumicata, funghi trifolati, maionese, patate fritte", "prezzo": "13,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Clint Eastwood", "descrizione": "Hamburger 200gr, bacon, pomodoro, lattuga, salsa BBQ, maionese, anelli di cipolla fritti, patate fritte", "prezzo": "13,00", "badge": ["TOP"], "allergeni": ["glutine", "uova"] },
-        { "nome": "Hound Dog", "descrizione": "Wurstel, cheddar, ketchup, maionese", "prezzo": "8,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Magic", "descrizione": "Wurstel, pancetta alla griglia, formaggio americano, salse", "prezzo": "10,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Black or White", "descrizione": "Salsiccia, pomodoro, rucola, mozzarella, maionese", "prezzo": "10,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Angie", "descrizione": "Tonno, pomodoro, lattuga, maionese", "prezzo": "8,00", "badge": [], "allergeni": ["glutine", "uova"] },
-        { "nome": "Parsons", "descrizione": "Cotoletta di pollo 200gr, pomodoro, lattuga, cheddar, salse", "prezzo": "10,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Greco", "descrizione": "Cotoletta di pollo 200gr, salsa yogurt, cipolla, zucchine grigliate, salsa mustard", "prezzo": "10,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Doppio Tex", "descrizione": "Doppio hamburger di scottona 200gr l'uno, pomodoro, verdura grigliata, insalata, patate, cheddar, bacon, anelli di cipolla fritti, salse", "prezzo": "15,00", "badge": ["MARCHIGIANO", "TOP"], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Tex Mex", "descrizione": "Tagliata di scottona 300gr marchigiana con lardo, verdure grigliate, patate arrosto", "prezzo": "20,00", "badge": ["MARCHIGIANO", "TOP"], "allergeni": [] },
-        { "nome": "Doppio Gioco Amigo", "descrizione": "Doppio hamburger di scottona 200gr, pomodoro, cheddar, cipolla caramellata, cetriolini, bacon, insalata, salsa burger, uova", "prezzo": "16,00", "badge": ["MARCHIGIANO"], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Pulled Pork Burger", "descrizione": "Maiale sfilettato, cavolo rosso e bianco, cipolla caramellata, cheddar, maionese, senape, bacon", "prezzo": "13,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] }
+        {
+          "nome": "Oregon",
+          "descrizione": "Hamburger 200gr, lattuga, pomodoro, ketchup, maionese, patate fritte",
+          "prezzo": "12,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Minnesota",
+          "descrizione": "Hamburger 200gr, speck croccante, cheddar, pomodoro, insalata, salsa piccante, ketchup, maionese, patate fritte",
+          "prezzo": "14,00",
+          "badge": [
+            "PICCANTE"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Black Macigno",
+          "descrizione": "Hamburger 200gr, pancetta croccante, cheddar, cipolla caramellata, pomodoro, insalata, ketchup, maionese, patate fritte",
+          "prezzo": "14,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "New Mexico",
+          "descrizione": "Hamburger 200gr, salsa messicana, bacon, formaggio, lattuga, pomodoro, cetriolini, patate fritte",
+          "prezzo": "13,00",
+          "badge": [
+            "PICCANTE"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Un Dollaro d'Onore",
+          "descrizione": "Hamburger 200gr, pomodoro, lattuga, speck croccante, scamorza affumicata, funghi trifolati, maionese, patate fritte",
+          "prezzo": "13,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Clint Eastwood",
+          "descrizione": "Hamburger 200gr, bacon, pomodoro, lattuga, salsa BBQ, maionese, anelli di cipolla fritti, patate fritte",
+          "prezzo": "13,00",
+          "badge": [
+            "TOP"
+          ],
+          "allergeni": [
+            "glutine",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Hound Dog",
+          "descrizione": "Wurstel, cheddar, ketchup, maionese",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Magic",
+          "descrizione": "Wurstel, pancetta alla griglia, formaggio americano, salse",
+          "prezzo": "10,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Black or White",
+          "descrizione": "Salsiccia, pomodoro, rucola, mozzarella, maionese",
+          "prezzo": "10,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Angie",
+          "descrizione": "Tonno, pomodoro, lattuga, maionese",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Parsons",
+          "descrizione": "Cotoletta di pollo 200gr, pomodoro, lattuga, cheddar, salse",
+          "prezzo": "10,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Greco",
+          "descrizione": "Cotoletta di pollo 200gr, salsa yogurt, cipolla, zucchine grigliate, salsa mustard",
+          "prezzo": "10,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Doppio Tex",
+          "descrizione": "Doppio hamburger di scottona 200gr l'uno, pomodoro, verdura grigliata, insalata, patate, cheddar, bacon, anelli di cipolla fritti, salse",
+          "prezzo": "15,00",
+          "badge": [
+            "MARCHIGIANO",
+            "TOP"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Tex Mex",
+          "descrizione": "Tagliata di scottona 300gr marchigiana con lardo, verdure grigliate, patate arrosto",
+          "prezzo": "20,00",
+          "badge": [
+            "MARCHIGIANO",
+            "TOP"
+          ],
+          "allergeni": []
+        },
+        {
+          "nome": "Doppio Gioco Amigo",
+          "descrizione": "Doppio hamburger di scottona 200gr, pomodoro, cheddar, cipolla caramellata, cetriolini, bacon, insalata, salsa burger, uova",
+          "prezzo": "16,00",
+          "badge": [
+            "MARCHIGIANO"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Pulled Pork Burger",
+          "descrizione": "Maiale sfilettato, cavolo rosso e bianco, cipolla caramellata, cheddar, maionese, senape, bacon",
+          "prezzo": "13,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        }
       ]
     },
     {
@@ -76,8 +450,32 @@
       "titolo": "Vegetariani",
       "icona": "veg",
       "items": [
-        { "nome": "Le Pistolere", "descrizione": "Hamburger di spinaci, formaggio, pomodoro, lattuga, salsa rosa, funghi, patate arrosto", "prezzo": "10,00", "badge": ["VEG"], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Bandidos", "descrizione": "Hamburger di verdure miste, scamorza, carciofini, salsa cesar, pomodoro, lattuga, patate arrosto", "prezzo": "10,00", "badge": ["VEG"], "allergeni": ["glutine", "lattosio", "uova"] }
+        {
+          "nome": "Le Pistolere",
+          "descrizione": "Hamburger di spinaci, formaggio, pomodoro, lattuga, salsa rosa, funghi, patate arrosto",
+          "prezzo": "10,00",
+          "badge": [
+            "VEG"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Bandidos",
+          "descrizione": "Hamburger di verdure miste, scamorza, carciofini, salsa cesar, pomodoro, lattuga, patate arrosto",
+          "prezzo": "10,00",
+          "badge": [
+            "VEG"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        }
       ]
     },
     {
@@ -85,10 +483,49 @@
       "titolo": "Panini",
       "icona": "sandwich",
       "items": [
-        { "nome": "Campagnolo", "descrizione": "Prosciutto crudo, pomodoro, mozzarella fior di latte", "prezzo": "8,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Il Cattivo", "descrizione": "Salame piccante, scamorza affumicata, pomodoro, lattuga", "prezzo": "8,00", "badge": ["PICCANTE"], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Nebraska", "descrizione": "Salsiccia grigliata, lattuga, scamorza dolce, pomodoro, salse", "prezzo": "9,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Italia", "descrizione": "Prosciutto crudo nazionale, grana, rucola, olio EVO, glassa di balsamico", "prezzo": "8,00", "badge": [], "allergeni": ["glutine", "lattosio"] }
+        {
+          "nome": "Campagnolo",
+          "descrizione": "Prosciutto crudo, pomodoro, mozzarella fior di latte",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Il Cattivo",
+          "descrizione": "Salame piccante, scamorza affumicata, pomodoro, lattuga",
+          "prezzo": "8,00",
+          "badge": [
+            "PICCANTE"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Nebraska",
+          "descrizione": "Salsiccia grigliata, lattuga, scamorza dolce, pomodoro, salse",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Italia",
+          "descrizione": "Prosciutto crudo nazionale, grana, rucola, olio EVO, glassa di balsamico",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        }
       ]
     },
     {
@@ -96,10 +533,52 @@
       "titolo": "Piadine",
       "icona": "wrap",
       "items": [
-        { "nome": "L'Ultima Pistola", "descrizione": "Patate fritte, pollo croccante, salsa cheddar, salsa Develey", "prezzo": "10,00", "badge": ["TOP"], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "La Ballata del Matto", "descrizione": "Salsiccia, cipolla caramellata, rucola, cheddar", "prezzo": "8,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Western all'Italiana", "descrizione": "Prosciutto nazionale Parma, pomodoro, fior di latte, lattughino", "prezzo": "8,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Piadina Sciacallo", "descrizione": "Salame ventricina, gorgonzola piccante, melanzane trifolate, salsa messicana, radicchio", "prezzo": "8,00", "badge": ["MARCHIGIANO", "PICCANTE"], "allergeni": ["glutine", "lattosio"] }
+        {
+          "nome": "L'Ultima Pistola",
+          "descrizione": "Patate fritte, pollo croccante, salsa cheddar, salsa Develey",
+          "prezzo": "10,00",
+          "badge": [
+            "TOP"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "La Ballata del Matto",
+          "descrizione": "Salsiccia, cipolla caramellata, rucola, cheddar",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Western all'Italiana",
+          "descrizione": "Prosciutto nazionale Parma, pomodoro, fior di latte, lattughino",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Piadina Sciacallo",
+          "descrizione": "Salame ventricina, gorgonzola piccante, melanzane trifolate, salsa messicana, radicchio",
+          "prezzo": "8,00",
+          "badge": [
+            "MARCHIGIANO",
+            "PICCANTE"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        }
       ]
     },
     {
@@ -108,13 +587,78 @@
       "icona": "fries",
       "nota": "Aggiunte: formaggio extra +1,00 € · cipolla croccante +1,00 €",
       "items": [
-        { "nome": "Cremini", "descrizione": "Crocchette cremose di formaggio, panate e fritte", "prezzo": "4,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Mozzarelline stick", "descrizione": "Bastoncini di mozzarella croccanti con salsa BBQ", "prezzo": "5,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Patate fritte", "descrizione": "Patate croccanti, sale e salsa a scelta", "prezzo": "5,00", "badge": [], "allergeni": [] },
-        { "nome": "Olive Ascolane", "descrizione": "La specialità marchigiana. 8 olive ripiene fritte al momento", "prezzo": "6,00", "badge": ["MARCHIGIANO", "TOP"], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Anelli di cipolla", "descrizione": "Onion rings croccanti con salsa ranch", "prezzo": "5,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Pepite di pollo", "descrizione": "Bocconcini di pollo croccanti con salsa BBQ o miele e senape", "prezzo": "6,00", "badge": [], "allergeni": ["glutine"] },
-        { "nome": "Bandidos di pollo", "descrizione": "Strisce di pollo piccanti speziate alla messicana", "prezzo": "5,00", "badge": ["PICCANTE"], "allergeni": ["glutine"] }
+        {
+          "nome": "Cremini",
+          "descrizione": "Crocchette cremose di formaggio, panate e fritte",
+          "prezzo": "4,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Mozzarelline stick",
+          "descrizione": "Bastoncini di mozzarella croccanti con salsa BBQ",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Patate fritte",
+          "descrizione": "Patate croccanti, sale e salsa a scelta",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "Olive Ascolane",
+          "descrizione": "La specialità marchigiana. 8 olive ripiene fritte al momento",
+          "prezzo": "6,00",
+          "badge": [
+            "MARCHIGIANO",
+            "TOP"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Anelli di cipolla",
+          "descrizione": "Onion rings croccanti con salsa ranch",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Pepite di pollo",
+          "descrizione": "Bocconcini di pollo croccanti con salsa BBQ o miele e senape",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Bandidos di pollo",
+          "descrizione": "Strisce di pollo piccanti speziate alla messicana",
+          "prezzo": "5,00",
+          "badge": [
+            "PICCANTE"
+          ],
+          "allergeni": [
+            "glutine"
+          ]
+        }
       ]
     },
     {
@@ -122,10 +666,38 @@
       "titolo": "Patate",
       "icona": "potato",
       "items": [
-        { "nome": "Patate al forno", "descrizione": "Patate al rosmarino cotte al forno", "prezzo": "4,00", "badge": [], "allergeni": [] },
-        { "nome": "Patate chips", "descrizione": "Sottili e croccanti", "prezzo": "4,00", "badge": [], "allergeni": [] },
-        { "nome": "Patate cheddar", "descrizione": "Patate fritte gratinate con salsa cheddar fusa", "prezzo": "5,00", "badge": [], "allergeni": ["lattosio"] },
-        { "nome": "Patate cipolla e cheddar", "descrizione": "Patate fritte con cipolla caramellata e salsa cheddar", "prezzo": "6,00", "badge": [], "allergeni": ["lattosio"] }
+        {
+          "nome": "Patate al forno",
+          "descrizione": "Patate al rosmarino cotte al forno",
+          "prezzo": "4,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "Patate chips",
+          "descrizione": "Sottili e croccanti",
+          "prezzo": "4,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "Patate cheddar",
+          "descrizione": "Patate fritte gratinate con salsa cheddar fusa",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Patate cipolla e cheddar",
+          "descrizione": "Patate fritte con cipolla caramellata e salsa cheddar",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        }
       ]
     },
     {
@@ -133,10 +705,40 @@
       "titolo": "Contorni",
       "icona": "salad",
       "items": [
-        { "nome": "Purè di patate", "descrizione": "Con briciole di cipolla croccante", "prezzo": "5,00", "badge": [], "allergeni": ["lattosio"] },
-        { "nome": "Bis di crauti", "descrizione": "Crauti freschi e crauti rossi", "prezzo": "4,00", "badge": [], "allergeni": [] },
-        { "nome": "Verdure grigliate", "descrizione": "Zucchine, melanzane, peperoni, olio EVO", "prezzo": "5,00", "badge": ["VEG"], "allergeni": [] },
-        { "nome": "Insalata", "descrizione": "Misticanza di stagione", "prezzo": "3,00", "badge": ["VEG"], "allergeni": [] }
+        {
+          "nome": "Purè di patate",
+          "descrizione": "Con briciole di cipolla croccante",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Bis di crauti",
+          "descrizione": "Crauti freschi e crauti rossi",
+          "prezzo": "4,00",
+          "badge": [],
+          "allergeni": []
+        },
+        {
+          "nome": "Verdure grigliate",
+          "descrizione": "Zucchine, melanzane, peperoni, olio EVO",
+          "prezzo": "5,00",
+          "badge": [
+            "VEG"
+          ],
+          "allergeni": []
+        },
+        {
+          "nome": "Insalata",
+          "descrizione": "Misticanza di stagione",
+          "prezzo": "3,00",
+          "badge": [
+            "VEG"
+          ],
+          "allergeni": []
+        }
       ]
     },
     {
@@ -144,10 +746,48 @@
       "titolo": "Insalatone",
       "icona": "bowl",
       "items": [
-        { "nome": "Caesar Salad", "descrizione": "Insalata mista, petto di pollo marinato e grigliato, pomodorini, olive taggiasche, crostini di pane, salsa yogurt", "prezzo": "9,00", "badge": ["TOP"], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Salmon Salad", "descrizione": "Insalata mista, salmone affumicato, pomodorini, mozzarella di bufala, crostini di pane, salsa yogurt", "prezzo": "9,00", "badge": [], "allergeni": ["glutine", "lattosio"] },
-        { "nome": "Occhio per Occhio", "descrizione": "Tonno, uovo sodo, olive, gamberetti, pomodoro", "prezzo": "9,00", "badge": [], "allergeni": ["uova"] },
-        { "nome": "The Wild West", "descrizione": "Rucola, funghi, parmigiano a scaglie, glassa di balsamico ai frutti di bosco", "prezzo": "9,00", "badge": ["VEG"], "allergeni": ["lattosio"] }
+        {
+          "nome": "Caesar Salad",
+          "descrizione": "Insalata mista, petto di pollo marinato e grigliato, pomodorini, olive taggiasche, crostini di pane, salsa yogurt",
+          "prezzo": "9,00",
+          "badge": [
+            "TOP"
+          ],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Salmon Salad",
+          "descrizione": "Insalata mista, salmone affumicato, pomodorini, mozzarella di bufala, crostini di pane, salsa yogurt",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Occhio per Occhio",
+          "descrizione": "Tonno, uovo sodo, olive, gamberetti, pomodoro",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": [
+            "uova"
+          ]
+        },
+        {
+          "nome": "The Wild West",
+          "descrizione": "Rucola, funghi, parmigiano a scaglie, glassa di balsamico ai frutti di bosco",
+          "prezzo": "9,00",
+          "badge": [
+            "VEG"
+          ],
+          "allergeni": [
+            "lattosio"
+          ]
+        }
       ]
     },
     {
@@ -155,9 +795,37 @@
       "titolo": "Dolci",
       "icona": "dessert",
       "items": [
-        { "nome": "Panna cotta", "descrizione": "Salse a scelta: caramello, frutti di bosco, cioccolato", "prezzo": "5,00", "badge": [], "allergeni": ["lattosio"] },
-        { "nome": "Tortino al cioccolato", "descrizione": "Cuore caldo, cioccolato fondente", "prezzo": "5,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] },
-        { "nome": "Strudel di mele", "descrizione": "Servito tiepido, con velo di zucchero", "prezzo": "5,00", "badge": [], "allergeni": ["glutine", "lattosio", "uova"] }
+        {
+          "nome": "Panna cotta",
+          "descrizione": "Salse a scelta: caramello, frutti di bosco, cioccolato",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Tortino al cioccolato",
+          "descrizione": "Cuore caldo, cioccolato fondente",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        },
+        {
+          "nome": "Strudel di mele",
+          "descrizione": "Servito tiepido, con velo di zucchero",
+          "prezzo": "5,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio",
+            "uova"
+          ]
+        }
       ]
     },
     {
@@ -165,10 +833,42 @@
       "titolo": "Birre",
       "icona": "beer",
       "items": [
-        { "nome": "Birra alla Spina Vecchio West", "descrizione": "La nostra bionda artigianale — media 0,4L", "prezzo": "5,00", "badge": ["TOP"], "allergeni": ["glutine"] },
-        { "nome": "IPA Outlaw", "descrizione": "IPA agrumata e luppolata — bottiglia 33cl", "prezzo": "6,00", "badge": [], "allergeni": ["glutine"] },
-        { "nome": "Rossa del Sceriffo", "descrizione": "Doppio malto rossa, note caramellate — bottiglia 33cl", "prezzo": "6,00", "badge": [], "allergeni": ["glutine"] },
-        { "nome": "Birra senza glutine", "descrizione": "Bottiglia 33cl — disponibile su richiesta", "prezzo": "5,50", "badge": [], "allergeni": [] }
+        {
+          "nome": "Birra alla Spina Vecchio West",
+          "descrizione": "La nostra bionda artigianale — media 0,4L",
+          "prezzo": "5,00",
+          "badge": [
+            "TOP"
+          ],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "IPA Outlaw",
+          "descrizione": "IPA agrumata e luppolata — bottiglia 33cl",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Rossa del Sceriffo",
+          "descrizione": "Doppio malto rossa, note caramellate — bottiglia 33cl",
+          "prezzo": "6,00",
+          "badge": [],
+          "allergeni": [
+            "glutine"
+          ]
+        },
+        {
+          "nome": "Birra senza glutine",
+          "descrizione": "Bottiglia 33cl — disponibile su richiesta",
+          "prezzo": "5,50",
+          "badge": [],
+          "allergeni": []
+        }
       ]
     }
   ]
