@@ -4,6 +4,18 @@
    da poster western, righe puntinate tra nome e prezzo.
    ========================================================= */
 
+/* ----- Nav ridotta su /menu (QR al tavolo) -----
+   Chi scansiona il QR vede solo il menù: niente link alle altre
+   sezioni della home né hamburger/overlay (puntano a index.html#…,
+   confusionari al tavolo). Restano logo (torna alla home) e stato
+   "Aperti". La classe .vw-page-menu è hardcoded sul <body> di
+   menu.html → presente prima dell'iniezione del blocco nav, niente flash. */
+.vw-page-menu .vw-top__nav,
+.vw-page-menu .vw-top__menu-btn,
+.vw-page-menu .vw-overlay-menu {
+  display: none;
+}
+
 /* ----- Container principale ----- */
 .vw-menu-vert {
   padding-top: var(--space-xl);

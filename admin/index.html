@@ -3,111 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vecchio West · CMS</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <!-- Vecchio West · il vecchio scaffold Decap CMS è stato sostituito
+       dall'editor self-service /modifica-menu. Questa pagina ora reindirizza. -->
+  <meta http-equiv="refresh" content="0; url=/modifica-menu" />
+  <title>Reindirizzamento · Vecchio West</title>
   <link rel="icon" href="../assets/img/favicon-32.png" />
+  <script>location.replace('/modifica-menu');</script>
 </head>
-<body>
-  <!-- Decap CMS -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <script>
-    // Configurazione Decap CMS — UI per editare i JSON da web
-    // Backend: GitHub (compatibile con Vercel; richiede una OAuth App GitHub +
-    // proxy OAuth — vedi README.md sezione "CMS / pannello admin").
-    // Per uso locale: avvia `npx decap-server` e attiva local_backend.
-    CMS.init({
-      config: {
-        backend: {
-          name: 'github',
-          repo: 'OWNER/REPO',        // ← sostituisci con "tuo-utente/nome-repo"
-          branch: 'main',
-          base_url: 'https://decap-proxy.example.com' // ← URL del tuo OAuth proxy
-        },
-        local_backend: true,         // usare `npx decap-server` per dev locale
-        media_folder: 'assets/img',
-        public_folder: '/assets/img',
-        site_url: 'https://www.vecchiowestpub.it',
-        display_url: 'https://www.vecchiowestpub.it',
-        locale: 'it',
-        collections: [
-          {
-            name: 'data',
-            label: 'Contenuti del sito',
-            files: [
-              {
-                file: 'data/promo.json',
-                label: 'Promo Banner',
-                name: 'promo',
-                fields: [
-                  { name: 'active', label: 'Attiva', widget: 'boolean' },
-                  { name: 'title', label: 'Titolo', widget: 'string' },
-                  { name: 'subtitle', label: 'Sottotitolo', widget: 'string' },
-                  { name: 'cta_text', label: 'Testo CTA', widget: 'string' },
-                  { name: 'cta_link', label: 'Link CTA', widget: 'string' },
-                  { name: 'expires_at', label: 'Scadenza', widget: 'datetime' },
-                  { name: 'theme', label: 'Tema', widget: 'select', options: ['western','latin','festive'] }
-                ]
-              },
-              {
-                file: 'data/eventi.json',
-                label: 'Eventi',
-                name: 'eventi',
-                fields: [
-                  {
-                    name: 'eventi', label: 'Lista eventi', widget: 'list',
-                    fields: [
-                      { name: 'id', label: 'ID', widget: 'string' },
-                      { name: 'titolo', label: 'Titolo', widget: 'string' },
-                      { name: 'descrizione_breve', label: 'Descrizione breve', widget: 'string' },
-                      { name: 'data_inizio', label: 'Data inizio', widget: 'datetime' },
-                      { name: 'data_fine', label: 'Data fine', widget: 'datetime' },
-                      { name: 'immagine', label: 'Immagine', widget: 'image' },
-                      { name: 'theme', label: 'Tema', widget: 'select', options: ['western','latin','festive'] },
-                      { name: 'cta_testo', label: 'Testo CTA', widget: 'string' }
-                    ]
-                  }
-                ]
-              },
-              {
-                file: 'data/recensioni.json',
-                label: 'Recensioni',
-                name: 'recensioni',
-                fields: [
-                  {
-                    name: 'recensioni', label: 'Lista recensioni', widget: 'list',
-                    fields: [
-                      { name: 'autore', label: 'Autore', widget: 'string' },
-                      { name: 'rating', label: 'Stelle (1-5)', widget: 'number', min: 1, max: 5 },
-                      { name: 'data', label: 'Data', widget: 'date' },
-                      { name: 'testo', label: 'Testo recensione', widget: 'text' }
-                    ]
-                  }
-                ]
-              },
-              {
-                file: 'data/contatti.json',
-                label: 'Contatti & Orari',
-                name: 'contatti',
-                fields: [
-                  { name: 'telefono', label: 'Telefono', widget: 'string' },
-                  { name: 'whatsapp', label: 'WhatsApp', widget: 'string' },
-                  { name: 'email', label: 'Email', widget: 'string' },
-                  { name: 'indirizzo', label: 'Indirizzo', widget: 'string' },
-                  { name: 'citta', label: 'Città', widget: 'string' },
-                  {
-                    name: 'orari', label: 'Orari settimanali', widget: 'list',
-                    fields: [
-                      { name: 'giorno', label: 'Giorno', widget: 'string' },
-                      { name: 'apertura', label: 'Apertura', widget: 'string' },
-                      { name: 'chiusura', label: 'Chiusura', widget: 'string' }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    });
-  </script>
+<body style="font-family:Georgia,serif;background:#1a120b;color:#f0e3c8;text-align:center;padding:3rem 1rem">
+  <p>Reindirizzamento all'editor del menù…</p>
+  <p><a href="/modifica-menu" style="color:#c89b3c">Vai a /modifica-menu</a></p>
 </body>
 </html>

@@ -416,27 +416,23 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   position: relative;
   width: 100%;
   margin: 0;
-  /* Asset clean (no fake UI) → mostra la composizione intera */
+  /* Asset clean (no fake UI) → mostra la composizione intera.
+     Solo aspect-ratio: il contenitore mantiene SEMPRE il rapporto
+     dell'asset (1376/768), quindi object-fit:contain riempie edge-to-edge
+     senza letterbox e senza cornice sfocata ::before.
+     I clamp di altezza (min-height/max-height) forzavano un rapporto
+     ≠ asset → poster rimpicciolito e incorniciato: rimossi.
+     Le hitbox % restano allineate perché il rapporto è invariato. */
   aspect-ratio: 1376 / 768;
-  min-height: 520px;
-  max-height: calc(100svh - var(--top-bar-h) - var(--top-header-h));
   isolation: isolate;
   overflow: hidden;
   background: var(--vw-deep);
 }
-/* Backdrop sfocato dietro: riempie i lati con una copia sfocata della
-   stessa immagine, così su DESKTOP il poster intero resta visibile
-   (object-fit: contain) senza bande nere e senza tagli sopra/sotto. */
-.vw-saloon-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: url('../assets/img/hero/vw-hero-desktop.png') center center / cover no-repeat;
-  filter: blur(30px) brightness(0.5) saturate(1.1);
-  transform: scale(1.12);
-  pointer-events: none;
-}
+/* Backdrop sfocato ::before RIMOSSO: ora che il contenitore mantiene il
+   rapporto dell'asset (desktop 1376/768, mobile 768/1376) object-fit:contain
+   riempie sempre edge-to-edge, quindi non c'è più letterbox da mascherare.
+   Rimuoverlo evita anche il download inutile di vw-hero-desktop.png (~2.5MB)
+   su mobile (dove il backdrop era comunque interamente coperto). */
 .vw-saloon-hero__bg {
   position: absolute;
   inset: 0;
@@ -450,13 +446,11 @@ html { scroll-padding-top: calc(var(--top-bar-h) + var(--top-header-h) + 12px); 
   filter: contrast(1.04) saturate(1.05);
 }
 @media (max-aspect-ratio: 1/1) {
-  /* Mobile: container con aspect ratio uguale all'asset (2480/3312),
-     niente min-height né max-height, full width senza taglio.
-     Backdrop sfocato riabilitato per riempire eventuali letterbox. */
+  /* Mobile/portrait: container con aspect ratio uguale all'asset reale
+     (vw-hero-mobile.png = 768×1376), così il poster riempie edge-to-edge
+     senza cornice sfocata laterale. Full width senza taglio. */
   .vw-saloon-hero {
-    aspect-ratio: 2480 / 3312;
-    max-height: none;
-    min-height: 0;
+    aspect-ratio: 768 / 1376;
   }
   .vw-saloon-hero__bg img { object-fit: contain; }
   .vw-saloon-hero::after {

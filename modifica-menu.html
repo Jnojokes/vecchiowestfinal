@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a120b" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Pagina privata: niente indicizzazione, nessun link interno la punta. -->
+  <meta name="robots" content="noindex, nofollow" />
+
+  <title>Modifica menù · Vecchio West</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
+
+  <!-- global.css porta @import tokens.css (brand) + base/bottoni/.vw-badge/.vw-chip -->
+  <link rel="stylesheet" href="css/global.css?v=20260615a" />
+  <link rel="stylesheet" href="css/modifica-menu.css?v=20260615a" />
+
+  <!-- =========================================================
+       Componente Alpine "vwEditor" registrato PRIMA del caricamento
+       di Alpine (evento alpine:init). Pagina autonoma: NON usa app.js.
+       ========================================================= -->
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('vwEditor', () => ({
+        // Set ammessi (devono combaciare col server e col CSS .vw-badge--<lowercase>)
+        BADGES: ['TOP', 'PICCANTE', 'MARCHIGIANO', 'VEG', 'VEGAN', 'NUOVO'],
+        ALLERGENI: ['glutine', 'lattosio', 'sedano', 'sesamo', 'uova'],
+
+        // Stato
+        step: 'login',            // 'login' | 'editor'
+        booting: !!sessionStorage.getItem('vw_admin_pw'), // auto-login in corso → evita flash della card login
+        password: '',
+        loginError: '',
+        loading: false,           // spinner login / caricamento iniziale
+        loadError: '',
+        publishing: false,
+        publishMsg: '',
+        publishError: '',
+        erroriValidazione: [],
+        menu: { ricerca_allergeni_attiva: true, sezioni: [] },
+        dirty: false,
+        aperte: {},               // accordion: { [idSezione]: bool } — NON serializzato nel menu
+        nuoveSezioni: {},         // { [idTemporaneo]: true } sezioni create in questa sessione
+
+        // ---------- Ciclo di vita ----------
+        async init() {
+          // Avviso se si chiude la pagina con modifiche non salvate.
+          window.addEventListener('beforeunload', (e) => {
+            if (this.dirty) { e.preventDefault(); e.returnValue = ''; }
+          });
+          // Auto-login se la password è già in sessionStorage (riverifica lato server).
+          const saved = sessionStorage.getItem('vw_admin_pw');
+          if (saved) {
+            this.password = saved;
+            this.loading = true;
+            try {
+              const ok = await this.verifica();
+              if (ok) { await this.loadMenu(); this.step = 'editor'; }
+              else { this.logout(); }
+            } finally {
+              this.loading = false;
+              this.booting = false;
+            }
+          }
+        },
+
+        // ---------- Autenticazione ----------
+        async verifica() {
+          try {
+            const r = await this.api({ action: 'verify' });
+            return r.status === 200;
+          } catch (_) { return false; }
+        },
+        async login() {
+          this.loginError = '';
+          if (!this.password) { this.loginError = 'Inserisci la password.'; return; }
+          this.loading = true;
+          try {
+            const r = await this.api({ action: 'verify' });
+            if (r.status === 401) { this.loginError = 'Password errata.'; return; }
+            if (r.status !== 200) { this.loginError = (r.body && r.body.error) || ('Errore server (' + r.status + ').'); return; }
+            sessionStorage.setItem('vw_admin_pw', this.password);
+            await this.loadMenu();
+            this.step = 'editor';
+          } catch (_) {
+            this.loginError = 'Errore di rete. Riprova.';
+          } finally {
+            this.loading = false;
+          }
+        },
+        logout() {
+          sessionStorage.removeItem('vw_admin_pw');
+          this.password = '';
+          this.step = 'login';
+        },
+
+        // ---------- Caricamento menù ----------
+        async loadMenu() {
+          this.loadError = '';
+          // 1) Sorgente primaria: API (menu fresco da GitHub).
+          try {
+            const r = await this.api({ action: 'load' });
+            if (r.status === 401) { this.logout(); return; }   // 401 = SOLO password errata
+            if (r.status === 200 && r.body && r.body.ok && r.body.menu) {
+              this.menu = this.normalizzaForma(r.body.menu);
+              this.nuoveSezioni = {};
+              this.dirty = false;
+              return;
+            }
+          } catch (_) { /* fallthrough al fallback */ }
+          // 2) Fallback: file statico (utile in locale senza token).
+          try {
+            const r2 = await fetch('../data/menu.json?t=' + Date.now(), { cache: 'no-store' });
+            if (r2.ok) {
+              this.menu = this.normalizzaForma(await r2.json());
+              this.nuoveSezioni = {};
+              this.dirty = false;
+              return;
+            }
+          } catch (_) { /* noop */ }
+          this.loadError = 'Impossibile caricare il menù.';
+        },
+        async ricarica() {
+          if (this.dirty && !confirm('Scartare le modifiche non salvate e ricaricare dal server?')) return;
+          this.publishMsg = ''; this.publishError = ''; this.erroriValidazione = [];
+          this.loading = true;
+          await this.loadMenu();
+          this.loading = false;
+        },
+
+        // Garantisce la forma minima senza perdere campi sconosciuti (_note, icona, nota…).
+        normalizzaForma(m) {
+          m = (m && typeof m === 'object' && !Array.isArray(m)) ? m : {};
+          if (!Array.isArray(m.sezioni)) m.sezioni = [];
+          if (typeof m.ricerca_allergeni_attiva !== 'boolean') m.ricerca_allergeni_attiva = true;
+          m.sezioni.forEach((s) => {
+            if (!Array.isArray(s.items)) s.items = [];
+            s.items.forEach((it) => {
+              if (!Array.isArray(it.badge)) it.badge = [];
+              if (!Array.isArray(it.allergeni)) it.allergeni = [];
+              if (typeof it.descrizione !== 'string') it.descrizione = '';
+              if (typeof it.prezzo !== 'string') it.prezzo = (it.prezzo == null ? '' : String(it.prezzo));
+            });
+          });
+          return m;
+        },
+
+        // ---------- Helpers di rete ----------
+        // Ritorna { status, body }. Nel body di rete viaggia SOLO la password (mai token).
+        async api(payload) {
+          const r = await fetch('/api/save-menu', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...payload, password: this.password }),
+          });
+          let body = null;
+          try { body = await r.json(); } catch (_) { body = null; }
+          return { status: r.status, body };
+        },
+
+        // ---------- Mutazioni: sezioni ----------
+        slugify(str) {
+          return (str || '').toString()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '') || 'sezione';
+        },
+        idUnivoco(base) {
+          const esistenti = new Set(this.menu.sezioni.map((s) => s.id));
+          const slug = this.slugify(base);
+          if (!esistenti.has(slug)) return slug;
+          let n = 2;
+          while (esistenti.has(slug + '-' + n)) n++;
+          return slug + '-' + n;
+        },
+        addSezione() {
+          const id = this.idUnivoco('nuova-sezione');
+          // icona:'' per coerenza con lo schema (ogni sezione ha icona); nota assente finché vuota.
+          this.menu.sezioni.push({ id, titolo: 'Nuova sezione', icona: '', items: [] });
+          this.aperte[id] = true;
+          this.nuoveSezioni[id] = true; // id definitivo (slug del titolo) calcolato al publish
+          this.dirty = true;
+          this.$nextTick(() => this.scrollAFondo());
+        },
+        removeSezione(si) {
+          const s = this.menu.sezioni[si];
+          if (!confirm('Rimuovere la sezione "' + (s.titolo || '') + '" e tutti i suoi piatti?')) return;
+          delete this.aperte[s.id];
+          delete this.nuoveSezioni[s.id];
+          this.menu.sezioni.splice(si, 1);
+          this.dirty = true;
+        },
+        moveSezione(si, dir) {
+          const j = si + dir;
+          if (j < 0 || j >= this.menu.sezioni.length) return;
+          const arr = this.menu.sezioni;
+          [arr[si], arr[j]] = [arr[j], arr[si]];
+          this.dirty = true;
+        },
+        toggleSezione(id) { this.aperte[id] = !this.aperte[id]; },
+
+        // ---------- Mutazioni: piatti ----------
+        addItem(s) {
+          s.items.push({ nome: '', descrizione: '', prezzo: '', badge: [], allergeni: [] });
+          this.aperte[s.id] = true;
+          this.dirty = true;
+        },
+        removeItem(s, ii) {
+          const it = s.items[ii];
+          const nome = (it && it.nome && it.nome.trim()) ? ('"' + it.nome.trim() + '"') : 'questo piatto';
+          if (!confirm('Rimuovere ' + nome + '?')) return;
+          s.items.splice(ii, 1);
+          this.dirty = true;
+        },
+        moveItem(s, ii, dir) {
+          const j = ii + dir;
+          if (j < 0 || j >= s.items.length) return;
+          [s.items[ii], s.items[j]] = [s.items[j], s.items[ii]];
+          this.dirty = true;
+        },
+
+        // ---------- Badge / allergeni (multi-select) ----------
+        toggleBadge(it, b) {
+          const i = it.badge.indexOf(b);
+          if (i === -1) it.badge.push(b); else it.badge.splice(i, 1);
+          this.dirty = true;
+        },
+        toggleAllergene(it, a) {
+          const i = it.allergeni.indexOf(a);
+          if (i === -1) it.allergeni.push(a); else it.allergeni.splice(i, 1);
+          this.dirty = true;
+        },
+
+        // ---------- Prezzo ----------
+        // Normalizza in "X,YY": 12 → 12,00 · 12.5 → 12,50 · "3,00" invariato.
+        normalizzaPrezzo(it) {
+          let v = (it.prezzo == null ? '' : String(it.prezzo)).trim();
+          if (v === '') return;
+          v = v.replace(/€/g, '').replace(/\s/g, '');
+          // Input ambiguo (più separatori, es. separatore migliaia "1.234,56"):
+          // non normalizzare, lascia che validate() lo segnali invece di corromperlo.
+          if ((v.match(/[.,]/g) || []).length > 1) return;
+          v = v.replace(',', '.');
+          const n = parseFloat(v);
+          if (isNaN(n) || !isFinite(n)) return; // non numerico → lo segnalerà la validazione
+          const nuovo = n.toFixed(2).replace('.', ',');
+          if (nuovo !== it.prezzo) { it.prezzo = nuovo; this.dirty = true; }
+        },
+        normalizzaTutto() {
+          this.menu.sezioni.forEach((s) => s.items.forEach((it) => this.normalizzaPrezzo(it)));
+        },
+
+        // ---------- Validazione client ----------
+        validate() {
+          const errori = [];
+          const prezzoRe = /^\d+,\d{2}$/;
+          this.menu.sezioni.forEach((s, si) => {
+            const et = (s.titolo && s.titolo.trim()) || ('Sezione ' + (si + 1));
+            (s.items || []).forEach((it, ii) => {
+              const nome = (it.nome || '').trim();
+              const rifPiatto = nome ? ('"' + nome + '"') : ('piatto ' + (ii + 1));
+              if (!nome) errori.push(et + ' · piatto ' + (ii + 1) + ': il nome è obbligatorio.');
+              if (!prezzoRe.test((it.prezzo || '').trim()))
+                errori.push(et + ' · ' + rifPiatto + ': prezzo nel formato 12,00 (virgola, 2 decimali).');
+              (it.badge || []).forEach((b) => {
+                if (!this.BADGES.includes(b)) errori.push(et + ' · ' + rifPiatto + ': badge non ammesso (' + b + ').');
+              });
+              (it.allergeni || []).forEach((a) => {
+                if (!this.ALLERGENI.includes(a)) errori.push(et + ' · ' + rifPiatto + ': allergene non ammesso (' + a + ').');
+              });
+            });
+          });
+          return errori;
+        },
+
+        // Prepara il payload: clone pulito, trim, rimozione di nota vuota e
+        // assegnazione dell'id definitivo (slug del titolo) alle SOLE sezioni
+        // nuove. Gli id delle sezioni esistenti NON vengono mai cambiati.
+        preparaMenu() {
+          const m = JSON.parse(JSON.stringify(this.menu));
+          // Id già "fissi": tutte le sezioni non create in questa sessione.
+          const usati = new Set();
+          (m.sezioni || []).forEach((s) => { if (!this.nuoveSezioni[s.id]) usati.add(s.id); });
+          (m.sezioni || []).forEach((s) => {
+            if (typeof s.titolo === 'string') s.titolo = s.titolo.trim();
+            // Sezione nuova → id = slug univoco del titolo.
+            if (this.nuoveSezioni[s.id]) {
+              const base = this.slugify(s.titolo);
+              let id = base, n = 2;
+              while (usati.has(id)) id = base + '-' + (n++);
+              s.id = id;
+              usati.add(id);
+            }
+            if (typeof s.nota === 'string' && s.nota.trim() === '') delete s.nota;
+            else if (typeof s.nota === 'string') s.nota = s.nota.trim();
+            (s.items || []).forEach((it) => {
+              if (typeof it.nome === 'string') it.nome = it.nome.trim();
+              if (typeof it.descrizione === 'string') it.descrizione = it.descrizione.trim();
+            });
+          });
+          return m;
+        },
+
+        // ---------- Pubblicazione ----------
+        async publish() {
+          this.publishMsg = ''; this.publishError = ''; this.erroriValidazione = [];
+          this.normalizzaTutto();
+          const errori = this.validate();
+          if (errori.length) { this.erroriValidazione = errori; this.scrollSu(); return; }
+          this.publishing = true;
+          try {
+            const r = await this.api({ action: 'publish', menu: this.preparaMenu() });
+            if (r.status === 401) { this.publishError = 'Sessione scaduta: rifai il login.'; this.logout(); return; }
+            if (r.status === 200 && r.body && r.body.ok) {
+              this.publishMsg = 'Pubblicato! Online tra ~1 minuto.';
+              this.dirty = false;
+              await this.loadMenu();   // ricarica fresco dal server
+            } else {
+              this.publishError = (r.body && r.body.error) || ('Errore pubblicazione (' + r.status + ').');
+            }
+          } catch (_) {
+            this.publishError = 'Errore di rete durante la pubblicazione.';
+          } finally {
+            this.publishing = false;
+          }
+        },
+
+        // ---------- Backup ----------
+        downloadBackup() {
+          const blob = new Blob([JSON.stringify(this.preparaMenu(), null, 2) + '\n'], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const stamp = new Date().toISOString().slice(0, 10);
+          a.href = url;
+          a.download = 'menu-backup-' + stamp + '.json';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+        },
+
+        // ---------- Util UI ----------
+        scrollSu() { window.scrollTo({ top: 0, behavior: 'smooth' }); },
+        scrollAFondo() { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); },
+        contaPiatti(s) { return (s.items || []).length; },
+      }));
+    });
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
+</head>
+
+<body class="vw-cms">
+  <div x-data="vwEditor()" x-cloak>
+
+    <!-- ===================== BOOT (auto-login) ===================== -->
+    <!-- Spinner mentre si riverifica la password salvata: evita il flash della card login. -->
+    <main class="vw-cms-login" x-show="booting" x-cloak>
+      <div class="vw-cms-login__card">
+        <img src="assets/img/logo-vw-sm.png" alt="Vecchio West" width="64" height="64" class="vw-cms-login__logo" />
+        <p class="vw-cms-login__sub">Verifica accesso…</p>
+      </div>
+    </main>
+
+    <!-- ============================== LOGIN ============================== -->
+    <main class="vw-cms-login" x-show="step === 'login' && !booting" x-cloak>
+      <div class="vw-cms-login__card">
+        <img src="assets/img/logo-vw-sm.png" alt="Vecchio West" width="64" height="64" class="vw-cms-login__logo" />
+        <h1 class="vw-cms-login__title">Gestione menù</h1>
+        <p class="vw-cms-login__sub">Area riservata · inserisci la password</p>
+
+        <form @submit.prevent="login()">
+          <label class="vw-cms-field">
+            <span class="vw-cms-field__label">Password</span>
+            <input
+              type="password"
+              class="vw-cms-input"
+              x-model="password"
+              autocomplete="current-password"
+              :disabled="loading"
+              required
+            />
+          </label>
+          <p class="vw-cms-error" x-show="loginError" x-text="loginError" x-cloak></p>
+          <button type="submit" class="vw-btn vw-cms-login__btn" :disabled="loading">
+            <span x-show="!loading">Entra</span>
+            <span x-show="loading" x-cloak>Verifica…</span>
+          </button>
+        </form>
+      </div>
+    </main>
+
+    <!-- ============================== EDITOR ============================== -->
+    <template x-if="step === 'editor'">
+      <div class="vw-cms-editor">
+
+        <header class="vw-cms-head">
+          <div class="vw-cms-head__left">
+            <img src="assets/img/logo-vw-sm.png" alt="" width="40" height="40" />
+            <div>
+              <h1 class="vw-cms-head__title">Modifica menù</h1>
+              <p class="vw-cms-head__sub">Aggiungi, modifica o togli piatti, poi pubblica.</p>
+            </div>
+          </div>
+          <button type="button" class="vw-cms-link" @click="logout()">Esci</button>
+        </header>
+
+        <!-- Esiti / errori -->
+        <div class="vw-cms-banner vw-cms-banner--ok" x-show="publishMsg" x-cloak>
+          <span x-text="publishMsg"></span>
+        </div>
+        <div class="vw-cms-banner vw-cms-banner--err" x-show="publishError" x-cloak>
+          <span x-text="publishError"></span>
+        </div>
+        <div class="vw-cms-banner vw-cms-banner--err" x-show="loadError" x-cloak>
+          <span x-text="loadError"></span>
+        </div>
+        <div class="vw-cms-banner vw-cms-banner--err" x-show="erroriValidazione.length" x-cloak>
+          <strong>Correggi prima di pubblicare:</strong>
+          <ul>
+            <template x-for="(e, i) in erroriValidazione" :key="i"><li x-text="e"></li></template>
+          </ul>
+        </div>
+
+        <!-- Impostazione globale -->
+        <div class="vw-cms-toggle">
+          <label class="vw-cms-switch">
+            <input type="checkbox" x-model="menu.ricerca_allergeni_attiva" @change="dirty = true" />
+            <span class="vw-cms-switch__track"><span class="vw-cms-switch__thumb"></span></span>
+            <span class="vw-cms-switch__label">Mostra il filtro allergeni sul sito</span>
+          </label>
+        </div>
+
+        <!-- Sezioni (accordion) -->
+        <div class="vw-cms-sezioni">
+          <template x-for="(s, si) in menu.sezioni" :key="s.id">
+            <section class="vw-cms-sez" :class="{ 'is-open': aperte[s.id] }">
+
+              <!-- Testata sezione -->
+              <div class="vw-cms-sez__head">
+                <button type="button" class="vw-cms-sez__toggle" @click="toggleSezione(s.id)" :aria-expanded="(!!aperte[s.id]).toString()">
+                  <span class="vw-cms-sez__chev" aria-hidden="true">▸</span>
+                  <span class="vw-cms-sez__titolo" x-text="s.titolo || 'Senza titolo'"></span>
+                  <span class="vw-cms-sez__count" x-text="contaPiatti(s) + (contaPiatti(s) === 1 ? ' piatto' : ' piatti')"></span>
+                </button>
+                <div class="vw-cms-sez__ord">
+                  <button type="button" class="vw-cms-iconbtn" title="Sposta su" @click="moveSezione(si, -1)" :disabled="si === 0">▲</button>
+                  <button type="button" class="vw-cms-iconbtn" title="Sposta giù" @click="moveSezione(si, 1)" :disabled="si === menu.sezioni.length - 1">▼</button>
+                  <button type="button" class="vw-cms-iconbtn vw-cms-iconbtn--danger" title="Rimuovi sezione" @click="removeSezione(si)">✕</button>
+                </div>
+              </div>
+
+              <!-- Corpo sezione -->
+              <div class="vw-cms-sez__body" x-show="aperte[s.id]">
+                <div class="vw-cms-grid2">
+                  <label class="vw-cms-field">
+                    <span class="vw-cms-field__label">Titolo sezione</span>
+                    <input type="text" class="vw-cms-input" x-model="s.titolo" @input="dirty = true" />
+                  </label>
+                  <label class="vw-cms-field">
+                    <span class="vw-cms-field__label">Nota <small>(opzionale)</small></span>
+                    <input type="text" class="vw-cms-input" x-model="s.nota" @input="dirty = true" placeholder="es. Aggiunte: formaggio +1,00 €" />
+                  </label>
+                </div>
+
+                <!-- Piatti -->
+                <div class="vw-cms-piatti">
+                  <template x-for="(it, ii) in s.items" :key="ii">
+                    <article class="vw-cms-piatto">
+                      <div class="vw-cms-piatto__top">
+                        <span class="vw-cms-piatto__n" x-text="'#' + (ii + 1)"></span>
+                        <div class="vw-cms-piatto__ord">
+                          <button type="button" class="vw-cms-iconbtn" title="Su" @click="moveItem(s, ii, -1)" :disabled="ii === 0">▲</button>
+                          <button type="button" class="vw-cms-iconbtn" title="Giù" @click="moveItem(s, ii, 1)" :disabled="ii === s.items.length - 1">▼</button>
+                          <button type="button" class="vw-cms-iconbtn vw-cms-iconbtn--danger" title="Rimuovi piatto" @click="removeItem(s, ii)">✕</button>
+                        </div>
+                      </div>
+
+                      <div class="vw-cms-grid-nome">
+                        <label class="vw-cms-field">
+                          <span class="vw-cms-field__label">Nome *</span>
+                          <input type="text" class="vw-cms-input" x-model="it.nome" @input="dirty = true" placeholder="Nome del piatto" />
+                        </label>
+                        <label class="vw-cms-field vw-cms-field--prezzo">
+                          <span class="vw-cms-field__label">Prezzo €</span>
+                          <input type="text" inputmode="decimal" class="vw-cms-input" x-model="it.prezzo" @input="dirty = true" @blur="normalizzaPrezzo(it)" placeholder="12,00" />
+                        </label>
+                      </div>
+
+                      <label class="vw-cms-field">
+                        <span class="vw-cms-field__label">Descrizione</span>
+                        <textarea class="vw-cms-input vw-cms-textarea" rows="2" x-model="it.descrizione" @input="dirty = true" placeholder="Ingredienti / dettagli"></textarea>
+                      </label>
+
+                      <div class="vw-cms-chips-group">
+                        <span class="vw-cms-field__label">Badge</span>
+                        <div class="vw-cms-chips">
+                          <template x-for="b in BADGES" :key="b">
+                            <button type="button" class="vw-chip vw-chip--toggle" :class="{ 'is-active': it.badge.includes(b) }" :aria-pressed="it.badge.includes(b).toString()" @click="toggleBadge(it, b)" x-text="b"></button>
+                          </template>
+                        </div>
+                      </div>
+
+                      <div class="vw-cms-chips-group">
+                        <span class="vw-cms-field__label">Allergeni</span>
+                        <div class="vw-cms-chips">
+                          <template x-for="a in ALLERGENI" :key="a">
+                            <button type="button" class="vw-chip vw-chip--toggle" :class="{ 'is-active': it.allergeni.includes(a) }" :aria-pressed="it.allergeni.includes(a).toString()" @click="toggleAllergene(it, a)" x-text="a"></button>
+                          </template>
+                        </div>
+                      </div>
+                    </article>
+                  </template>
+
+                  <p class="vw-cms-vuoto" x-show="s.items.length === 0" x-cloak>Nessun piatto in questa sezione.</p>
+                  <button type="button" class="vw-btn vw-btn--ghost vw-cms-add" @click="addItem(s)">+ Aggiungi piatto</button>
+                </div>
+              </div>
+            </section>
+          </template>
+        </div>
+
+        <button type="button" class="vw-btn vw-btn--ghost vw-cms-add-sez" @click="addSezione()">+ Aggiungi sezione</button>
+
+        <!-- Spazio per non finire sotto la barra sticky -->
+        <div class="vw-cms-spacer" aria-hidden="true"></div>
+
+        <!-- Barra azioni sticky -->
+        <div class="vw-cms-bar">
+          <div class="vw-cms-bar__status">
+            <span class="vw-cms-dot" :class="dirty ? 'is-dirty' : 'is-clean'" aria-hidden="true"></span>
+            <span x-text="dirty ? 'Modifiche non salvate' : 'Tutto salvato'"></span>
+          </div>
+          <div class="vw-cms-bar__actions">
+            <button type="button" class="vw-btn vw-btn--ghost" @click="downloadBackup()">Scarica backup</button>
+            <button type="button" class="vw-btn vw-btn--ghost" @click="ricarica()" :disabled="loading || publishing">Ricarica</button>
+            <button type="button" class="vw-btn" @click="publish()" :disabled="publishing">
+              <span x-show="!publishing">Pubblica</span>
+              <span x-show="publishing" x-cloak>Pubblico…</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </div>
+</body>
+</html>

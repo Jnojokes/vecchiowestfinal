@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /admin
+Disallow: /modifica-menu
 
 Sitemap: https://www.vecchiowestpub.it/sitemap.xml
