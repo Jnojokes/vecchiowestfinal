@@ -61,7 +61,7 @@ modifica un piatto e premi **Pubblica**.
 ## 4) Uso quotidiano
 
 1. Vai su **https://www.vecchiowestpub.it/modifica-menu** (anche da telefono).
-2. Inserisci la **password**.
+2. Accedi con **utente `admin`** e la **password** (= valore di `ADMIN_PASSWORD`).
 3. Aggiungi/modifica/togli piatti e sezioni, riordina con le frecce ▲▼.
    - Il **prezzo** va scritto come `12,00` (virgola, 2 decimali, senza €) —
      l'editor normalizza in automatico (`12` → `12,00`).

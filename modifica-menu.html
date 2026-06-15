@@ -26,10 +26,12 @@
         // Set ammessi (devono combaciare col server e col CSS .vw-badge--<lowercase>)
         BADGES: ['TOP', 'PICCANTE', 'MARCHIGIANO', 'VEG', 'VEGAN', 'NUOVO'],
         ALLERGENI: ['glutine', 'lattosio', 'sedano', 'sesamo', 'uova'],
+        USERNAME: 'admin',        // utente fisso (non è un segreto): la protezione vera è la password lato server
 
         // Stato
         step: 'login',            // 'login' | 'editor'
         booting: !!sessionStorage.getItem('vw_admin_pw'), // auto-login in corso → evita flash della card login
+        username: '',
         password: '',
         loginError: '',
         loading: false,           // spinner login / caricamento iniziale
@@ -74,11 +76,13 @@
         },
         async login() {
           this.loginError = '';
-          if (!this.password) { this.loginError = 'Inserisci la password.'; return; }
+          if (!this.username || !this.password) { this.loginError = 'Inserisci utente e password.'; return; }
+          // L'utente è fisso ('admin'); la password è verificata dal server.
+          if (this.username.trim().toLowerCase() !== this.USERNAME) { this.loginError = 'Utente o password errati.'; return; }
           this.loading = true;
           try {
             const r = await this.api({ action: 'verify' });
-            if (r.status === 401) { this.loginError = 'Password errata.'; return; }
+            if (r.status === 401) { this.loginError = 'Utente o password errati.'; return; }
             if (r.status !== 200) { this.loginError = (r.body && r.body.error) || ('Errore server (' + r.status + ').'); return; }
             sessionStorage.setItem('vw_admin_pw', this.password);
             await this.loadMenu();
@@ -368,9 +372,22 @@
       <div class="vw-cms-login__card">
         <img src="assets/img/logo-vw-sm.png" alt="Vecchio West" width="64" height="64" class="vw-cms-login__logo" />
         <h1 class="vw-cms-login__title">Gestione menù</h1>
-        <p class="vw-cms-login__sub">Area riservata · inserisci la password</p>
+        <p class="vw-cms-login__sub">Area riservata · accedi per modificare il menù</p>
 
         <form @submit.prevent="login()">
+          <label class="vw-cms-field">
+            <span class="vw-cms-field__label">Utente</span>
+            <input
+              type="text"
+              class="vw-cms-input"
+              x-model="username"
+              autocomplete="username"
+              autocapitalize="none"
+              autocorrect="off"
+              :disabled="loading"
+              required
+            />
+          </label>
           <label class="vw-cms-field">
             <span class="vw-cms-field__label">Password</span>
             <input
