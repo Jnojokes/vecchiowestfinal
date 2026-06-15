@@ -13,8 +13,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
 
   <!-- global.css porta @import tokens.css (brand) + base/bottoni/.vw-badge/.vw-chip -->
-  <link rel="stylesheet" href="css/global.css?v=20260616a" />
-  <link rel="stylesheet" href="css/modifica-menu.css?v=20260616a" />
+  <link rel="stylesheet" href="css/global.css?v=20260616b" />
+  <link rel="stylesheet" href="css/modifica-menu.css?v=20260616b" />
 
   <!-- =========================================================
        Componente Alpine "vwEditor" registrato PRIMA del caricamento
@@ -974,9 +974,9 @@
             <span x-text="dirty ? 'Modifiche non salvate' : 'Tutto salvato'"></span>
           </div>
           <div class="vw-cms-bar__actions">
-            <button type="button" class="vw-btn vw-btn--ghost vw-cms-bar__reload" @click="ricarica()" :disabled="loading || publishing"
-                    title="Scarta le modifiche e torna alla versione online">
-              <span x-text="loading ? 'Carico…' : 'Ripristina online'"></span>
+            <button type="button" class="vw-btn vw-btn--ghost vw-cms-bar__reload" @click="ricarica()" :disabled="!dirty || loading || publishing"
+                    title="Scarta le modifiche non salvate e ricarica il menù com'è online adesso">
+              <span x-text="loading ? 'Carico…' : 'Annulla modifiche'"></span>
             </button>
             <button type="button" class="vw-btn vw-cms-bar__publish" :class="{ 'is-dirty': dirty }" @click="publish()" :disabled="publishing || loading">
               <span class="vw-cms-spinner" x-show="publishing" x-cloak aria-hidden="true"></span>

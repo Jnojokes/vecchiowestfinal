@@ -710,6 +710,7 @@ body.vw-cms {
 .vw-cms-bar__status.is-clean .vw-cms-dot { background: #6b8a4a; }
 .vw-cms-bar__actions { display: flex; gap: 0.5rem; }
 .vw-cms-bar__reload { flex: 0 0 auto; min-height: 50px; }
+.vw-cms-bar__reload:disabled { opacity: 0.4; cursor: not-allowed; }  /* niente da annullare = poco appariscente */
 .vw-cms-bar__publish { flex: 1 1 auto; min-height: 50px; font-size: 1rem; }
 .vw-cms-bar__publish.is-dirty { box-shadow: var(--shadow-gold); }
 
