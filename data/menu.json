@@ -3,6 +3,43 @@
   "ricerca_allergeni_attiva": true,
   "sezioni": [
     {
+      "id": "primi",
+      "titolo": "Primi piatti",
+      "icona": "pasta",
+      "items": [
+        {
+          "nome": "Tortellini o pennette norcina",
+          "descrizione": "Crema, salsiccia, funghi",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Pennette fumé",
+          "descrizione": "Pomodoro, panna, prosciutto, mozzarella affumicata",
+          "prezzo": "8,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        },
+        {
+          "nome": "Tortellini o pennette boscaiola",
+          "descrizione": "Panna, funghi, salsiccia",
+          "prezzo": "9,00",
+          "badge": [],
+          "allergeni": [
+            "glutine",
+            "lattosio"
+          ]
+        }
+      ]
+    },
+    {
       "id": "stuzzichini",
       "titolo": "Stuzzichini",
       "icona": "snack",
@@ -91,43 +128,6 @@
           "allergeni": [
             "lattosio",
             "glutine"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "primi",
-      "titolo": "Primi piatti",
-      "icona": "pasta",
-      "items": [
-        {
-          "nome": "Tortellini o pennette norcina",
-          "descrizione": "Crema, salsiccia, funghi",
-          "prezzo": "9,00",
-          "badge": [],
-          "allergeni": [
-            "glutine",
-            "lattosio"
-          ]
-        },
-        {
-          "nome": "Pennette fumé",
-          "descrizione": "Pomodoro, panna, prosciutto, mozzarella affumicata",
-          "prezzo": "8,00",
-          "badge": [],
-          "allergeni": [
-            "glutine",
-            "lattosio"
-          ]
-        },
-        {
-          "nome": "Tortellini o pennette boscaiola",
-          "descrizione": "Panna, funghi, salsiccia",
-          "prezzo": "9,00",
-          "badge": [],
-          "allergeni": [
-            "glutine",
-            "lattosio"
           ]
         }
       ]
