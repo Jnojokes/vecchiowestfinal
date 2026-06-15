@@ -13,8 +13,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
 
   <!-- global.css porta @import tokens.css (brand) + base/bottoni/.vw-badge/.vw-chip -->
-  <link rel="stylesheet" href="css/global.css?v=20260615b" />
-  <link rel="stylesheet" href="css/modifica-menu.css?v=20260615b" />
+  <link rel="stylesheet" href="css/global.css?v=20260616a" />
+  <link rel="stylesheet" href="css/modifica-menu.css?v=20260616a" />
 
   <!-- =========================================================
        Componente Alpine "vwEditor" registrato PRIMA del caricamento
@@ -22,12 +22,19 @@
        ========================================================= -->
   <script>
     document.addEventListener('alpine:init', () => {
-      Alpine.data('vwEditor', () => ({
+      Alpine.data('vwEditor', () => {
+        // Id effimeri dei piatti (UI-only): WeakMap NON reattiva, tenuta FUORI dallo stato
+        // Alpine. Serve per chiavi x-for / drag stabili senza aggiungere campi allo schema
+        // di data/menu.json (l'id non viene mai serializzato né pubblicato).
+        const _uids = new WeakMap();
+        let _uidSeq = 0;
+        return {
         // Set ammessi (devono combaciare col server e col CSS .vw-badge--<lowercase>)
         BADGES: ['TOP', 'PICCANTE', 'MARCHIGIANO', 'VEG', 'VEGAN', 'NUOVO'],
         ALLERGENI: ['glutine', 'lattosio', 'sedano', 'sesamo', 'uova'],
         USERNAME: 'admin',        // utente fisso (non è un segreto): la protezione vera è la password lato server
         DRAFT_KEY: 'vw_menu_draft_v1', // bozza locale (sostituisce il vecchio "scarica backup")
+        HELP_KEY: 'vw_cms_help_v1',    // ricorda se il pannello "Come funziona" è stato chiuso
 
         // Stato
         step: 'login',            // 'login' | 'editor'
@@ -44,18 +51,30 @@
         menu: { ricerca_allergeni_attiva: true, sezioni: [] },
         dirty: false,
         sezioneAperta: null,      // accordion: id dell'UNICA sezione aperta (non serializzato nel menu)
+        piattoAperto: null,       // uid dell'UNICO piatto con dettaglio aperto (non serializzato)
         nuoveSezioni: {},         // { [idTemporaneo]: true } sezioni create/non ancora pubblicate
         erroriCampo: {},          // { "<si>-<ii>": { nome?:msg, prezzo?:msg } } — validazione inline
         q: '',                    // testo di ricerca piatti
         mostraTornaSu: false,     // bottone "torna su"
+        helpAperto: true,         // pannello "Come funziona"
         bozzaDisponibile: false,  // c'è una bozza locale non pubblicata da ripristinare
         bozzaTs: 0,               // timestamp della bozza
         bozzaErrore: false,       // localStorage non disponibile (modalità privata / memoria piena)
         _draftTimer: null,        // debounce salvataggio bozza (non reattivo)
         _scrollTicking: false,    // throttle scroll (non reattivo)
 
+        // ---------- Id effimero del piatto (per :key, dettaglio aperto, drag) ----------
+        // Chiave = identità dell'oggetto piatto (proxy reattivo, stabile per Alpine/Vue).
+        uid(it) {
+          if (!it || typeof it !== 'object') return '';
+          let u = _uids.get(it);
+          if (!u) { u = 'p' + (++_uidSeq); _uids.set(it, u); }
+          return u;
+        },
+
         // ---------- Ciclo di vita ----------
         async init() {
+          try { if (localStorage.getItem(this.HELP_KEY) === 'chiuso') this.helpAperto = false; } catch (_) { /* noop */ }
           // Avviso se si chiude la pagina con modifiche non salvate (salvando subito la bozza in coda).
           window.addEventListener('beforeunload', (e) => {
             if (this.dirty) { this.flushBozza(); e.preventDefault(); e.returnValue = ''; }
@@ -90,6 +109,10 @@
             }
           }
         },
+
+        // ---------- Pannello "Come funziona" ----------
+        chiudiHelp() { this.helpAperto = false; try { localStorage.setItem(this.HELP_KEY, 'chiuso'); } catch (_) { /* noop */ } },
+        apriHelp() { this.helpAperto = true; try { localStorage.setItem(this.HELP_KEY, 'aperto'); } catch (_) { /* noop */ } },
 
         // ---------- Autenticazione ----------
         async verifica() {
@@ -154,13 +177,14 @@
               return;
             }
           } catch (_) { /* noop */ }
-          this.loadError = 'Impossibile caricare il menù. Controlla la connessione e riprova con "Ricarica".';
+          this.loadError = 'Impossibile caricare il menù. Controlla la connessione e riprova con "Ripristina".';
         },
         apriPrimaSezione() {
           this.sezioneAperta = (this.menu.sezioni[0] && this.menu.sezioni[0].id) || null;
+          this.piattoAperto = null;
         },
         async ricarica() {
-          if (this.dirty && !confirm('Scartare le modifiche non salvate e ricaricare l’ultima versione dal server?')) return;
+          if (this.dirty && !confirm('Scartare le modifiche non salvate e tornare all’ultima versione online?')) return;
           this.publishMsg = ''; this.publishError = ''; this.avvisoValidazione = ''; this.erroriCampo = {};
           this.q = '';
           this.loading = true;
@@ -274,6 +298,44 @@
           } catch (_) { return ''; }
         },
 
+        // ---------- Drag & drop (SortableJS) ----------
+        // Inizializzato via x-init sui contenitori. Maniglie distinte per sezioni e piatti
+        // così il drag di un piatto non fa partire quello della sezione (sortable annidati).
+        initSortable(el, arr, idAttr) {
+          if (!window.Sortable) {
+            // I due script sono `defer` (ordine garantito dalla spec), ma per sicurezza
+            // se SortableJS non fosse ancora pronto riprovo a pagina caricata; in ogni
+            // caso resta il riordino da tastiera con le frecce sulla maniglia.
+            window.addEventListener('load', () => this.initSortable(el, arr, idAttr), { once: true });
+            return;
+          }
+          const isSez = idAttr === 'id';
+          window.Sortable.create(el, {
+            handle: isSez ? '.vw-cms-drag--sez' : '.vw-cms-drag--piatto',
+            draggable: isSez ? '.vw-cms-sez' : '.vw-cms-piatto',
+            animation: 150,
+            delay: 160,                 // niente drag accidentali mentre si scorre
+            delayOnTouchOnly: true,
+            touchStartThreshold: 6,
+            forceFallback: true,        // rendering del drag coerente cross-browser su mobile
+            fallbackTolerance: 5,
+            scroll: true,
+            scrollSensitivity: 70,
+            scrollSpeed: 14,
+            onEnd: () => this.riordinaDaDOM(el, arr, idAttr),
+          });
+        },
+        // Dopo il drop, riordina l'array nello stesso ordine dei nodi nel DOM (per data-uid).
+        // Con :key stabili la riconciliazione di Alpine è un no-op → niente doppio spostamento.
+        riordinaDaDOM(el, arr, idAttr) {
+          const sel = (idAttr === 'id') ? ':scope > .vw-cms-sez' : ':scope > .vw-cms-piatto';
+          const ordine = Array.from(el.querySelectorAll(sel)).map((n) => n.dataset.uid);
+          const chiave = (x) => (idAttr === 'id') ? x.id : this.uid(x);
+          arr.sort((a, b) => ordine.indexOf(chiave(a)) - ordine.indexOf(chiave(b)));
+          this.erroriCampo = {}; // gli indici si-ii non sono più validi
+          this.markDirty();
+        },
+
         // ---------- Mutazioni: sezioni ----------
         slugify(str) {
           return (str || '').toString()
@@ -297,7 +359,10 @@
           this.sezioneAperta = id;
           this.nuoveSezioni[id] = true; // id definitivo (slug del titolo) calcolato al publish
           this.markDirty();
-          this.$nextTick(() => this.scrollAFondo());
+          this.$nextTick(() => {
+            const el = document.getElementById('sez-' + id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
         },
         removeSezione(si) {
           const s = this.menu.sezioni[si];
@@ -312,22 +377,40 @@
           const j = si + dir;
           if (j < 0 || j >= this.menu.sezioni.length) return;
           const arr = this.menu.sezioni;
+          const movedId = arr[si].id;
           [arr[si], arr[j]] = [arr[j], arr[si]];
           this.erroriCampo = {};
           this.markDirty();
+          this.focusManiglia(movedId, '.vw-cms-drag--sez');
         },
         toggleSezione(id) {
           this.sezioneAperta = (this.sezioneAperta === id) ? null : id;
         },
+        vaiASezione(s) {
+          this.sezioneAperta = s.id;
+          this.$nextTick(() => {
+            const el = document.getElementById('sez-' + s.id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        },
 
         // ---------- Mutazioni: piatti ----------
-        addItem(s) {
+        togglePiatto(u) { this.piattoAperto = (this.piattoAperto === u) ? null : u; },
+        isPiattoOpen(u) { return this.piattoAperto === u; },
+        addItem(s, si) {
           s.items.push({ nome: '', descrizione: '', prezzo: '', badge: [], allergeni: [] });
+          const ii = s.items.length - 1;
+          const it = s.items[ii];           // rileggo l'elemento (proxy reattivo) → uid coerente col template
           this.sezioneAperta = s.id;
+          this.piattoAperto = this.uid(it); // apre subito il dettaglio del nuovo piatto
           this.markDirty();
+          this.$nextTick(() => {
+            const el = document.getElementById('f-nome-' + si + '-' + ii);
+            if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); try { el.focus({ preventScroll: true }); } catch (_) { el.focus(); } }
+          });
         },
         duplicaItem(s, ii) {
-          const clone = JSON.parse(JSON.stringify(s.items[ii]));
+          const clone = JSON.parse(JSON.stringify(s.items[ii])); // oggetto nuovo → uid nuovo automatico
           s.items.splice(ii + 1, 0, clone);
           this.erroriCampo = {}; // gli indici successivi sono slittati
           this.markDirty();
@@ -336,6 +419,7 @@
           const it = s.items[ii];
           const nome = (it && it.nome && it.nome.trim()) ? ('"' + it.nome.trim() + '"') : 'questo piatto';
           if (!confirm('Rimuovere ' + nome + '?')) return;
+          if (this.piattoAperto === this.uid(it)) this.piattoAperto = null;
           s.items.splice(ii, 1);
           this.erroriCampo = {};
           this.markDirty();
@@ -343,9 +427,11 @@
         moveItem(s, ii, dir) {
           const j = ii + dir;
           if (j < 0 || j >= s.items.length) return;
+          const movedUid = this.uid(s.items[ii]);
           [s.items[ii], s.items[j]] = [s.items[j], s.items[ii]];
           this.erroriCampo = {};
           this.markDirty();
+          this.focusManiglia(movedUid, '.vw-cms-drag--piatto');
         },
 
         // ---------- Badge / allergeni (multi-select) ----------
@@ -397,6 +483,14 @@
           const e = this.erroriCampo[this.keyCampo(si, ii)];
           return (e && e[campo]) || '';
         },
+        piattoHaErrore(si, ii) {
+          const e = this.erroriCampo[this.keyCampo(si, ii)];
+          return !!(e && (e.nome || e.prezzo));
+        },
+        sezioneHaErrori(si) {
+          const pre = si + '-';
+          return Object.keys(this.erroriCampo).some((k) => k.startsWith(pre));
+        },
         setErrore(si, ii, campo, msg) {
           const k = this.keyCampo(si, ii);
           const next = { ...this.erroriCampo };
@@ -426,11 +520,25 @@
           this.erroriCampo = errs;
           return primo;
         },
-        focusPrimoErrore(primo) {
+        focusPrimoErrore(primo, tentativi) {
+          tentativi = tentativi || 0;
           const el = document.getElementById('f-' + primo.campo + '-' + primo.si + '-' + primo.ii);
-          if (!el) return;
+          if (!el) {
+            // Il campo "nome" vive in un <template x-if> appena aperto: se il DOM non è
+            // ancora pronto riprovo per qualche frame (così il focus non fallisce in silenzio).
+            if (tentativi < 6) requestAnimationFrame(() => this.focusPrimoErrore(primo, tentativi + 1));
+            return;
+          }
           el.scrollIntoView({ behavior: 'smooth', block: 'center' });
           try { el.focus({ preventScroll: true }); } catch (_) { el.focus(); }
+        },
+        // Riporta il focus sulla maniglia dopo un riordino da tastiera (a11y).
+        focusManiglia(uidVal, sel) {
+          this.$nextTick(() => {
+            const v = (window.CSS && CSS.escape) ? CSS.escape(String(uidVal)) : String(uidVal);
+            const h = document.querySelector('[data-uid="' + v + '"] ' + sel);
+            if (h) { try { h.focus(); } catch (_) { /* noop */ } }
+          });
         },
 
         // Prepara il payload: clone pulito, trim, rimozione di nota vuota e
@@ -468,12 +576,14 @@
           const primo = this.validaCampi();
           if (primo) {
             const n = this.contaErrori();
+            const sez = this.menu.sezioni[primo.si];
+            const nomeSez = (sez && sez.titolo && sez.titolo.trim()) || ('sezione ' + (primo.si + 1));
             this.avvisoValidazione = (n === 1)
-              ? 'C’è 1 campo da correggere (evidenziato in rosso).'
-              : ('Ci sono ' + n + ' campi da correggere (evidenziati in rosso).');
+              ? ('C’è 1 campo da correggere in «' + nomeSez + '».')
+              : ('Ci sono ' + n + ' campi da correggere (il primo in «' + nomeSez + '»).');
             this.q = ''; // svuota la ricerca così il campo è sicuramente visibile
-            const s = this.menu.sezioni[primo.si];
-            if (s) this.sezioneAperta = s.id;
+            if (sez) this.sezioneAperta = sez.id;                       // apri la sezione…
+            if (sez && sez.items[primo.ii]) this.piattoAperto = this.uid(sez.items[primo.ii]); // …e il piatto (il campo è dentro il dettaglio)
             this.$nextTick(() => this.focusPrimoErrore(primo));
             return;
           }
@@ -535,15 +645,21 @@
 
         // ---------- Util UI ----------
         scrollSu() { window.scrollTo({ top: 0, behavior: 'smooth' }); },
-        scrollAFondo() { window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); },
         contaPiatti(s) { return (s.items || []).length; },
         etichettaPiatti(s) {
           const n = this.contaPiatti(s);
           return n + (n === 1 ? ' piatto' : ' piatti');
         },
-      }));
+        nomePiatto(it) { return (it.nome && it.nome.trim()) ? it.nome.trim() : 'Nuovo piatto'; },
+        eyebrowPiatto(s, ii) {
+          return (s.titolo || 'Senza titolo') + ' · ' + (ii + 1) + '/' + (s.items.length);
+        },
+        };
+      });
     });
   </script>
+  <!-- SortableJS PRIMA di Alpine: window.Sortable disponibile quando girano gli x-init -->
+  <script defer src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
 </head>
 
@@ -609,10 +725,13 @@
             <img src="assets/img/logo-vw-sm.png" alt="" width="40" height="40" />
             <div>
               <h1 class="vw-cms-head__title">Modifica menù</h1>
-              <p class="vw-cms-head__sub">Aggiungi, modifica o togli piatti, poi premi Pubblica.</p>
+              <p class="vw-cms-head__sub">Apri una categoria, tocca un piatto, poi premi Pubblica.</p>
             </div>
           </div>
-          <button type="button" class="vw-cms-link" @click="logout()">Esci</button>
+          <div class="vw-cms-head__actions">
+            <button type="button" class="vw-cms-link" @click="apriHelp()" x-show="!helpAperto">? Aiuto</button>
+            <button type="button" class="vw-cms-link" @click="logout()">Esci</button>
+          </div>
         </header>
 
         <!-- Barra di ricerca (sticky) -->
@@ -635,6 +754,13 @@
           </div>
         </div>
 
+        <!-- Indice "salta a sezione" (sticky sotto la ricerca, nascosto durante la ricerca) -->
+        <nav class="vw-cms-jump" x-show="!ricercaAttiva()" aria-label="Vai a una categoria">
+          <template x-for="s in menu.sezioni" :key="s.id">
+            <button type="button" class="vw-cms-jump__chip" :class="{ 'is-active': sezioneAperta === s.id }" @click="vaiASezione(s)" x-text="s.titolo || 'Senza titolo'"></button>
+          </template>
+        </nav>
+
         <!-- Riga risultati ricerca -->
         <p class="vw-cms-search-info" x-show="ricercaAttiva()" x-cloak>
           <span x-show="contaRisultati() > 0" x-text="contaRisultati() === 1 ? '1 piatto trovato' : (contaRisultati() + ' piatti trovati')"></span>
@@ -642,16 +768,17 @@
           <button type="button" class="vw-cms-link" @click="q = ''">Svuota</button>
         </p>
 
-        <!-- Prompt ripristino bozza -->
-        <div class="vw-cms-bozza" x-show="bozzaDisponibile" x-cloak>
-          <div class="vw-cms-bozza__txt">
-            <strong>Hai modifiche non pubblicate</strong>
-            <span>Salvate sul telefono il <span x-text="bozzaQuando()"></span>. Vuoi riprenderle?</span>
-          </div>
-          <div class="vw-cms-bozza__actions">
-            <button type="button" class="vw-btn vw-cms-bozza__resume" @click="riprendiBozza()">Riprendi modifiche</button>
-            <button type="button" class="vw-btn vw-btn--ghost" @click="scartaBozza()">Scarta</button>
-          </div>
+        <!-- Pannello "Come funziona" (richiudibile, ricordato sul telefono) -->
+        <div class="vw-cms-help" x-show="helpAperto && !ricercaAttiva()" x-cloak>
+          <button type="button" class="vw-cms-help__close" @click="chiudiHelp()" aria-label="Chiudi le istruzioni">✕</button>
+          <strong class="vw-cms-help__title">Come funziona</strong>
+          <ul class="vw-cms-help__list">
+            <li>Le <b>categorie</b> (es. Stuzzichini) contengono i <b>piatti</b>. Tocca una categoria per aprirla.</li>
+            <li>Tocca un piatto per aprirne i dettagli. Il <b>prezzo</b> lo cambi al volo dalla riga, scritto come <b>12,00</b>.</li>
+            <li>Trascina la maniglia <b>≡</b> per cambiare l’ordine (o usa le frecce della tastiera).</li>
+            <li>Le modifiche restano salvate sul telefono finché non premi <b>Pubblica</b>.</li>
+            <li><b>Pubblica</b> mette tutto online (circa 1 minuto).</li>
+          </ul>
         </div>
 
         <!-- Esiti / errori (aree live per screen reader) -->
@@ -676,6 +803,18 @@
           <span>Questo browser non salva le modifiche in automatico (modalità privata o memoria piena). Pubblica appena puoi per non perderle.</span>
         </div>
 
+        <!-- Prompt ripristino bozza -->
+        <div class="vw-cms-bozza" x-show="bozzaDisponibile" x-cloak>
+          <div class="vw-cms-bozza__txt">
+            <strong>Hai modifiche non pubblicate</strong>
+            <span>Salvate sul telefono il <span x-text="bozzaQuando()"></span>. Vuoi riprenderle?</span>
+          </div>
+          <div class="vw-cms-bozza__actions">
+            <button type="button" class="vw-btn vw-cms-bozza__resume" @click="riprendiBozza()">Riprendi modifiche</button>
+            <button type="button" class="vw-btn vw-btn--ghost" @click="scartaBozza()">Scarta</button>
+          </div>
+        </div>
+
         <!-- Impostazione globale (nascosta durante la ricerca per ridurre il rumore) -->
         <div class="vw-cms-toggle" x-show="!ricercaAttiva()">
           <label class="vw-cms-switch">
@@ -685,30 +824,30 @@
           </label>
         </div>
 
-        <!-- Sezioni (accordion: una aperta per volta) -->
-        <div class="vw-cms-sezioni">
+        <!-- Categorie (accordion: una aperta per volta). Drag&drop via maniglia ≡. -->
+        <div class="vw-cms-sezioni" x-init="initSortable($el, menu.sezioni, 'id')">
           <template x-for="(s, si) in menu.sezioni" :key="s.id">
-            <section class="vw-cms-sez" :class="{ 'is-open': isOpen(s) }" x-show="sezioneVisibile(s)" x-cloak>
+            <section class="vw-cms-sez" :id="'sez-' + s.id" :data-uid="s.id" :class="{ 'is-open': isOpen(s) }" x-show="sezioneVisibile(s)" x-cloak>
 
-              <!-- Testata sezione (sticky quando aperta) -->
+              <!-- Testata categoria (sticky quando aperta) -->
               <div class="vw-cms-sez__head">
+                <button type="button" class="vw-cms-drag vw-cms-drag--sez" x-show="!ricercaAttiva()"
+                        title="Trascina per spostare la categoria"
+                        aria-label="Trascina per spostare la categoria, oppure usa le frecce su e giù"
+                        @keydown.arrow-up.prevent="moveSezione(si, -1)" @keydown.arrow-down.prevent="moveSezione(si, 1)">≡</button>
                 <button type="button" class="vw-cms-sez__toggle" @click="toggleSezione(s.id)" :aria-expanded="isOpen(s).toString()">
                   <span class="vw-cms-sez__chev" aria-hidden="true">▸</span>
                   <span class="vw-cms-sez__titolo" x-text="s.titolo || 'Senza titolo'"></span>
-                  <span class="vw-cms-sez__count" x-text="etichettaPiatti(s)"></span>
+                  <span class="vw-cms-sez__count" x-text="contaPiatti(s)"></span>
+                  <span class="vw-cms-sez__errdot" x-show="sezioneHaErrori(si)" title="Ci sono campi da correggere in questa categoria" x-cloak></span>
                 </button>
-                <div class="vw-cms-sez__ord">
-                  <button type="button" class="vw-cms-iconbtn" title="Sposta sezione su" aria-label="Sposta sezione su" @click="moveSezione(si, -1)" :disabled="ricercaAttiva() || si === 0">▲</button>
-                  <button type="button" class="vw-cms-iconbtn" title="Sposta sezione giù" aria-label="Sposta sezione giù" @click="moveSezione(si, 1)" :disabled="ricercaAttiva() || si === menu.sezioni.length - 1">▼</button>
-                  <button type="button" class="vw-cms-iconbtn vw-cms-iconbtn--danger" title="Rimuovi sezione" aria-label="Rimuovi sezione" @click="removeSezione(si)">✕</button>
-                </div>
               </div>
 
-              <!-- Corpo sezione -->
+              <!-- Corpo categoria -->
               <div class="vw-cms-sez__body" x-show="isOpen(s)" x-cloak>
                 <div class="vw-cms-grid2">
                   <label class="vw-cms-field">
-                    <span class="vw-cms-field__label">Titolo sezione</span>
+                    <span class="vw-cms-field__label">Nome categoria</span>
                     <input type="text" class="vw-cms-input" x-model="s.titolo" @input="markDirty()" />
                   </label>
                   <label class="vw-cms-field">
@@ -717,92 +856,110 @@
                   </label>
                 </div>
 
-                <!-- Piatti -->
-                <div class="vw-cms-piatti">
-                  <template x-for="(it, ii) in s.items" :key="ii">
-                    <article class="vw-cms-piatto" x-show="itemVisibile(s, it)" x-cloak>
-                      <div class="vw-cms-piatto__top">
-                        <span class="vw-cms-piatto__n" x-text="'#' + (ii + 1)"></span>
-                        <div class="vw-cms-piatto__ord">
-                          <button type="button" class="vw-cms-iconbtn" title="Sposta piatto su" aria-label="Sposta piatto su" @click="moveItem(s, ii, -1)" :disabled="ricercaAttiva() || ii === 0">▲</button>
-                          <button type="button" class="vw-cms-iconbtn" title="Sposta piatto giù" aria-label="Sposta piatto giù" @click="moveItem(s, ii, 1)" :disabled="ricercaAttiva() || ii === s.items.length - 1">▼</button>
-                          <button type="button" class="vw-cms-iconbtn" title="Duplica piatto" aria-label="Duplica piatto" @click="duplicaItem(s, ii)">⧉</button>
-                          <button type="button" class="vw-cms-iconbtn vw-cms-iconbtn--danger" title="Rimuovi piatto" aria-label="Rimuovi piatto" @click="removeItem(s, ii)">✕</button>
-                        </div>
-                      </div>
+                <!-- Piatti (contenitore con SOLO le card: drag&drop dei piatti) -->
+                <div class="vw-cms-piatti" x-init="initSortable($el, s.items, '_uid')">
+                  <template x-for="(it, ii) in s.items" :key="uid(it)">
+                    <article class="vw-cms-piatto"
+                             :class="{ 'is-open': isPiattoOpen(uid(it)), 'has-err': piattoHaErrore(si, ii) }"
+                             :data-uid="uid(it)" x-show="itemVisibile(s, it)" x-cloak>
 
-                      <div class="vw-cms-grid-nome">
-                        <label class="vw-cms-field">
-                          <span class="vw-cms-field__label">Nome *</span>
+                      <!-- Riga compatta: maniglia · contesto+nome (tap=espandi) · prezzo inline · chevron -->
+                      <div class="vw-cms-piatto__row">
+                        <button type="button" class="vw-cms-drag vw-cms-drag--piatto" x-show="!ricercaAttiva()"
+                                title="Trascina per spostare il piatto"
+                                aria-label="Trascina per spostare il piatto, oppure usa le frecce su e giù"
+                                @keydown.arrow-up.prevent="moveItem(s, ii, -1)" @keydown.arrow-down.prevent="moveItem(s, ii, 1)">≡</button>
+                        <button type="button" class="vw-cms-piatto__main" @click="togglePiatto(uid(it))" :aria-expanded="isPiattoOpen(uid(it)).toString()">
+                          <span class="vw-cms-piatto__eyebrow" x-text="eyebrowPiatto(s, ii)"></span>
+                          <span class="vw-cms-piatto__nome" :class="{ 'is-vuoto': !(it.nome && it.nome.trim()) }" x-text="nomePiatto(it)"></span>
+                        </button>
+                        <div class="vw-cms-prezzo vw-cms-prezzo--inline" :class="{ 'is-error': erroreDi(si, ii, 'prezzo') }">
+                          <span class="vw-cms-prezzo__euro" aria-hidden="true">€</span>
                           <input
                             type="text"
-                            class="vw-cms-input"
-                            :class="{ 'is-error': erroreDi(si, ii, 'nome') }"
-                            :id="'f-nome-' + si + '-' + ii"
-                            :aria-invalid="erroreDi(si, ii, 'nome') ? 'true' : 'false'"
-                            :aria-describedby="erroreDi(si, ii, 'nome') ? 'err-nome-' + si + '-' + ii : null"
-                            x-model="it.nome"
-                            @input="onNomeInput(it, si, ii)"
-                            placeholder="Nome del piatto"
+                            inputmode="decimal"
+                            class="vw-cms-input vw-cms-prezzo__input"
+                            :id="'f-prezzo-' + si + '-' + ii"
+                            aria-label="Prezzo in euro"
+                            :aria-invalid="erroreDi(si, ii, 'prezzo') ? 'true' : 'false'"
+                            :aria-describedby="erroreDi(si, ii, 'prezzo') ? 'err-prezzo-' + si + '-' + ii : null"
+                            x-model="it.prezzo"
+                            @input="onPrezzoInput(it, si, ii)"
+                            @blur="onPrezzoBlur(it, si, ii)"
+                            placeholder="0,00"
                           />
-                          <span class="vw-cms-campo-err" :id="'err-nome-' + si + '-' + ii" x-show="erroreDi(si, ii, 'nome')" x-text="erroreDi(si, ii, 'nome')" x-cloak></span>
-                        </label>
-                        <label class="vw-cms-field vw-cms-field--prezzo">
-                          <span class="vw-cms-field__label">Prezzo</span>
-                          <div class="vw-cms-prezzo" :class="{ 'is-error': erroreDi(si, ii, 'prezzo') }">
-                            <span class="vw-cms-prezzo__euro" aria-hidden="true">€</span>
+                        </div>
+                        <button type="button" class="vw-cms-piatto__expand" @click="togglePiatto(uid(it))" :aria-label="isPiattoOpen(uid(it)) ? 'Chiudi i dettagli del piatto' : 'Apri i dettagli del piatto'" aria-hidden="false">
+                          <span class="vw-cms-piatto__chev" aria-hidden="true">⌄</span>
+                        </button>
+                      </div>
+                      <span class="vw-cms-campo-err vw-cms-campo-err--row" :id="'err-prezzo-' + si + '-' + ii" x-show="erroreDi(si, ii, 'prezzo')" x-text="erroreDi(si, ii, 'prezzo')" x-cloak></span>
+
+                      <!-- Dettaglio (montato solo quando aperto → DOM leggero) -->
+                      <template x-if="isPiattoOpen(uid(it))">
+                        <div class="vw-cms-piatto__det">
+                          <label class="vw-cms-field">
+                            <span class="vw-cms-field__label">Nome del piatto *</span>
                             <input
                               type="text"
-                              inputmode="decimal"
-                              class="vw-cms-input vw-cms-prezzo__input"
-                              :id="'f-prezzo-' + si + '-' + ii"
-                              aria-label="Prezzo in euro"
-                              :aria-invalid="erroreDi(si, ii, 'prezzo') ? 'true' : 'false'"
-                              :aria-describedby="erroreDi(si, ii, 'prezzo') ? 'err-prezzo-' + si + '-' + ii : null"
-                              x-model="it.prezzo"
-                              @input="onPrezzoInput(it, si, ii)"
-                              @blur="onPrezzoBlur(it, si, ii)"
-                              placeholder="12,00"
+                              class="vw-cms-input"
+                              :class="{ 'is-error': erroreDi(si, ii, 'nome') }"
+                              :id="'f-nome-' + si + '-' + ii"
+                              :aria-invalid="erroreDi(si, ii, 'nome') ? 'true' : 'false'"
+                              :aria-describedby="erroreDi(si, ii, 'nome') ? 'err-nome-' + si + '-' + ii : null"
+                              x-model="it.nome"
+                              @input="onNomeInput(it, si, ii)"
+                              placeholder="Nome del piatto"
                             />
+                            <span class="vw-cms-campo-err" :id="'err-nome-' + si + '-' + ii" x-show="erroreDi(si, ii, 'nome')" x-text="erroreDi(si, ii, 'nome')" x-cloak></span>
+                          </label>
+
+                          <label class="vw-cms-field">
+                            <span class="vw-cms-field__label">Descrizione</span>
+                            <textarea class="vw-cms-input vw-cms-textarea" rows="2" x-model="it.descrizione" @input="markDirty()" placeholder="Ingredienti / dettagli"></textarea>
+                          </label>
+
+                          <div class="vw-cms-chips-group" role="group" aria-label="Badge del piatto">
+                            <span class="vw-cms-field__label">Badge</span>
+                            <p class="vw-cms-hint">Tocca per attivare o disattivare (puoi sceglierne più di uno).</p>
+                            <div class="vw-cms-chips">
+                              <template x-for="b in BADGES" :key="b">
+                                <button type="button" class="vw-cms-chip" :class="{ 'is-on': it.badge.includes(b) }" :aria-pressed="it.badge.includes(b).toString()" :aria-label="'Badge ' + b" @click="toggleBadge(it, b)" x-text="b"></button>
+                              </template>
+                            </div>
                           </div>
-                          <span class="vw-cms-campo-err" :id="'err-prezzo-' + si + '-' + ii" x-show="erroreDi(si, ii, 'prezzo')" x-text="erroreDi(si, ii, 'prezzo')" x-cloak></span>
-                        </label>
-                      </div>
 
-                      <label class="vw-cms-field">
-                        <span class="vw-cms-field__label">Descrizione</span>
-                        <textarea class="vw-cms-input vw-cms-textarea" rows="2" x-model="it.descrizione" @input="markDirty()" placeholder="Ingredienti / dettagli"></textarea>
-                      </label>
+                          <div class="vw-cms-chips-group" role="group" aria-label="Allergeni del piatto">
+                            <span class="vw-cms-field__label">Allergeni</span>
+                            <div class="vw-cms-chips">
+                              <template x-for="a in ALLERGENI" :key="a">
+                                <button type="button" class="vw-cms-chip" :class="{ 'is-on': it.allergeni.includes(a) }" :aria-pressed="it.allergeni.includes(a).toString()" :aria-label="'Allergene ' + a" @click="toggleAllergene(it, a)" x-text="a"></button>
+                              </template>
+                            </div>
+                          </div>
 
-                      <div class="vw-cms-chips-group" role="group" aria-label="Badge del piatto">
-                        <span class="vw-cms-field__label">Badge</span>
-                        <div class="vw-cms-chips">
-                          <template x-for="b in BADGES" :key="b">
-                            <button type="button" class="vw-chip vw-chip--toggle" :class="{ 'is-active': it.badge.includes(b) }" :aria-pressed="it.badge.includes(b).toString()" :aria-label="'Badge ' + b" @click="toggleBadge(it, b)" x-text="b"></button>
-                          </template>
+                          <div class="vw-cms-piatto__actions">
+                            <button type="button" class="vw-btn vw-btn--ghost vw-cms-act" @click="duplicaItem(s, ii)">⧉ Duplica</button>
+                            <button type="button" class="vw-btn vw-btn--ghost vw-cms-act vw-cms-act--danger" @click="removeItem(s, ii)">🗑 Elimina</button>
+                          </div>
                         </div>
-                      </div>
-
-                      <div class="vw-cms-chips-group" role="group" aria-label="Allergeni del piatto">
-                        <span class="vw-cms-field__label">Allergeni</span>
-                        <div class="vw-cms-chips">
-                          <template x-for="a in ALLERGENI" :key="a">
-                            <button type="button" class="vw-chip vw-chip--toggle" :class="{ 'is-active': it.allergeni.includes(a) }" :aria-pressed="it.allergeni.includes(a).toString()" :aria-label="'Allergene ' + a" @click="toggleAllergene(it, a)" x-text="a"></button>
-                          </template>
-                        </div>
-                      </div>
+                      </template>
                     </article>
                   </template>
-
-                  <p class="vw-cms-vuoto" x-show="s.items.length === 0" x-cloak>Nessun piatto in questa sezione.</p>
-                  <button type="button" class="vw-btn vw-btn--ghost vw-cms-add" x-show="!ricercaAttiva()" @click="addItem(s)">+ Aggiungi piatto</button>
                 </div>
+
+                <p class="vw-cms-vuoto" x-show="s.items.length === 0" x-cloak>Ancora nessun piatto in questa categoria.</p>
+                <button type="button" class="vw-btn vw-btn--ghost vw-cms-add" x-show="!ricercaAttiva()" @click="addItem(s, si)">
+                  + Aggiungi piatto in «<span x-text="s.titolo || 'questa categoria'"></span>»
+                </button>
+
+                <button type="button" class="vw-cms-del-sez" @click="removeSezione(si)">🗑 Elimina la categoria «<span x-text="s.titolo || 'senza nome'"></span>»</button>
               </div>
             </section>
           </template>
         </div>
 
-        <button type="button" class="vw-btn vw-btn--ghost vw-cms-add-sez" x-show="!ricercaAttiva()" @click="addSezione()">+ Aggiungi sezione</button>
+        <button type="button" class="vw-btn vw-btn--ghost vw-cms-add-sez" x-show="!ricercaAttiva()" @click="addSezione()">+ Aggiungi categoria</button>
 
         <!-- Spazio per non finire sotto la barra azioni -->
         <div class="vw-cms-spacer" aria-hidden="true"></div>
@@ -812,17 +969,18 @@
 
         <!-- Barra azioni fissa (comoda al pollice) -->
         <div class="vw-cms-bar">
-          <div class="vw-cms-bar__status">
-            <span class="vw-cms-dot" :class="dirty ? 'is-dirty' : 'is-clean'" aria-hidden="true"></span>
+          <div class="vw-cms-bar__status" :class="dirty ? 'is-dirty' : 'is-clean'">
+            <span class="vw-cms-dot" aria-hidden="true"></span>
             <span x-text="dirty ? 'Modifiche non salvate' : 'Tutto salvato'"></span>
           </div>
           <div class="vw-cms-bar__actions">
-            <button type="button" class="vw-btn vw-btn--ghost vw-cms-bar__reload" @click="ricarica()" :disabled="loading || publishing">
-              <span x-text="loading ? 'Carico…' : 'Ricarica'"></span>
+            <button type="button" class="vw-btn vw-btn--ghost vw-cms-bar__reload" @click="ricarica()" :disabled="loading || publishing"
+                    title="Scarta le modifiche e torna alla versione online">
+              <span x-text="loading ? 'Carico…' : 'Ripristina online'"></span>
             </button>
-            <button type="button" class="vw-btn vw-cms-bar__publish" @click="publish()" :disabled="publishing || loading">
+            <button type="button" class="vw-btn vw-cms-bar__publish" :class="{ 'is-dirty': dirty }" @click="publish()" :disabled="publishing || loading">
               <span class="vw-cms-spinner" x-show="publishing" x-cloak aria-hidden="true"></span>
-              <span x-text="publishing ? 'Pubblico…' : 'Pubblica'"></span>
+              <span x-text="publishing ? 'Pubblico…' : (dirty ? 'Pubblica modifiche' : 'Pubblica')"></span>
             </button>
           </div>
         </div>
