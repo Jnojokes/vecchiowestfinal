@@ -25,6 +25,8 @@ const GITHUB_API = 'https://api.github.com';
 // Set ammessi — validazione lato server (autoritativa, oltre a quella client).
 const BADGE_AMMESSI = ['TOP', 'PICCANTE', 'MARCHIGIANO', 'VEG', 'VEGAN', 'NUOVO'];
 const ALLERGENI_AMMESSI = ['glutine', 'lattosio', 'sedano', 'sesamo', 'uova'];
+// prezzo SEMPRE stringa "X,YY" (virgola + 2 decimali): invariante dello schema.
+const PREZZO_RE = /^\d+,\d{2}$/;
 
 module.exports = async (req, res) => {
   // Solo POST.
@@ -219,8 +221,10 @@ function validaMenu(menu) {
       if (typeof it.nome !== 'string' || it.nome.trim() === '') {
         return `Un piatto della sezione "${etichettaSez}" non ha nome.`;
       }
-      if (typeof it.prezzo !== 'string') {
-        return `Il piatto "${it.nome}" non ha un prezzo valido.`;
+      // Oltre al tipo, impone il formato "X,YY" (come per badge/allergeni la
+      // validazione è autoritativa lato server, a protezione di data/menu.json).
+      if (typeof it.prezzo !== 'string' || !PREZZO_RE.test(it.prezzo.trim())) {
+        return `Il piatto "${it.nome}" ha un prezzo non valido (formato richiesto: 12,00).`;
       }
       if (it.badge !== undefined &&
           (!Array.isArray(it.badge) || it.badge.some((b) => !BADGE_AMMESSI.includes(b)))) {
